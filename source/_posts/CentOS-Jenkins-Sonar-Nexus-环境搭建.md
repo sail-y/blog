@@ -291,7 +291,7 @@ vi/etc/init.d/sonar
 ```
 
 添加如下内容
-```bash
+```bash	
 #!/bin/sh
 #
 # rc file for SonarQube

@@ -14,8 +14,10 @@ title: about
 
 <embed src="http://www.xiami.com/widget/0_1773290413/singlePlayer.swf" type="application/x-shockwave-flash" width="257" height="33" wmode="transparent"></embed>
 
+可以点右上角High一下
+
 # Contact Me
 
-* [新浪微博](http://weibo.com/s0ftware/)
-* [Email](mailto:hyyangfan@gmail.com) 
-* [Github](https://github.com/sail-y)
+* [新浪微博](http://weibo.com/s0ftware/) http://weibo.com/s0ftware/
+* [Email](mailto:hyyangfan@gmail.com)  hyyangfan@gmail.com
+* [Github](https://github.com/sail-y) https://github.com/sail-y

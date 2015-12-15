@@ -33,6 +33,7 @@ http://docs.docker.com/engine/installation/centos/
 如果到这里，您和我们所期望的结果是一致的。恭喜您！下面我们就一起来安装 Docker 了。
 
 接下来按照官网文档的步骤安装  
+
 ```
 sudo yum update
 sudo tee /etc/yum.repos.d/docker.repo <<-'EOF'

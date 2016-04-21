@@ -6,7 +6,12 @@ categories: spring
 
 在spring cloud项目环境中配置oauth2.0认证。	
 ![](http://callistaenterprise.se/assets/blogg/build-microservices-part-3/system-landscape.png)	
-花了不少时间才把这个调通，spring cloud的版本和文档也存在不一致的地方。		
+
+
+http://callistaenterprise.se/blogg/teknik/2015/04/27/building-microservices-part-3-secure-APIs-with-OAuth/
+可以先看看这篇文章。
+
+我花了不少时间才把这个调通，spring cloud的版本和文档也存在不一致的地方。		
 以下所有的操作都基于Brixton.RC1搭建，须保持所有相关项目都引用此parent。否则会出现各种莫名其妙的错误。
 ```
 <parent>

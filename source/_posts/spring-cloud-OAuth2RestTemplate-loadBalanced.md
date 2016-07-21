@@ -71,7 +71,7 @@ security:
 private OAuth2RestTemplate restTemplate;
 ```
 
-结果还是不行，一样的错误，难道这个类没有用吗，于是我打了在我的代码和`customize`方法初始化执行的时候打了2个断点，发现注入对象的根本就不是这个地方初始化使用的那个对象。又倒腾了好一会才找到，必须得注入一个bean名字为`userInfoRestTemplate`的对象。
+结果还是不行，一样的错误，难道这个类没有用吗，于是我在我的代码和`customize`方法初始化执行的时候打了2个断点，发现注入对象的根本就不是这个地方初始化使用的那个对象。又倒腾了好一会才找到，必须得注入一个bean名字为`userInfoRestTemplate`的对象。
 
 
 ```

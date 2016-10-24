@@ -1,7 +1,7 @@
 title: gitlab替换nginx服务
 date: 2015-10-29 16:29:10
 tags: [gitlab]
-categories: gitlab
+categories: centos
 ---
 
 之前在自己服务器上搭建服务器，这是之前的文章

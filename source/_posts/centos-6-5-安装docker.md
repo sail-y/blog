@@ -1,7 +1,7 @@
 title: centos 6.5 安装docker
 date: 2015-12-08 12:33:43
 tags: [centos,docker]
-categories: docker
+categories: centos
 ---
 先试试把开环境用docker来部署。
 

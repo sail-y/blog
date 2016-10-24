@@ -1,7 +1,7 @@
 title: CentOS Jenkins + Sonar + Nexus 环境搭建
 date: 2015-03-06 21:43:05
 tags: [centos]
-categories: 持续集成
+categories: CI
 ---
 # Nexus篇 
 在Centos上安装

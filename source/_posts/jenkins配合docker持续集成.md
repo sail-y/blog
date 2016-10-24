@@ -1,7 +1,7 @@
 title: jenkins配合docker持续集成
 date: 2015-12-15 12:53:45
 tags: [jenkins,docker]
-categories: jenkins
+categories: CI
 ---
 
 我这里用docker来做持续集成的思路和[jenkins和tomcat的持续集成](http://sail-y.github.io/2015/12/14/jenkins%E5%92%8Ctomcat%E7%9A%84%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90/)是一样的。都是用jenkins拉取git的代码然后打war包，只不过重启tomcat步骤换成了docker的重启。

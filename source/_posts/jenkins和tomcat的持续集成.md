@@ -1,7 +1,7 @@
 title: jenkins和tomcat的持续集成
 date: 2015-12-14 17:26:16
 tags: [jenkins,tomcat]
-categories: jenkins
+categories: CI
 ---
 今天来说一下如何用jenkins做持续集成。		
 jenkins我这里就不介绍了，重点介绍一下如何用jenkins对tomcat进行持续集成。

@@ -1,7 +1,7 @@
 title: "Spring mvc @ResponseBody 返回枚举类型"
 date: 2015-01-31 11:36:30
 tags: [fastjson,spring mvc,java]
-categories: Java
+categories: spring
 ---
 
 我们在用`@ResponseBody`返回实体对象可以用`spring mvc`自动帮我们转化成json串  

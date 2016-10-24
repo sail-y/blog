@@ -1,7 +1,7 @@
 title: mybatis-memcached框架配置
 date: 2015-02-06 23:22:37
 tags: [mybatis,memcached]
-categories: mybatis
+categories: Java
 ---
 官方放出了mybatis和memcached的整合包，先附上官方文档地址
 http://mybatis.github.io/memcached-cache/

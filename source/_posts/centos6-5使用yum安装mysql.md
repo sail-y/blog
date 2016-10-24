@@ -1,7 +1,7 @@
 title: centos6.5使用yum安装mysql
 date: 2015-01-31 17:41:07
 tags: [mysql,centos]
-categories: mysql
+categories: centos
 ---
 要使用yum 安装mysql，要使用mysql的yum仓库，先从官网下载适合你系统的仓库
 http://dev.mysql.com/downloads/repo/yum/

@@ -1,7 +1,7 @@
 title: 发现tomcat的一个bug
 date: 2015-03-10 14:01:15
 tags: [tomcat]
-categories: tomcat
+categories: Java
 ---
 在做项目的时候出现一个错误，看了半天没看出来是什么问题
 ```

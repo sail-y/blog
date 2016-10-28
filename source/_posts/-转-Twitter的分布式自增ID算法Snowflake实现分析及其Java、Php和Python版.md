@@ -1,7 +1,7 @@
 title: "[转]Twitter的分布式自增ID算法Snowflake实现分析及其Java、Php和Python版"
 date: 2015-04-22 09:47:54
 tags: [分布式自增ID算法]
-categories: [Java]
+categories: Java
 ---
 转载：http://www.dengchuanhua.com/132.html
 

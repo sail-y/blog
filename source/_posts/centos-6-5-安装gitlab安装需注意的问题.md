@@ -1,7 +1,7 @@
 title: centos 6.5 安装gitlab安装需注意的问题
 date: 2015-02-06 23:30:50
 tags: [centos,gitlab]
-categories: gitlab
+categories: centos
 ---
 安装gitlab
 首先按照官网进行操作，环境为centos 6.5

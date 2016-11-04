@@ -1,49 +1,90 @@
-title: JVM3 垃圾收集器
-date: 2016-10-31 15:32:44
-tags: [java,JVM]
+title: JVM3-内存溢出异常实战
+date: 2016-10-31 12:25:33
+tags: [JVM,java]
 categories: JVM
 ---
 
+在Java虚拟机规范的描述中，除了程序计数器，其他几个运行时区域都有发生OutOfMemoryError异常的可能。有两个目的：
 
-## 哪些内存需要回收？
+1. 通过代码验证Java虚拟机规范中描述的各个运行时区域存储的内容。
+2. 希望我们在工作中遇到问题的时候能迅速判断是哪个区域的内存溢出，知道什么样的代码会导致这些区域溢出，以及出现这些异常后该如何处理。
 
-程序计数器、虚拟机栈、本地方法栈3个区域随线程而生，随线程而灭，方法或者线程结束的时候内存自然就跟着回收了，所以不需要考虑过多回收的问题。而**Java堆**和**方法区**就不一样了，这部分内存的*分配*和*回收*都是动态的。
-
-### Java堆内存回收
-
-#### 对象已死吗
-首先要知道哪些对象是不可能再被任何途径使用的
-##### 引用计数法
-这个算法的实现是：给对象中添加一个引用计数器，每当有一个地方引用它时，计数器+1，当引用失效时，计数器-1。Object-C就是使用的这种方式，Java没有选用引用计数算法来管理内存，因为它很难解决对象之间相互循环引用的问题。例子如下
-
+这个图展示了如何在Idea中设置VM参数。
 <!--more-->
+![](http://7xs4nh.com1.z0.glb.clouddn.com/jvm2-2-1.png)
+
+### Java堆异常
+Java堆用于储存对象实例，只要不断地创建对象且对象不被回收，那么在对象数量到达最大堆的容量限制后就会产生OOM。
+
 
 ```java
-
 /**
- * Created by YangFan on 2016/10/31 下午3:48.
+ * Created by YangFan on 2016/10/31 下午1:34.
  * <p/>
- * 虚拟机参数：-verbose:gc
+ *  设置堆大小为20m，不可扩展(堆的最小值-Xms参数和最大值-Xmx参数设置为一样可避免堆自动扩展)
+ *  VM参数：-Xms20m -Xmx20m -XX:+HeapDumpOnOutOfMemoryError
  */
-public class ReferenceCountingGC {
-    public Object instance = null;
-    private static final int _1MB = 1024 * 1024;
+public class HeapOOM {
 
-    /**
-     * 这个成员属性的唯一意义就是占点内存，以便能在GC日志中看清楚是否被回收过
-     */
-    private byte[] bigSize = new byte[2 * _1MB];
+    static class OOMObject {
+
+    }
 
     public static void main(String[] args) {
-        ReferenceCountingGC objA = new ReferenceCountingGC();
-        ReferenceCountingGC objB = new ReferenceCountingGC();
+        List<OOMObject> list = new ArrayList<>();
+        while (true) {
+            list.add(new OOMObject());
+        }
 
-        objA.instance = objB;
-        objB.instance = objA;
+    }
+}
 
-        objA = null;
-        objB = null;
-        System.gc();
+```
+
+结果如下
+
+```
+java.lang.OutOfMemoryError: Java heap space
+Dumping heap to java_pid56046.hprof ...
+Heap dump file created [27956110 bytes in 0.186 secs]
+Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
+```
+
+这个问题很常见，根据错误提示可以定位到代码，分清楚是内存泄露还是内存溢出。如果是内存泄露，找出GC无法回收的对象代码位置。如果不存在泄露，就是说内存中的对象确实都还必须存活着，应当检查一下虚拟机的堆参数(-Xms和-Xmx)，代码上检查是否存在某些对象生命周期过长、持有状态时间过长的情况，尝试减少程序运行期的内存消耗。
+
+### 虚拟机栈和本地方法栈溢出
+
+由于HotSpot虚拟机中并不区分虚拟机栈和本地方法栈，因此对于HotSpot来说`-Xoss`(设置本地方法栈大小)是无效的，栈容量只由`-Xss`参数设置。关于虚拟机栈和本地方法栈，在虚拟机规范中描述了两种异常：
+
+* 如果线程请求的栈深度大于虚拟机所允许的最大深度，将抛出StackOverflowError异常。
+* 如果虚拟机在扩展栈时无法申请到足够的内存空间，则抛出OutOfMemoryError异常。
+
+```java
+/**
+ * Created by YangFan on 2016/10/31 下午2:06.
+ * <p/>
+ *  不断地递归调用导致栈深度增加
+ *  VM参数：-Xss128k
+ *
+ */
+public class JavaVMStackSOF {
+    private int stackLength = 1;
+
+    public void stackLength() {
+        stackLength++;
+        stackLength();
+    }
+
+    public static void main(String[] args) {
+
+        JavaVMStackSOF javaVMStackSOF = new JavaVMStackSOF();
+        try {
+            javaVMStackSOF.stackLength();
+        } catch (Throwable e) {
+            System.out.println("stack length:" + javaVMStackSOF.stackLength);
+            throw e;
+        }
+
     }
 }
 
@@ -52,124 +93,97 @@ public class ReferenceCountingGC {
 运行结果
 
 ```
-[GC (System.gc())  7440K->632K(125952K), 0.0012069 secs]
-[Full GC (System.gc())  632K->520K(125952K), 0.0058047 secs]
+stack length:29460
+Exception in thread "main" java.lang.StackOverflowError
+	at oom.JavaVMStackSOF.stackLength(JavaVMStackSOF.java:19)
 ```
-看到`632K->520K`，意味着两个对象相互引用也被回收了，侧面说明虚拟机不是通过引用计数法来判断对象是否存活的。
-
-##### 可达性分析法
-这个算法的基本思路是通过一系列的称为`GC Roots`的对象作为起始点，从这些节点开始向下搜索，搜索所走过的路径称为引用链，当一个对象到`GC Roots`没有任何引用链相连(从GC Roots到这个对象不可达)时，则证明此对象是不可用的。下图中object5、object6、object7虽然相互关联，但是到GC Roots是不可达的，所以他们会被回收。
-![](http://7xs4nh.com1.z0.glb.clouddn.com/jvm3-1.jpeg)
-
-在Java语言中，可用作为GC Roots的对象包括下面几种：
-
-* 虚拟机栈(栈帧中的本地变量)中引用的对象
-* 方法区中类静态属性引用的对象
-* 方法区中常量引用的对象
-* 本地方法栈中JNI（即一般说的本地方法）引用的对象
-
-#### 引用
-JDK1.2之前，Java中引用的定义很传统：如果引用类型的数据中存储的数值代表的是另一块内存的起始地址，就称这块内存代表着一个引用。这种定义很纯粹，但是太过于狭隘，一个对象只有被引用或者没被引用两种状态。我们希望描述这样一类对象：当内存空间还足够时，则能保留在内存中；如果内存空间在进行垃圾收集后还是非常紧张，则可以抛弃这些对象。很多系统的缓存功能都符合这样的应用场景。在JDK1.2之后，Java对引用的概念进行了扩充，将引用分为强引用、软引用、弱引用、虚引用4种，这4种引用强度依次减弱。
-
-* 强引用在代码中普遍存在，类似`Object obj = new Object()`这类的引用，只要引用还在，垃圾收集器就不会回收
-* 软引用是用来描述一些还有用但并非必需的对象。在系统将要发生内存溢出异常之前，将会把这些列进回收范围之中进行第二次回收。如果这次回收还没有足够的内存，才会抛出内存溢出异常。在JDK1.2之后，提供了SoftReference来实现软引用。
-* 弱引用也是用来描述非必需对象，被弱引用关联的对象只能生存到下一次GC之前。无论当前内存是够足够，都会回收掉被弱引用关联的对象。在JDK1.2之后，提供了WeakReference类来实现弱引用。
-* 虚引用的存在不会对一个对象的生存时间构成影响，它的唯一目的就是能在这个对象被收集器回收时收到一个系统通知。在JDK1.2之后，提供了PhantomReference类来实现。
-
-#### 对象自我拯救
-用可达性分析算法，对象也需要标记2次后才会被回收，第一次是发现没有与GC Roots相连的引用链接会标记一次，然后看他覆盖finalize()方法或者finalize()被调用过没有，如果finalize()不需要执行，就直接被回收了，如果需要执行，稍后GC会进行第二轮标记，对象有可能被移出回收队列(例如在finalize()中重新给自己赋值)。上代码
+在单线程下，无论是栈帧太大，还是虚拟机栈容量太小，当内存无法分配的时候，虚拟机抛出的都是*StackOverFlow*异常。		
+可以通过不断创建线程的方式产生内存溢出异常，不过这个异常与栈容量大小没有什么关系，因为不断创建线程，每个线程分配的容量越大，那么总共可产生线程数量就越小，就越容易出现OOM。这个只能通过减少最大堆内存(留给栈分配的内存变大)和减少栈容量来换取更多的线程。
 
 ```java
 
 /**
- * Created by YangFan on 2016/10/31 下午4:54.
+ * Created by YangFan on 2016/10/31 下午2:18.
  * <p/>
- *  此代码演示两点：
- *     1. 对象可以在GC时自我拯救
- *     2. 这种自救的机会只有一次，因为一个对象的finalize()方法最多只会被系统自动调用一次。
+ * 不断创建线程导致内存溢出
+ * VM参数：-Xss2M
  */
-public class FinalizeEscapeGC {
-    public static FinalizeEscapeGC SAVE_HOOK = null;
+public class JavaVMStackOOM {
 
-    public void isAlive() {
-        System.out.println("yes, i am still alive :)");
-    }
+    private int count = 0;
 
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-        System.out.println("finalize method executed!");
-        FinalizeEscapeGC.SAVE_HOOK = this;
-    }
+    public void stackLeakByThread() {
 
-    public static void main(String[] args) throws InterruptedException {
-        SAVE_HOOK = new FinalizeEscapeGC();
+        while (true) {
+            Thread thread = new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        count++;
+                        TimeUnit.SECONDS.sleep(10);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
 
-        // 对象第一次成功拯救自己
-        SAVE_HOOK = null;
-        System.gc();
-        // 因为finalize方法的优先级很低，所以暂停了0.5秒等待它执行
-        TimeUnit.MILLISECONDS.sleep(500);
-
-        if (SAVE_HOOK != null) {
-            SAVE_HOOK.isAlive();
-        }else {
-            System.out.println("no, i am dead :( ");
+            thread.start();
         }
 
-        // 下面代码一样，但是这次失败了，因为finalize只执行一次
-        SAVE_HOOK = null;
-        System.gc();
-        // 因为finalize方法的优先级很低，所以暂停了0.5秒等待它执行
-        TimeUnit.MILLISECONDS.sleep(500);
+    }
 
-        if (SAVE_HOOK != null) {
-            SAVE_HOOK.isAlive();
-        }else {
-            System.out.println("no, i am dead :( ");
+    // 不要在Windows下运行这段代码，可能会假死
+    public static void main(String[] args) {
+        JavaVMStackOOM javaVMStackOOM = new JavaVMStackOOM();
+        try {
+            javaVMStackOOM.stackLeakByThread();
+        } catch (Throwable e) {
+            System.out.println("thread count: " + javaVMStackOOM.count);
+            throw e;
         }
     }
 }
 
 ```
+
 运行结果
 
 ```
-finalize method executed!
-yes, i am still alive :)
-no, i am dead :( 
+thread count: 2028
+Exception in thread "main" java.lang.OutOfMemoryError: unable to create new native thread
+	at java.lang.Thread.start0(Native Method)
 ```
-### 方法区回收
-Java虚拟机规范中说过可以不要求虚拟机在方法区实现垃圾收集，而且在方法区中进行垃圾收集性价比一般比较低。HotSpot VM永久代的垃圾收集主要回收两部分内容：废弃常量和无用的类。		
-判断一个倡廉是否是“废弃常量”比较简单，而要判定一个类是否是“无用的类”的条件则相对苛刻许多。类需要同时满足下面3个条件才能算是“无用的类”：
 
-* 该类所有的实例都已经被回收，也就是Java堆中不存在该类的任何实例。
-* 加载该类的ClassLoader已经被回收。
-* 该类对应的java.lang.Class对象没有在任何地方被引用，无法在任何地方通过反射访问该类的方法。
+### 方法区和运行时常量池溢出
 
-在大量使用反射、动态代理、CGLib等ByteCode框架、动态生成JSP以及OSGi这类频繁自定义ClassLoader的场景都需要虚拟机具备类卸载功能，以保证方法区不会溢出。
+前面提到过，运行时常量池也是方法区的一部分，并且在JDK8 HotSpot中去掉了永久代。`String.intern()`是一个Native方法，它的作用是：如果常量池中有一个String对象的字符串就返回池中的这个字符串的String对象；否则，将此String对象包含的字符串添加到常量池中去，并且返回此String对象的引用。
 
+```java
+/**
+ * Created by YangFan on 2016/10/31 下午3:01.
+ * <p/>
+ * 
+ * VM参数-XX:PermSize=10M -XX:MaxPermSize=10M
+ *
+ * 对于JDK 1.6 HotSpot而言，方法区=永久代，这里看到OutOfMemoryError的区域是“PermGen space”，即永久代，那其实也就是方法区溢出了
+ *
+ * JDK7这个例子会一直循环，因为JDK 7里String.intern生成的String不再是在perm gen分配,而是在Java Heap中分配
+ * JDK8移除了永久代（Permanent Generation ），替换成了元空间（Metaspace）内存分配模型
+ * 设置虚拟机参数-XX:MaxMetaspaceSize=1m，可出现OutOfMemoryError: Metaspace 溢出
+ */
+public class RuntimeConstantPoolOOM {
+    public static void main(String[] args) {
+        List<String> list = new ArrayList<>();
 
+        int i = 0;
 
-## 垃圾回收算法
-下面介绍几种垃圾回收算法的思想及发展过程。
-### 标记-清除算法
-最基础的收集算法是标记-清除(Mark-Sweep)算法，，如同它的名字一样，算法分为`标记`和`清除`两个阶段：首先标记处所有需要回收的对象，在标记完成后统一回收所有被标记的对象。（[标记过程](#对象自我拯救)已经介绍过了）。这种算法主要有两个不足：
+        while (true)
+            list.add(String.valueOf(i++).intern());
+    }
+}
 
-* 一个是效率问题，标记和清除两个过程的效率都不高
-* 另一个是空间问题，标记清除之后会产生大量不连续的内存碎片，空间碎片太多可能会导致以后在程序运行中需要分配较大对象时[对象的创建](http://sail-y.github.io/2016/10/28/JVM2/#对象创建)，无法找到足够的连续内存而不得不提前出发另一次垃圾收集动作。标记-清除算法的执行过程如图：
-![](http://images2015.cnblogs.com/blog/801753/201509/801753-20150924224524194-1099144937.png)。
+```
 
-### 复制算法
-复制算法是为了解决效率问题而出现的，**它将可用的内存分为两块，每次只用其中一块，当这一块内存用完了，就将还存活着的对象复制到另外一块上面，然后再把已经使用过的内存空间一次性清理掉**。这样每次只需要对整个半区进行内存回收，内存分配时也不需要考虑内存碎片等复杂情况，只需要移动指针，按照顺序分配即可。复制算法的执行过程如图：
-![](http://images2015.cnblogs.com/blog/801753/201509/801753-20150924224944365-2132315257.png)
+### 本机直接内存溢出
 
-只是这个算法代价太高，内存缩小为原来的一半，现在商用虚拟机都采用这种算法来回收“新生代”，IBM研究表明新生代98%的对象“朝生夕死”，所以不需要按1:1来划分内存空间，而是将内存分为一块较大的**Eden**空间和两块较小的**Survivor**空间，每次使用Eden和其中一块Survivor。当回收时，将Eden和Survivor中还存活的对象一次性地复制到另外一块Survivor空间上，最后清理掉Eden和刚才用过的Survivor空间。HotSpot虚拟机默认Eden和Survivor的大小比例是8:1，也就是每次新生代可用内存空间为整个新生代容量的90%，只有10%的内存会被“浪费”。我们没有办法保证每次回收都只有不多余10%的对象存活，所以如果Survivor空间不够用的时候，这些对象将直接通过分配担保机制进入老年代。
-
-### 标记-整理算法
-复制手机算法在对象存活率较高时就要进行较多的复制操作，效率会变低，如果对象存活率太高，还需要额外的空间进行分配担保，所以老年代一般不能直接用这种算法。
-标记-整理算法是先标记对象，让所有存活的对象向一端移动，然后直接清理掉端边界以外的内存。如图：![](http://images2015.cnblogs.com/blog/801753/201509/801753-20150924225908490-419097314.png)
-
-### 分代收集算法
-概括一下Java内存的布局：![](http://images2015.cnblogs.com/blog/801753/201509/801753-20150924230142897-1555721768.png)
-当前的商业袭击垃圾收集都采用“分代收集”算法，把Java堆分为新生代和老年代。在新生代中，垃圾收集时都有大批对象死去，只有少量存活，使用少量存活对象复制的成本低。老年代对象存活率高、没有额外的空间进行分配担保，就必须使用“标记-清理”或者“标记-整理”算法来进行回收。
+这个地方的溢出，特征是发现OOM后Dump文件很小，而程序中间接或直接使用了NIO，那就考虑检查一下是不是这个原因。

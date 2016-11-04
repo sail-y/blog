@@ -1,6 +1,6 @@
 title: JVM1-Java介绍
 date: 2016-10-28 13:30:50
-tags: [java]
+tags: [java,JVM]
 categories: JVM
 ---
 

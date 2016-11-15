@@ -99,7 +99,9 @@ Constant pool:
 }
 SourceFile: "TestClass.java"
 ```
+<a name="ref"></a>
 看看常量池里的内容：
+
 `Utf8`就是UTF-8编码的字符串，`Class`、`Methodref`和`Fieldref`则是符号引用。符号引用后面的编号最终也指向了字符串表示他们的值。
 
 ### 访问标志

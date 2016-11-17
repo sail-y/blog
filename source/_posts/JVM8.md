@@ -159,5 +159,5 @@ sun.misc.Launcher$ExtClassLoader@5cad8086
 null
 /Users/xiaomai/code/IdeaProjects/jvm/out/production/jvm:/Applications/IntelliJ IDEA.app/Contents/lib/idea_rt.jar
 ```
-这里说到一个实践，就是有时候我们想覆盖第三方jar包中的某个类，除了替换jar包中的class文件的方式，还可以直接在项目中编写一个一样包名的类。上面打印在前面的`/Users/xiaomai/code/IdeaProjects/jvm/out/production/jvm`目录下的class会优先于第三方jar包中的class加载。		
+这里说到一个实践，就是有时候我们想覆盖第三方jar包中的某个类，除了替换jar包中的class文件的方式，还可以直接在项目中编写一个一样包名的类。上面打印在前面的`/Users/xiaomai/code/IdeaProjects/jvm/out/production/jvm`（相当于web项目里WEB-INF下的class文件夹）目录下的class会优先于第三方jar包中的class加载。		
 上面的null，表示ClassLoader就是Bootstrap ClassLoader。

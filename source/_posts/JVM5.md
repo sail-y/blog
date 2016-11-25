@@ -1,217 +1,132 @@
-title: JVM5-垃圾收集器
-date: 2016-10-31 15:32:44
+title: JVM5-内存分配与回收策略
+date: 2016-11-01 13:51:44
 tags: [java,JVM]
 categories: JVM
 ---
 
+## 内存分配
+之前讲了垃圾回收器体系以及运作原理，现在来看看对象内存分配那点事儿。对象的内存分配，往大方向讲就是在堆上分配，对象主要分配在新生代的Eden区上，也可能直接分配在老年代中，并不固定，取决于使用的哪一种垃圾收集器以及虚拟机参数设置。
 
-## 哪些内存需要回收？
-
-程序计数器、虚拟机栈、本地方法栈3个区域随线程而生，随线程而灭，方法或者线程结束的时候内存自然就跟着回收了，所以不需要考虑过多回收的问题。而**Java堆**和**方法区**就不一样了，这部分内存的*分配*和*回收*都是动态的。
-
-### Java堆内存回收
-
-因为堆就是放对象的地方，要回收内存，首先要知道哪些对象是不可能再被任何途径使用的
-#### 引用计数法
-这个算法的实现是：给对象中添加一个引用计数器，每当有一个地方引用它时，计数器+1，当引用失效时，计数器-1。Object-C就是使用的这种方式，Java没有选用引用计数算法来管理内存，因为它很难解决对象之间相互循环引用的问题。例子如下
-
+### 对象优先在Eden分配
+大多数情况下，对象在新生代Eden区中分配。当Eden区没有足够的空间进行分配时，虚拟机会发一起一次Minor GC。		
 <!--more-->
+不同的垃圾收集器组合对于对象的分配是有影响的，我们这里都是测试在`Serial+SerialOld`的收集器组合下测试的代码。
+下面的代码，`-Xms20M -Xmx20M -Xmn10M`三个参数限制了Java堆大小为20M，不可扩展，分给新生代10M，剩下10M分给老年代，`-XX:SurvivorRatio=8`定义了Eden区与一个Survivor区的空间比例是8:1,`-XX:+UseSerialGC`参数指定Serial垃圾收集器
 
 ```java
-
 /**
- * Created by YangFan on 2016/10/31 下午3:48.
+ * Created by YangFan on 2016/11/1 下午3:34.
  * <p/>
- * 虚拟机参数：-verbose:gc
+ *  VM 参数: -verbose:gc -XX:+PrintGCDetails -Xms20M -Xmx20M -Xmn10M -XX:SurvivorRatio=8 -XX:UseSerialGC
  */
-public class ReferenceCountingGC {
-    public Object instance = null;
+public class EdenGC {
     private static final int _1MB = 1024 * 1024;
 
-    /**
-     * 这个成员属性的唯一意义就是占点内存，以便能在GC日志中看清楚是否被回收过
-     */
-    private byte[] bigSize = new byte[2 * _1MB];
-
     public static void main(String[] args) {
-        ReferenceCountingGC objA = new ReferenceCountingGC();
-        ReferenceCountingGC objB = new ReferenceCountingGC();
-
-        objA.instance = objB;
-        objB.instance = objA;
-
-        objA = null;
-        objB = null;
-        System.gc();
+        byte[] allocation1 = new byte[2 * _1MB];
+        byte[] allocation2 = new byte[2 * _1MB];
+        byte[] allocation3 = new byte[2 * _1MB];
+        // 发生一次MinorGC
+        byte[] allocation4 = new byte[4 * _1MB];
     }
 }
 
 ```
+GC输出：
 
-运行结果
-
+```plain
+[GC (Allocation Failure) [DefNew: 7643K->517K(9216K), 0.0078067 secs] 7643K->6661K(19456K), 0.0078482 secs] [Times: user=0.00 sys=0.00, real=0.01 secs] 
+Heap
+ def new generation   total 9216K, used 4750K [0x00000007bec00000, 0x00000007bf600000, 0x00000007bf600000)
+  eden space 8192K,  51% used [0x00000007bec00000, 0x00000007bf0223b8, 0x00000007bf400000)
+  from space 1024K,  50% used [0x00000007bf500000, 0x00000007bf581668, 0x00000007bf600000)
+  to   space 1024K,   0% used [0x00000007bf400000, 0x00000007bf400000, 0x00000007bf500000)
+ tenured generation   total 10240K, used 6144K [0x00000007bf600000, 0x00000007c0000000, 0x00000007c0000000)
+   the space 10240K,  60% used [0x00000007bf600000, 0x00000007bfc00030, 0x00000007bfc00200, 0x00000007c0000000)
+ Metaspace       used 3062K, capacity 4494K, committed 4864K, reserved 1056768K
+  class space    used 333K, capacity 386K, committed 512K, reserved 1048576K
 ```
-[GC (System.gc())  7440K->632K(125952K), 0.0012069 secs]
-[Full GC (System.gc())  632K->520K(125952K), 0.0058047 secs]
-```
-看到`632K->520K`，意味着两个对象相互引用也被回收了，侧面说明虚拟机不是通过引用计数法来判断对象是否存活的。
+我们可以看到`eden space`是8M，前面3个对象都分配到了eden区，在分配`allocation4`的时候，eden区已经不够了，于是发生了一次Minor GC，但是3个对象都是存活的，并且无法放进Survivor(from space)区，所以通过分配担保机制转移到了老年代去。然后4M的`allocation4`分配进了Eden区。
 
-#### 可达性分析法
-这个算法的基本思路是通过一系列的称为`GC Roots`的对象作为起始点，从这些节点开始向下搜索，搜索所走过的路径称为引用链，当一个对象到`GC Roots`没有任何引用链相连(从GC Roots到这个对象不可达)时，则证明此对象是不可用的。下图中object5、object6、object7虽然相互关联，但是到GC Roots是不可达的，所以他们会被回收。
-![](http://7xs4nh.com1.z0.glb.clouddn.com/jvm3-1.jpeg)
+### 大对象直接进入老年代
+虚拟机提供了一个-XX:PretenureSizeThreshold参数，大于这个设置值的对象直接在老年代分配。这样做的目的是避免在Eden区以及两个Survivor区之间发生大量的复制（新生代采用复制算法）。
 
-在Java语言中，可用作为GC Roots的对象包括下面几种：
-
-* 虚拟机栈(栈帧中的本地变量)中引用的对象
-* 方法区中类静态属性引用的对象
-* 方法区中常量引用的对象
-* 本地方法栈中JNI（即一般说的本地方法）引用的对象
-
-#### 引用
-JDK1.2之前，Java中引用的定义很传统：如果引用类型的数据中存储的数值代表的是另一块内存的起始地址，就称这块内存代表着一个引用。这种定义很纯粹，但是太过于狭隘，一个对象只有被引用或者没被引用两种状态。我们希望描述这样一类对象：当内存空间还足够时，则能保留在内存中；如果内存空间在进行垃圾收集后还是非常紧张，则可以抛弃这些对象。很多系统的缓存功能都符合这样的应用场景。在JDK1.2之后，Java对引用的概念进行了扩充，将引用分为强引用、软引用、弱引用、虚引用4种，这4种引用强度依次减弱。
-
-* 强引用在代码中普遍存在，类似`Object obj = new Object()`这类的引用，只要引用还在，垃圾收集器就不会回收
-* 软引用是用来描述一些还有用但并非必需的对象。在系统将要发生内存溢出异常之前，将会把这些列进回收范围之中进行第二次回收。如果这次回收还没有足够的内存，才会抛出内存溢出异常。在JDK1.2之后，提供了SoftReference来实现软引用。
-* 弱引用也是用来描述非必需对象，被弱引用关联的对象只能生存到下一次GC之前。无论当前内存是够足够，都会回收掉被弱引用关联的对象。在JDK1.2之后，提供了WeakReference类来实现弱引用。
-* 虚引用的存在不会对一个对象的生存时间构成影响，它的唯一目的就是能在这个对象被收集器回收时收到一个系统通知。在JDK1.2之后，提供了PhantomReference类来实现。
-
-#### 对象自我拯救
-用可达性分析算法，对象也需要标记2次后才会被回收，第一次是发现没有与GC Roots相连的引用链接会标记一次，然后看他覆盖finalize()方法或者finalize()被调用过没有，如果finalize()不需要执行，就直接被回收了，如果需要执行，稍后GC会进行第二轮标记，对象有可能被移出回收队列(例如在finalize()中重新给自己赋值)。上代码
+	-XX:PretenureSizeThreshold只在Serial和ParNew两款收集器有效。
 
 ```java
-
 /**
- * Created by YangFan on 2016/10/31 下午4:54.
+ * Created by YangFan on 2016/11/1 下午3:34.
  * <p/>
- *  此代码演示两点：
- *     1. 对象可以在GC时自我拯救
- *     2. 这种自救的机会只有一次，因为一个对象的finalize()方法最多只会被系统自动调用一次。
+ *  VM 参数: -verbose:gc -XX:+PrintGCDetails -Xms20M -Xmx20M -Xmn10M -XX:SurvivorRatio=8
  */
-public class FinalizeEscapeGC {
-    public static FinalizeEscapeGC SAVE_HOOK = null;
+public class EdenGC {
+    private static final int _1MB = 1024 * 1024;
 
-    public void isAlive() {
-        System.out.println("yes, i am still alive :)");
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-        System.out.println("finalize method executed!");
-        FinalizeEscapeGC.SAVE_HOOK = this;
-    }
-
-    public static void main(String[] args) throws InterruptedException {
-        SAVE_HOOK = new FinalizeEscapeGC();
-
-        // 对象第一次成功拯救自己
-        SAVE_HOOK = null;
-        System.gc();
-        // 因为finalize方法的优先级很低，所以暂停了0.5秒等待它执行
-        TimeUnit.MILLISECONDS.sleep(500);
-
-        if (SAVE_HOOK != null) {
-            SAVE_HOOK.isAlive();
-        }else {
-            System.out.println("no, i am dead :( ");
-        }
-
-        // 下面代码一样，但是这次失败了，因为finalize只执行一次
-        SAVE_HOOK = null;
-        System.gc();
-        // 因为finalize方法的优先级很低，所以暂停了0.5秒等待它执行
-        TimeUnit.MILLISECONDS.sleep(500);
-
-        if (SAVE_HOOK != null) {
-            SAVE_HOOK.isAlive();
-        }else {
-            System.out.println("no, i am dead :( ");
-        }
+    public static void main(String[] args) {
+        byte[] allocation1 = new byte[2 * _1MB];
+        byte[] allocation2 = new byte[2 * _1MB];
+        byte[] allocation3 = new byte[2 * _1MB];
+        // 发生一次MinorGC
+        byte[] allocation4 = new byte[4 * _1MB];
     }
 }
-
 ```
-运行结果
+运行结果：
 
+```plain
+Heap
+ def new generation   total 9216K, used 1655K [0x00000007bec00000, 0x00000007bf600000, 0x00000007bf600000)
+  eden space 8192K,  20% used [0x00000007bec00000, 0x00000007bed9de40, 0x00000007bf400000)
+  from space 1024K,   0% used [0x00000007bf400000, 0x00000007bf400000, 0x00000007bf500000)
+  to   space 1024K,   0% used [0x00000007bf500000, 0x00000007bf500000, 0x00000007bf600000)
+ tenured generation   total 10240K, used 4096K [0x00000007bf600000, 0x00000007c0000000, 0x00000007c0000000)
+   the space 10240K,  40% used [0x00000007bf600000, 0x00000007bfa00010, 0x00000007bfa00200, 0x00000007c0000000)
+ Metaspace       used 2994K, capacity 4494K, committed 4864K, reserved 1056768K
+  class space    used 324K, capacity 386K, committed 512K, reserved 1048576K
 ```
-finalize method executed!
-yes, i am still alive :)
-no, i am dead :( 
+看到对象超过了3M，直接进入了tenured generation(老年代)。
+
+### 长期存活的对象将进入老年代
+
+对象在Eden区每gc留下来一次(大小可复制到Survivor区中)，年龄+1，默认是15岁后移到老年代。这个阀值可以通过-XX:MaxTenuringThreshold设置。
+
+```java
+/**
+ * Created by YangFan on 2016/11/2 下午13:58.
+ * <p/>
+ * 1岁后直接进入老年代
+ *
+ * VM参数：-verbose:gc -XX:+PrintGCDetails -Xms20M -Xmx20M -Xmn10M -XX:SurvivorRatio=8 -XX:+UseSerialGC -XX:MaxTenuringThreshold=1
+ */
+public class TenuringThresholdTest {
+    private static final int _1MB = 1024 * 1024;
+
+    public static void main(String[] args) {
+        byte[] allocation1 = new byte[_1MB / 4];
+        byte[] allocation2 = new byte[4 * _1MB];
+        // Eden区放不下了，发起第一次GC，allocation1年龄+1，allocation2因为无法放入Survivor区通过分配担保机制提前进入老年代，allocation3进入新生代Eden区
+        byte[] allocation3 = new byte[4 * _1MB];
+        allocation3 = null;
+        // 发起第二次GC，allocation3被回收，allocation1年龄过大进入老年代，allocation4进入Eden区
+        byte[] allocation4 = new byte[4 * _1MB];
+
+    }
+}
 ```
-### 方法区回收
-Java虚拟机规范中说过可以不要求虚拟机在方法区实现垃圾收集，而且在方法区中进行垃圾收集性价比一般比较低。HotSpot VM永久代的垃圾收集主要回收两部分内容：废弃常量和无用的类。		
-判断一个倡廉是否是“废弃常量”比较简单，而要判定一个类是否是“无用的类”的条件则相对苛刻许多。类需要同时满足下面3个条件才能算是“无用的类”：
+运行结果：
 
-* 该类所有的实例都已经被回收，也就是Java堆中不存在该类的任何实例。
-* 加载该类的ClassLoader已经被回收。
-* 该类对应的java.lang.Class对象没有在任何地方被引用，无法在任何地方通过反射访问该类的方法。
+```plain
+[GC (Allocation Failure) [DefNew: 5843K->783K(9216K), 0.0062294 secs] 5843K->4879K(19456K), 0.0062786 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] 
+[GC (Allocation Failure) [DefNew: 4961K->0K(9216K), 0.0018562 secs] 9057K->4867K(19456K), 0.0018840 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+Heap
+ def new generation   total 9216K, used 4178K [0x00000007bec00000, 0x00000007bf600000, 0x00000007bf600000)
+  eden space 8192K,  51% used [0x00000007bec00000, 0x00000007bf014930, 0x00000007bf400000)
+  from space 1024K,   0% used [0x00000007bf400000, 0x00000007bf400228, 0x00000007bf500000)
+  to   space 1024K,   0% used [0x00000007bf500000, 0x00000007bf500000, 0x00000007bf600000)
+ tenured generation   total 10240K, used 4866K [0x00000007bf600000, 0x00000007c0000000, 0x00000007c0000000)
+   the space 10240K,  47% used [0x00000007bf600000, 0x00000007bfac0ae8, 0x00000007bfac0c00, 0x00000007c0000000)
+ Metaspace       used 3103K, capacity 4494K, committed 4864K, reserved 1056768K
+  class space    used 338K, capacity 386K, committed 512K, reserved 1048576K
+```
 
-在大量使用反射、动态代理、CGLib等ByteCode框架、动态生成JSP以及OSGi这类频繁自定义ClassLoader的场景都需要虚拟机具备类卸载功能，以保证方法区不会溢出。
-
-
-
-## 垃圾回收算法
-下面介绍几种垃圾回收算法的思想及发展过程。
-### 标记-清除算法
-最基础的收集算法是标记-清除(Mark-Sweep)算法，，如同它的名字一样，算法分为`标记`和`清除`两个阶段：首先标记处所有需要回收的对象，在标记完成后统一回收所有被标记的对象。（[标记过程](#对象自我拯救)已经介绍过了）。这种算法主要有两个不足：
-
-* 一个是效率问题，标记和清除两个过程的效率都不高
-* 另一个是空间问题，标记清除之后会产生大量不连续的内存碎片，空间碎片太多可能会导致以后在程序运行中需要分配较大对象时[对象的创建](http://sail-y.github.io/2016/10/28/JVM2/#对象创建)，无法找到足够的连续内存而不得不提前出发另一次垃圾收集动作。标记-清除算法的执行过程如图：
-![](http://images2015.cnblogs.com/blog/801753/201509/801753-20150924224524194-1099144937.png)。
-
-### 复制算法
-复制算法是为了解决效率问题而出现的，**它将可用的内存分为两块，每次只用其中一块，当这一块内存用完了，就将还存活着的对象复制到另外一块上面，然后再把已经使用过的内存空间一次性清理掉**。这样每次只需要对整个半区进行内存回收，内存分配时也不需要考虑内存碎片等复杂情况，只需要移动指针，按照顺序分配即可。复制算法的执行过程如图：
-![](http://images2015.cnblogs.com/blog/801753/201509/801753-20150924224944365-2132315257.png)
-
-只是这个算法代价太高，内存缩小为原来的一半，现在商用虚拟机都采用这种算法来回收“新生代”，IBM研究表明新生代98%的对象“朝生夕死”，所以不需要按1:1来划分内存空间，而是将内存分为一块较大的**Eden**空间和两块较小的**Survivor**空间，每次使用Eden和其中一块Survivor。当回收时，将Eden和Survivor中还存活的对象一次性地复制到另外一块Survivor空间上，最后清理掉Eden和刚才用过的Survivor空间。HotSpot虚拟机默认Eden和Survivor的大小比例是8:1，也就是每次新生代可用内存空间为整个新生代容量的90%，只有10%的内存会被“浪费”。我们没有办法保证每次回收都只有不多余10%的对象存活，所以如果Survivor空间不够用的时候，这些对象将直接通过分配担保机制进入老年代。
-
-### 标记-整理算法
-复制手机算法在对象存活率较高时就要进行较多的复制操作，效率会变低，如果对象存活率太高，还需要额外的空间进行分配担保，所以老年代一般不能直接用这种算法。
-标记-整理算法是先标记对象，让所有存活的对象向一端移动，然后直接清理掉端边界以外的内存。如图：![](http://images2015.cnblogs.com/blog/801753/201509/801753-20150924225908490-419097314.png)
-
-### 分代收集算法
-概括一下Java内存的布局：![](http://images2015.cnblogs.com/blog/801753/201509/801753-20150924230142897-1555721768.png)
-当前的商业虚拟机垃圾收集都采用“分代收集”算法，把Java堆分为新生代和老年代。在新生代中，垃圾收集时都有大批对象死去，只有少量存活，只需复制少量存活的对象成本低。老年代对象存活率高、没有额外的空间进行分配担保，就必须使用“标记-清理”或者“标记-整理”算法来进行回收。
-
-## 垃圾收集器
-垃圾收集器是内存回收的具体实现，JDK1.7之后的HotSpot虚拟机包含的收集器如下图所示：
-![](http://images2015.cnblogs.com/blog/801753/201509/801753-20150925111718131-1534856948.png)
-
-上图展示了7种不作用于不同分代的收集器，如果两个收集器之间存在连线，就说明它们可以搭配使用。虚拟机所处的区域，则表示它是属于新生代收集器还是老年代收集器。
-
-### Serial收集器
-
-Serial收集器是一个单线程的收集器，在进行垃圾收集的时候，会暂停其他所有的工作线程，直到它收集结束。新生代采用*复制*算法，老年代采取*标记-整理*算法。虽然它会暂停用户的工作线程似乎显得很不能接受，**不过它仍然是Client模式下虚拟机的默认新生代收集器**，因为它简单而高效，收集几十兆内存停顿时间可以控制在几十毫秒，这是可以接受的。
-
-### ParNew收集器
-**ParNew收集器是Serial收集器的多线程版本，它是运行在Server模式下虚拟机中首选的新生代收集器**。有个重要的原因是，除了Serial收集器，目前只有它能与CMS收集器配合工作。(CMS是HotSpot在JDK1.5推出的第一款真正意义上的**老年代**并发收集器，第一次实现了垃圾收集线程基本上与用户线程同时工作--意思就是几乎不会暂停用户的工作线程)。ParNew收集器默认开启的收集线程数与CPU数量相同，与Serial相比，CPU数量越多，它的效果才越好。在CPU数量非常多的情况下，可以使用-XX:ParallelGCThreads参数来限制垃圾收集的线程数。
-
-### Parallel Scavenge收集器
-Parallel Scavenge收集器是一个使用复制算法的新生代收集器。它的特点是它的关注点与其他收集器不同，CMS等收集器的关注点是尽可能地缩短垃圾收集时用户线程的停顿时间，而Parallel Scavenge收集器的目标则是达到一个可控制的**吞吐量**。吞吐量就是CPU用于运行用户代码的时间与CPU总消耗时间的比值，即吞吐量=运行用户代码时间/(运行用户代码时间+垃圾收集时间)，假如虚拟机总共运行了100分钟，其中垃圾收集花掉1分钟，那吞吐量就是99%。高吞吐量可以高效率的运用CPU时间，尽快完成程序的运算任务，主要适合在后台运算而不需要太多交互的任务。		
-Parallel Scavenge收集器提供了两个参数用于精确控制吞吐量，分别是控制最大垃圾收集停顿时间的`-XX:MaxGCPauseMillis`参数以及直接设置吞吐量大小的`-XX:GCTimeRatio`参数。Parallel Scavenge收集器还有个参数-XX:+UseAdaptiveSizePolicy值得关注，这个参数打开后虚拟机会根据当前系统的运行情况动态调整新生代大小、Eden与Survivor区的比例、晋升老年代对象年龄，以提供最合适的停顿时间或者最大的吞吐量，这种调节方式成为*GC自适应调节策略*。如果我们不太了解手工优化，交给虚拟机区去优化是个不错的选择。
-
-### Serial Old收集器
-Serial Old是Serial收集器的老年代版本，它是单线程收集器，使用**标记-整理**算法。这个收集器主要也是在Client模式下的虚拟机使用。
-
-### Parallel Old收集器
-Parallel Old是Parallel Scavenge收集器的老年代版本，使用多线程和**标记-整理**算法。由于Parallel Scavenge无法与CMS配合工作，Serial Old在服务端应用上又不给力，JDK1.6后Parallel Old的发布才有了Parallel Scavenge+Parallel Old的应用组合，适合注重吞吐量以及CPU资源敏感的场合。
-
-### CMS收集器
-CMS收集器是一种以获取最短回收停顿时间为目标的收集器。目前很大一部分Java应用集中在互联网站或者B/S系统的服务端上，这类应用尤其重视服务的响应速度，希望系统停顿时间最短，以给用户带来较好的体验。CMS收集器是基于**标记-清除**算法实现的。CMS非常优秀但是有3个缺点：
-
-* 占用CPU资源
-* 并发收集会产生浮动垃圾(收集的同时产生的新垃圾)
-* 内存空间碎片问题
-
-### G1收集器
-G1是一款面向服务端应用的垃圾收集器，是当今收集器技术发展的最前沿成果之一，随JDK1.7 HotSpot发布。G1的目标是替换掉CMS收集器，特点如下：
-
-* 并行(多线程)+并发(与用户线程同时工作)
-* 分代收集
-* 空间整合(不会产生空间碎片)
-* 可预测的停顿
-
-在G1收集器之前的其他收集器进行收集的范围都是整个新生代或者老年代，而G1收集器不再是这样，使用G1收集器时，Java堆的内存布局就与其他收集器有很大差别，它将整个Java堆分为多个大小相等的独立区域（Region），虽然还保留有新生代和老年代的概念，但新生代和老年代不再是物理隔离的了，它们都是一部分Region的集合。
-
-G1收集器跟踪各个Region里面的垃圾堆积的价值大小，在后台维护一个优先列表，每次根据允许的收集时间，优先回收价值最大的Region（这也是Garbage-First名称的由来）。这种使用Region划分内存空间以及有优先级的区域回收方式，保证了G1收集器在有限的时间内可以获取尽可能高的收集效率。
-
+为了适应不同程序的内存状况，Survivor空间中相同年龄的所有对象大小总和大于Survivor空间的一半，年龄大于或等于该年龄的对象就可以直接进入老年代，无须等到“-XX:MaxTenuringThreshold”设置要求的年龄。

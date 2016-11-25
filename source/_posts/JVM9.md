@@ -7,8 +7,8 @@ categories: JVM
 执行引擎是Java虚拟机最核心的组成部分之一，本章将主要从概念模型的角度来讲解虚拟机的方法调用和字节码执行。
 ## 运行时栈帧结构
 栈帧（Stack Frame）是用于支持虚拟机进行方法代用和方法执行的数据结构，它是虚拟机运行时数据区中的[虚拟机栈](http://sail-y.github.io/2016/10/28/JVM2/#Java虚拟机栈)的栈元素。栈帧存储了局部变量表、操作数栈、动态链接、方法出口等信息。每一个方法从调用开始至执行完成的过程，都对应着一个栈帧在虚拟机里面从入栈到出栈的过程。对于执行引擎来说，在活动线程中，只有位于栈顶的栈帧才是有效的，称为当前栈帧，与这个栈帧相关联的方法称为当前方法，执行引擎运行的所有字节码指令都只针对当前栈帧进行操作，在概念模型上，点醒的栈帧结构图如下：
+<!--more-->
 ![](http://7xs4nh.com1.z0.glb.clouddn.com/jvm-9-1.jpeg)
-
 ### 局部变量表
 局部变量表是一组变量值存储空间，用于存放**参数**和**方法内部**定义的局部变量。局部变量表的容量以变量槽（Slot）为最小单位。虚拟机规范中没有明确指明一个Slot应占用的内存空间大小，只是向导性的说到每个Slot都应该能存放一个boolean、byte、char、short、int、float、reference和returnAddress。reference表示对一个对象实例的引用，returnAddress目前很少见了。一个Slot可以存放一个32位以内的数据，那么64位的long和double会被分配两个连续的Slot空间。		
 实例方法第0位索引的Slot默认是用于传递方法所属对象实例的引用（this），然后从1开始是方法参数，参数表分配完后再是方法体内部的变量。		
@@ -43,7 +43,7 @@ public static void main(String[] args) {
 * invokestatic：调用静态方法
 * invokespecial：调用实例构造器<init>方法、私有方法和父类方法
 * invokevirtual：调用所有的虚方法
-* invokeinterface：调用借口方法，会在运行时再确定一个实现此接口的对象
+* invokeinterface：调用接口方法，会在运行时再确定一个实现此接口的对象
 * invokedynamic：先在运行时动态解析出调用点限定符所引用的方法，然后再执行该方法，在此之前的4条调用指令，分派逻辑是固话在Java虚拟机内部的，而invokedynamic指令的分派逻辑是由用户所设定的引导方法决定的。
 
 能invokestatic和invokespecial指令调用的方法，能在解析阶段把符号引用转化为直接引用，这些方法称为非虚方法，其他方法称为虚方法（final除外）。被final修饰的虽然是用invokevirtual调用的，但是它是一个非虚方法。

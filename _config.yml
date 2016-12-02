@@ -79,8 +79,8 @@ disqus_shortname:
 # Extensions
 ## Plugins: https://github.com/hexojs/hexo/wiki/Plugins
 plugins:
-- hexo-generator-feed
-- hexo-generator-sitemap
+# - hexo-generator-feed
+# - hexo-generator-sitemap
 ## Themes: https://github.com/hexojs/hexo/wiki/Themes
 theme: jacman
 stylus:
@@ -90,8 +90,6 @@ exclude_generator:
 # Deployment
 ## Docs: http://hexo.io/docs/deployment.html
 deploy:
-  type: github    #部署类型, 本文使用Github
+  type: git    #部署类型, 本文使用Github
   repository: git@github.com:sail-y/sail-y.github.io.git  #部署的仓库的SSH
   branch: master   #部署分支,一般使用master主分支
-plugins: 
-- hexo-generator-feed   #此插件用于RSS订阅, 以后有时间再介绍

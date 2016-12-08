@@ -78,9 +78,11 @@ disqus_shortname:
 
 # Extensions
 ## Plugins: https://github.com/hexojs/hexo/wiki/Plugins
-plugins:
-# - hexo-generator-feed
-# - hexo-generator-sitemap
+feed:
+  type: atom
+  path: atom.xml
+sitemap:
+    path: sitemap.xml
 ## Themes: https://github.com/hexojs/hexo/wiki/Themes
 theme: jacman
 stylus:

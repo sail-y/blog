@@ -13,7 +13,8 @@ http://callistaenterprise.se/blogg/teknik/2015/04/27/building-microservices-part
 
 我花了不少时间才把这个调通，spring cloud的版本和文档也存在不一致的地方。		
 以下所有的操作都基于Brixton.RC1搭建，须保持所有相关项目都引用此parent。否则会出现各种莫名其妙的错误。
-```
+
+```xml
 <parent>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-parent</artifactId>
@@ -35,7 +36,7 @@ http://cloud.spring.io/spring-cloud-static/spring-cloud.html#_token_relay
 在pom中加入oauth2的依赖。
 
 
-```
+```xml
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-security</artifactId>
@@ -48,8 +49,8 @@ http://cloud.spring.io/spring-cloud-static/spring-cloud.html#_token_relay
 ```
 然后是`Application`
 
-```
 
+```java
 @SpringBootApplication
 @EnableZuulProxy
 //必须添加@EnableResourceServer，Zuul才会进行Token Relay。
@@ -138,7 +139,7 @@ public class Application {
 
 然后在API里同样加入依赖
 
-```
+```xml
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-security</artifactId>
@@ -153,7 +154,7 @@ public class Application {
 
 在application.yml中加入以下配置:
 
-```
+```yaml
 security:
   oauth2:
     resource:
@@ -167,7 +168,8 @@ security:
 ```
 
 `Application.java`中加上`@EnableResourceServer`
-```
+
+```java
 @EnableResourceServer
 public class Application {
 
@@ -189,7 +191,8 @@ public class Application {
 
 配置完了，启动应用。			
 获取access_token。
-```
+
+```bash
 
 curl -s clientId:secretId@localhost:10000/oauth/token  \
  -d grant_type=client_credentials \

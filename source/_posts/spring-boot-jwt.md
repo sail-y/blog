@@ -484,3 +484,4 @@ public class DemoAccessDecisionManager implements AccessDecisionManager {
 
 
 好了，核心配置就是这些，我把这些代码上传github上，有需要的可以下载下来看看。里面的角色和权限都是虚拟数据，应用还需要自行修改代码。
+https://github.com/sail-y/spring-boot-jwt

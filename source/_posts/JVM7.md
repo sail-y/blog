@@ -105,7 +105,7 @@ SourceFile: "TestClass.java"
 `Utf8`就是UTF-8编码的字符串，`Class`、`Methodref`和`Fieldref`则是符号引用。符号引用后面的编号最终也指向了字符串表示他们的值。
 
 ### 访问标志
-常量池结束后，紧接着2个字节代表访问标志(access\_flag)。包括这个Class是类还是借口；是否定义为public类型；是否定义为abstract类型；如果是类的话，是否被声明为final。上面的flags中的值是flags: ACC\_PUBLIC, ACC\_SUPER表示这个类是public的。
+常量池结束后，紧接着2个字节代表访问标志(access\_flag)。包括这个Class是类还是接口；是否定义为public类型；是否定义为abstract类型；如果是类的话，是否被声明为final。上面的flags中的值是flags: ACC\_PUBLIC, ACC\_SUPER表示这个类是public的。
 
 <!--### 类索引、父类引用与接口索引集合
 Class文件中由这三项数据来确定这个类的集成关系。3个2字节无符号数表示，本例中索引指向#3和#4
@@ -116,7 +116,7 @@ Class文件中由这三项数据来确定这个类的集成关系。3个2字节�
 这里说一下方法和字段的描述符。			
 基本类型是取首字母的大写基本上。例如byte就是B,有3个特殊的，long是J，boolean是Z，V是void。			
 L表示对象（例如Ljava/lang/String）。对数组而言，每一维度将使用一个前置的“[”字符来描述。			
->如定义一个为“java.lang.String[][]”类型的二维数组，将被记录为“[[java/lang/String”。
+>如定义一个为“java.lang.String[][]”类型的二维数组，将被记录为“[[Ljava/lang/String”。
 
 描述方法的时候，是先参数列表，后返回值。参数列表在小括号“()”内。例如`()V`表示0个参数，返回值为void，`int test(int[] i, char c)`的描述符为`([IC)I`。
 
@@ -187,7 +187,7 @@ aload\_0、iconst\_1之类的都是字节码指令，下面将字节码操作按
 * invokeinterface调用接口方法
 * invokespecial调用一些需要特殊处理的实例方法，包括实例初始化方法、私有方法和父类方法
 * invokestatic调用类方法
-* invokedynamic指令用于再运行时动态解析出调用点限定符所引用的方法，并执行该方法
+* invokedynamic指令用于在运行时动态解析出调用点限定符所引用的方法，并执行该方法
 
 ### 异常处理指令
 

@@ -4,7 +4,7 @@ tags: [mybatis]
 categories: Java
 ---
 
-######枚举
+## 枚举
 我们在写程序的时候会遇到这种需求。就是我的对象里面有一个属性是一个枚举值，但是mybatis默认是不支持的，官方提供了一个typeHandler可以用枚举的ordinal()来进行存和取的自动转换。把它配置在
 `mybatis-configuration.xml`里。	
 
@@ -15,7 +15,7 @@ categories: Java
 ```
 <!--more-->
 
-######问题
+## 问题
 但是这里有一些问题，必须如果数据库里面存在了别的数字，举个例，有以下枚举
 
 ```
@@ -37,12 +37,12 @@ public enum UserType{
 所以就出现了我们写代码其实并不经常会遇到的`ArrayIndexOutOfBoundsException`
 
 
-######解决方案
+## 解决方案
 为了避免出现这些情况，有个简单的办法就是重写一个`EnumOrdinalTypeHandler`，
 我这里贴一下我的解决方案。		
 首先要为所有枚举写一个接口，为了获取枚举对应的intValue,代码如下。
 
-```
+```java
 public interface CommonEnum<E> {
 
     int getValue();
@@ -102,7 +102,7 @@ public interface CommonEnum<E> {
 上面3个静态方法也可以提取到工具类中，我这里偷了一下懒，也因为我是用的JDK8。		
 枚举实例如下：
 
-```
+```java
 public enum UserType implements CommonEnum<UserType> {
     ADMIN(0), EDITOR(2);
 
@@ -122,8 +122,7 @@ public enum UserType implements CommonEnum<UserType> {
 
 这里就是一个很常见的枚举，重点在下面的typeHandler。
 
-```
-
+```java
 public class CustomEnumTypeHandler<E extends CommonEnum<E>> extends BaseTypeHandler<E> {
 
     private Class<E> type;
@@ -197,7 +196,7 @@ public class CustomEnumTypeHandler<E extends CommonEnum<E>> extends BaseTypeHand
 	
 第一句是插入和更新的时候用到的，第二句是查询的时候用到的，最后把`mybatis-configuration.xml`里的改一下。	
 
-```
+```java
 <typeHandlers>
         <typeHandler handler="xxx.CustomEnumTypeHandler" javaType="com.xxx.user.UserType"/>
 </typeHandlers>

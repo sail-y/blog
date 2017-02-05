@@ -54,7 +54,7 @@ categories: JVM
 准备阶段是正式为类变量分配内存并设置类变量初始值的阶段，这些变量所使用的内存都将在方法区中分配。这个时候进行内存分配仅包括类变量（static），而不包括实例变量。注意初始值是指分配零值
 
 	public static int value = 123;
-变量value在准备阶段过后的初始值是0而不是123，因为这时候尚未开始执行任何Java方法，而把value赋值为123的putstatic指令是程序被编译后，纯防御类构造器<clinit>()方法之中，所以把value赋值为123的动作将在初始化阶段才会执行。
+变量value在准备阶段过后的初始值是0而不是123，因为这时候尚未开始执行任何Java方法，而把value赋值为123的putstatic指令是程序被编译后，存放于类构造器<clinit>()方法之中，所以把value赋值为123的动作将在初始化阶段才会执行。
 **加了final的常量除外，这个放在方法区常量池中的数据将会在准备阶段被赋值**
 
 ### 解析
@@ -160,5 +160,5 @@ sun.misc.Launcher$ExtClassLoader@5cad8086
 null
 /Users/xiaomai/code/IdeaProjects/jvm/out/production/jvm:/Applications/IntelliJ IDEA.app/Contents/lib/idea_rt.jar
 ```
-这里说到一个实践，就是有时候我们想覆盖第三方jar包中的某个类，除了替换jar包中的class文件的方式，还可以直接在项目中编写一个一样包名的类。上面打印在前面的`/Users/xiaomai/code/IdeaProjects/jvm/out/production/jvm`（相当于web项目里WEB-INF下的class文件夹）目录下的class会优先于第三方jar包中的class加载。		
+这里说到一个实践，就是有时候我们想覆盖第三方jar包中的某个类，除了替换jar包中的class文件的方式，还可以直接在项目中编写一个一样包名的类。上面打印在前面的`/Users/xiaomai/code/IdeaProjects/jvm/out/production/jvm`（相当于web项目里WEB-INF下的class文件夹）目录下的class会优先于第三方jar包中的class加载。但是却没有办法写一个同样包名的类来覆盖lib和ext下面的库的类。		
 上面的null，表示ClassLoader就是Bootstrap ClassLoader。

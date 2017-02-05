@@ -4,7 +4,7 @@ tags: [java,JVM]
 categories: JVM
 ---
 
-给一个系统定位问题的时候，知识、经验是关键基础，数据是依据，工具是运用知识处理数据的手短。这里说的数据包括：运行日志、异常堆栈、GC日志、线程快照(threaddump/javacore文件)、堆转储快照(heapdump/hprof文件)等。经常使用适当的虚拟机监控和分析的工具可以加快我们分析数据、定位问题的速度。
+给一个系统定位问题的时候，知识、经验是关键基础，数据是依据，工具是运用知识处理数据的手段。这里说的数据包括：运行日志、异常堆栈、GC日志、线程快照(threaddump/javacore文件)、堆转储快照(heapdump/hprof文件)等。经常使用适当的虚拟机监控和分析的工具可以加快我们分析数据、定位问题的速度。
 
 ## JDK的命令行工具
 JDK的安装目录bin下提供了很多工具，这些工具其实是jdk/lib/tools.jar的包装而已。
@@ -126,7 +126,7 @@ Server is ready.
 ![](http://7xs4nh.com1.z0.glb.clouddn.com/8E34846A-29FF-4342-A1DE-81817C327574.png)
 
 ### jstack：Java堆栈跟踪工具
-jstack(Sstack Trace for Java)命令用于生成虚拟机当前时刻的线程快照(一般称为threaddump或者javacore文件)。『线程快照』就是当前虚拟机内每一条线程正在执行的方法堆栈的集合，生成线程快照的主要目的是定位线程出现长时间停顿的原因，如线程思索、死循环、请求外部资源导致的长时间等待。
+jstack(Sstack Trace for Java)命令用于生成虚拟机当前时刻的线程快照(一般称为threaddump或者javacore文件)。『线程快照』就是当前虚拟机内每一条线程正在执行的方法堆栈的集合，生成线程快照的主要目的是定位线程出现长时间停顿的原因，如线程死锁、死循环、请求外部资源导致的长时间等待。
 
 	jstack [ option ] vmid
 

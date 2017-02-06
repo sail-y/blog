@@ -306,7 +306,7 @@ public class PredicateTest {
     }
 }
 ```
-
+代码测试
 ```java
 public class PredicateTest2 {
     public static void main(String[] args) {
@@ -314,9 +314,12 @@ public class PredicateTest2 {
 
         PredicateTest2 predicateTest2 = new PredicateTest2();
         predicateTest2.conditionFilter(list, i -> i % 2 == 0);
+
+        predicateTest2.conditionFilter2(list, item -> item > 5, item -> item % 2 == 0);
+
     }
 
-    // 以前我们在对数据进行筛选或者处理的时候，一般是单独定义一个方法来进行处理，现在我们只需要把处理逻辑当作参数传入
+    // 以前我们在对数据进行筛选或者处理的时候，一般是单独定义一个方法来进行处理，现在我们只需要把筛选条件当作参数传入
     public void conditionFilter(List<Integer> list, Predicate<Integer> predicate) {
         for (Integer integer : list) {
             if (predicate.test(integer)) {
@@ -324,6 +327,55 @@ public class PredicateTest2 {
             }
         }
     }
+
+    // Predicate的其他方法测试
+    public void conditionFilter2(List<Integer> list, Predicate<Integer> predicate, Predicate<Integer> predicate2) {
+        for (Integer integer : list) {
+            if (predicate.or(predicate2).test(integer)) {
+                System.out.println(integer);
+            }
+        }
+    }
 }
+```
+
+### Supplier
+
+简单测试
+
+```java
+public class SupplierTest {
+    public static void main(String[] args) {
+        Supplier<String> supplier = () -> "hello world";
+        System.out.println(supplier.get());
+    }
+
+}
+```
+java.util.function包下面还有很多函数式接口，无非就是0参数，1个参数，2个参数的接口，用法都是一样的。
+```java
+
+public class BinaryOperatorTest {
+    public static void main(String[] args) {
+        BinaryOperatorTest binaryOperatorTest = new BinaryOperatorTest();
+        System.out.println(binaryOperatorTest.compute(1, 2, (a, b) -> a + b));
+        System.out.println(binaryOperatorTest.compute(1, 2, (a, b) -> a - b));
+        System.out.println("----------------");
+        System.out.println(binaryOperatorTest.getShort("hello123", "world", (a, b) -> a.length() - b.length()));
+
+
+    }
+
+    public int compute(int a, int b, BinaryOperator<Integer> binaryOperator) {
+        return binaryOperator.apply(a, b);
+    }
+
+    public String getShort(String a, String b, Comparator<String> comparator) {
+        return BinaryOperator.minBy(comparator).apply(a, b);
+    }
+
+
+}
+
 ```
 

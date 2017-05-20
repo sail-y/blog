@@ -19,7 +19,7 @@ JWT是一种用于双方之间传递安全信息的简洁的、URL安全的表�
 
 JWT的这些特性使得我们可以完全依赖其无状态的特性提供数据API服务，甚至是创建一个下载流服务。因为JWT并不使用Cookie的，所以你可以使用任何域名提供你的API服务而不需要担心跨域资源共享问题（CORS）。
 大概就是这样：
-![](http://img1.tuicool.com/UfIbUjj.png!web)
+![](http://img1.tuicool.com/UfIbUjj.png)
 
 # Spring Boot集成
 我是勤劳的搬运工，[这应该是翻译老外的东西](http://www.jdon.com/dl/best/json-web-tokens-spring-cloud-microservices.html)，项目地址：https://github.com/thomas-kendall/trivia-microservices。

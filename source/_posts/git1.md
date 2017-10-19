@@ -55,6 +55,8 @@ GitLab要求服务器端采用Gitolite搭建（为了方便安装，现已经用
 
 创建一个文件：`touch test.txt`
 
+## git status
+
 执行`git status`
 
 ```bash
@@ -73,6 +75,8 @@ nothing added to commit but untracked files present (use "git add" to track)
 
 表示当前处于master分支上，并且还没有提交过，test.txt没有被追踪（意思test.txt没有纳入到git的版本控制系统中），然后执行`git add test.txt`加入到暂存区中。
 
+## git add
+
 ```bash
 ➜  mygit git:(master) ✗ git add test.txt 
 ➜  mygit git:(master) ✗ git status 
@@ -85,6 +89,8 @@ Changes to be committed:
 
 	new file:   test.txt
 ```
+
+## git rm --cached
 
 现在test.txt文件就已经被添加到git暂存区了，可以被提交。根据上面的输出提示，我们可以执行`git rm --cached <file>`将文件还原到被修改的状态，现在来试一下。
 
@@ -104,6 +110,8 @@ Untracked files:
 nothing added to commit but untracked files present (use "git add" to track)
 ```
 现在文件又从暂存区恢复到了被修改的状态，接下来我们添加后来测试一下git的提交,git的commit是要求提交必须填写注释的。
+
+## git commit
 
 ``` bash
 mygit git:(master) ✗ git commit
@@ -139,6 +147,11 @@ On branch master
 nothing to commit, working tree clean
 ```
 
+还有一种更加简便的方式：将当前目录下有修改的文件进行`add`操作并提交：
+`git commit -am 'add another line'`
+
+# git log
+
 如果要查看之前的提交，可以用`git log`命令进行查看。
 
 ```bash
@@ -151,13 +164,15 @@ Date:   Fri Sep 15 10:58:10 2017 +0800
 (END)
 ```
 
+## git config
+
 Git的提交id（commit id）是一个摘要值，这个摘要值实际上是个sha1计算出来的。
 
 对于user.name和user.email来说，有3个地方可以设置
 
-1. /etc/gitconfig (几乎不会使用)
+1. /etc/gitconfig (几乎不会使用) `git config --system`
 2. ~/.gitconfig (很常用) `git config --global`
-3. 针对于特定项目的，.git/config文件中 `gut config --local`
+3. 针对于特定项目的，.git/config文件中 `git config --local`
 
 ```bash
 ➜  mygit git:(master) git config
@@ -206,6 +221,8 @@ user.email=test@test.com
 
 现在再改一下test.txt文件：
 
+## git checkout
+
 ```bash
 ➜  mygit git:(master) vi test.txt 
 ➜  mygit git:(master) ✗ git status 
@@ -252,3 +269,153 @@ Date:   Fri Sep 15 10:58:10 2017 +0800
 (END)
 ```
 
+## git rm
+
+现在新创建一个**test2.txt**并提交，那我们将这个文件从已经提交的库里删除应该怎么做呢？
+
+```bash
+➜  mygit git:(master) git rm test2.txt 
+rm 'test2.txt'
+➜  mygit git:(master) ✗ git status
+On branch master
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+	deleted:    test2.txt
+
+➜  mygit git:(master) ✗ ls
+test.txt
+```
+
+执行上面的命令，我们可以看到，不光是`git status`显示文件已经被删除，`ls`命令也看不到了。
+
+```bash
+➜  mygit git:(master) ✗ git reset HEAD test2.txt
+Unstaged changes after reset:
+D	test2.txt
+➜  mygit git:(master) ✗ git status
+On branch master
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	deleted:    test2.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+➜  mygit git:(master) ✗ ls
+test.txt
+➜  mygit git:(master) ✗ git checkout -- test2.txt
+➜  mygit git:(master) git status
+On branch master
+nothing to commit, working tree clean
+➜  mygit git:(master) ls
+test.txt  test2.txt
+```
+
+上面又测试一系列命令，用reset和checkout命令恢复了删除的文件。
+
+下面进行真正的删除，并提交。
+
+```bash
+➜  mygit git:(master) git rm test2.txt 
+rm 'test2.txt'
+➜  mygit git:(master) ✗ git status
+On branch master
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+	deleted:    test2.txt
+
+➜  mygit git:(master) ✗ git commit -m "delete test2.txt"
+[master 5f69c8b] delete test2.txt
+ 1 file changed, 1 deletion(-)
+ delete mode 100644 test2.txt
+➜  mygit git:(master) ls        
+test.txt
+```
+
+再演示系统使用系统命令rm删除文件的情况，不再需要调用reset就可以用checkout恢复。
+
+```bash
+➜  mygit git:(master) echo 'hello world' > test2.txt
+➜  mygit git:(master) ✗ ls
+test.txt  test2.txt
+➜  mygit git:(master) ✗ git add test2.txt 
+➜  mygit git:(master) ✗ git commit -m 'create a file'
+[master 1a7fc91] create a file
+ 1 file changed, 1 insertion(+)
+ create mode 100644 test2.txt
+➜  mygit git:(master) rm test2.txt 
+➜  mygit git:(master) ✗ git status
+On branch master
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	deleted:    test2.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+➜  mygit git:(master) ✗ git checkout -- test2.txt
+➜  mygit git:(master) git status
+On branch master
+nothing to commit, working tree clean
+➜  mygit git:(master) ls
+test.txt  test2.txt
+```
+
+不过也可以由此看出，使用`git rm`，可以直接提交删除文件。而使用系统命令`rm`，需要调用`git add`将删除文件的动作纳入到暂存区才能提交。
+
+
+* git rm：
+	1. 删除了一个文件
+	2. 将被删除的文件纳入到暂存区（stage，index）
+	
+	若想恢复被删除的文件，需要进行两个动作：
+	
+	1. `git reset HEAD test2.txt`，将待删除的问价你从暂存区恢复到工作区
+	2. `git checkout -- test2.txt`，将工作区中的修改丢弃掉
+	
+* rm：
+	将test2.txt删除，这时被删除的文件并未纳入暂存区中。
+	
+## git mv
+
+重命名
+
+```bash
+➜  mygit git:(master)  git mv test.txt test2.txt
+➜  mygit git:(master) ✗ git status
+On branch master
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+	renamed:    test.txt -> test2.txt
+➜  mygit git:(master) ✗ git commit -m 'rename a file'
+[master 7030bca] rename a file
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ rename test.txt => test2.txt (100%)
+```
+	
+## git add .
+
+如果一次修改了多个文件，可以使用`git add .`命令将所有修改纳入到暂存区。
+
+
+## git commit --amend
+
+如果不小心写错了提交消息怎么办？
+
+```bash
+➜  mygit git:(master) ✗ git commit -m "不小心写错了这条消息"
+On branch master
+Changes not staged for commit:
+	modified:   test2.txt
+
+no changes added to commit
+➜  mygit git:(master) ✗ git commit --amend -m '再次修正'
+[master 021a9de] 再次修正
+ Date: Wed Sep 20 16:48:51 2017 +0800
+ 2 files changed, 1 insertion(+), 2 deletions(-)
+ delete mode 100644 test.txt
+➜  mygit git:(master) ✗ git log
+```

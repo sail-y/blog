@@ -96,14 +96,6 @@ To github.com:sail-y/git_demo.git
 
 
 
-### 分支设计技巧
-
-1. Gitflow
-2. 基于Git分支的开发模型：		
-	develop分支（频繁变化的一个分支）	
-	test分支（供测试与产品等人员使用的一个分支，变化不是特别频繁）	
-	master分支（生产发布分支，变化非常不频繁的一个分支）
-	bugfix（hotfix）分支（生产系统中出现了紧急Bug，用于紧急修复的分支）
 
 
 
@@ -133,5 +125,182 @@ origin
   Local ref configured for 'git push':
     master pushes to master (up to date)
 ```
+
+
+上面命令输出表示当前fetch（拉取）的地址是**git@github.com:sail-y/git_demo.git**，推送的地址是**git@github.com:sail-y/git_demo.git**，当前分支是master，远程关联的分支是master。`git pull`默认拉取的是master分支，`git push`默认推送的是master分支，并且已经是最新的了。
+
+
+```bash
+➜  mygit git:(master) ✗ git branch -av
+* master                460b082 add fifth line
+  remotes/origin/master 460b082 add fifth line
+```
+
+加上`-a`参数可以看到远程分支。
+
+```bash
+➜  mygit git:(master) ✗ git commit -am 'update test.txt'
+[master d04325a] update test.txt
+ 1 file changed, 1 insertion(+)
+➜  mygit git:(master) git status
+On branch master
+Your branch is ahead of 'origin/master' by 1 commit.
+  (use "git push" to publish your local commits)
+nothing to commit, working tree clean
+➜  mygit git:(master) git branch -av
+* master                d04325a [ahead 1] update test.txt
+  remotes/origin/master 460b082 add fifth line
+```
+
+接着进行一次提交，`git status`提示本地的分支是超前了远程master分支的1个提交。`git branch -av`显示的结果也是2个分支最后一次提交的id，现在也不一样了。
+
+```bash
+➜  mygit git:(master) git push
+Counting objects: 3, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 323 bytes | 0 bytes/s, done.
+Total 3 (delta 1), reused 0 (delta 0)
+remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+To github.com:sail-y/git_demo.git
+   460b082..d04325a  master -> master
+➜  mygit git:(master) git branch -av
+* master                d04325a update test.txt
+  remotes/origin/master d04325a update test.txt
+```
+
+执行`git push`，将本地的推送到远程，再执行`git branch -av`,origin/master显示的最后一次提交发生了一次改变，我们可以理解为origin/master就是保存了一份远程分支的提交信息，是只读的。
+
+
+### 处理冲突
+
+当另外两个用户同时修改了一个文件，一个人先push，另一个也再push的时候，会被远程拒绝，此时需要处理冲突。
+
+
+```bash
+➜  mygit2 git:(master) git push
+To github.com:sail-y/git_demo.git
+ ! [rejected]        master -> master (fetch first)
+error: failed to push some refs to 'git@github.com:sail-y/git_demo.git'
+hint: Updates were rejected because the remote contains work that you do
+hint: not have locally. This is usually caused by another repository pushing
+hint: to the same ref. You may want to first integrate the remote changes
+hint: (e.g., 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+➜  mygit2 git:(master) git pull
+remote: Counting objects: 3, done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 0), reused 3 (delta 0), pack-reused 0
+Unpacking objects: 100% (3/3), done.
+From github.com:sail-y/git_demo
+   bb880c1..f162a21  master     -> origin/master
+Auto-merging hello.txt
+CONFLICT (content): Merge conflict in hello.txt
+Automatic merge failed; fix conflicts and then commit the result.
+```
+
+`bb880c1..f162a21  master     -> origin/master`
+
+这个输出的意思是远程的master的commit同步到本地的origin/master。
+然后发现有冲突，需要自己编辑文件来解决冲突，调用`git add`来标记冲突已解决，最后提交并push。
+
+```bash
+➜  mygit2 git:(master) ✗ vi hello.txt
+➜  mygit2 git:(master) ✗ git status
+On branch master
+Your branch and 'origin/master' have diverged,
+and have 1 and 1 different commits each, respectively.
+  (use "git pull" to merge the remote branch into yours)
+You have unmerged paths.
+  (fix conflicts and run "git commit")
+  (use "git merge --abort" to abort the merge)
+
+Unmerged paths:
+  (use "git add <file>..." to mark resolution)
+
+	both modified:   hello.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+➜  mygit2 git:(master) ✗ git add hello.txt 
+➜  mygit2 git:(master) git status
+On branch master
+Your branch and 'origin/master' have diverged,
+and have 1 and 1 different commits each, respectively.
+  (use "git pull" to merge the remote branch into yours)
+All conflicts fixed but you are still merging.
+  (use "git commit" to conclude merge)
+
+➜  mygit2 git:(master) git commit
+[master 02b63a9] Merge branch 'master' of github.com:sail-y/git_demo
+```
+
+
+git pull == git fetch + git merge
+
+git fetch表示把远程最新的修改拉回到本地，git merge表示将远程的修改合并到代码库里。
+
+我们可以分别测试一下这2个命令，也就是刚才说的先同步远程master信息到本地的origin/master。
+
+```bash
+➜  mygit2 git:(master) git branch -av
+* master                7660696 [ahead 1] hello23
+  remotes/origin/HEAD   -> origin/master
+  remotes/origin/master 02b63a9 Merge branch 'master' of github.com:sail-y/git_demo
+➜  mygit2 git:(master) git fetch
+remote: Counting objects: 3, done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 0), reused 3 (delta 0), pack-reused 0
+Unpacking objects: 100% (3/3), done.
+From github.com:sail-y/git_demo
+   02b63a9..4ba6b0d  master     -> origin/master
+➜  mygit2 git:(master) git branch -av
+* master                7660696 [ahead 1, behind 1] hello23
+  remotes/origin/HEAD   -> origin/master
+  remotes/origin/master 4ba6b0d change hello.txt   
+```
+
+
+可以看到在执行`git fetch`之前，remotes/origin/master 的最新commit id是02b63a9，执行以后就变成了4ba6b0d。
+
+接着我们来合并
+
+```bash
+➜  mygit2 git:(master) git merge origin/master
+Auto-merging hello.txt
+CONFLICT (content): Merge conflict in hello.txt
+Automatic merge failed; fix conflicts and then commit the result.
+```
+
+就跟之前一样，解决冲突并提交。
+
+
+### 分支设计技巧
+
+1. Gitflow
+2. 基于Git分支的开发模型：		
+	develop分支（频繁变化的一个分支）	
+	test分支（供测试与产品等人员使用的一个分支，变化不是特别频繁）	
+	master分支（生产发布分支，变化非常不频繁的一个分支）
+	bugfix（hotfix）分支（生产系统中出现了紧急Bug，用于紧急修复的分支）
+	
+	
+### Git命令别名
+
+git可以配置简短的字符串来替代长一些的命令，来方便用户。
+
+这里我们配置几个别名。
+
+```bash
+➜  mygit git:(master) git config --global alias.br branch
+➜  mygit git:(master) git config --global alias.st status
+➜  mygit git:(master) git config --global alias.co checkout
+➜  mygit git:(master) git config --global alias.unstage 'reset HEAD'
+```
+	
+这个命令的结果是保存在了`~/.gitconfig`文件中，可以查看到。
+
+执行外部命令需要，也就是非git命令，需要在前面加感叹号。
+
+`➜  mygit git:(master) git config --global alias.ui '!gitk'`
 
 

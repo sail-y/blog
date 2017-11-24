@@ -15,7 +15,7 @@ refspec格式：
 其中的+是可选的，表示强制更新
 典型的push refspec为HEAD:refs/heads/master
 典型的fetch refspec为refs/heads/*:refs/remotes/origin/*
-
+<!--more-->
 
 1. 在缺省情况下，refspec会被git remote add命令所自动生成，Git会获取远端上refs/heads下的所有引用，并将它们写到本地的refs/remotes/origin目录下，这些信息我们都可以在**.git/config**文件里面可以看到。所以，如果远端上有一个master分支，你在本地就可以通过下面几种方式来访问它们的历史记录：
 	
@@ -30,7 +30,7 @@ refspec格式：
 
 表示本地分支和远程分支的关联，我们在创建好分支以后直接执行push是无法推送的，因为git并不知道你要推送到远程的哪一个分支上。
 
-<!--more-->
+
 
 ```bash
 ➜  mygit git:(master) git co -b develop

@@ -351,3 +351,8 @@ To github.com:sail-y/git_substree_child.git
 ![](/img/git/git6-3.png)
 
 
+### --squash
+
+`--squash`会将subtree的所有提交信息合并成parent的一个提交，然后会将这一次合并的提交和parent再次合并，那么就产生了2次合并。`--squash`是为了防止主仓库的提交历史被污染，但是它的使用也有一些问题。
+
+所以在使用`--squash`的时候，我们需要保证要么一直使用，要么一直不使用。

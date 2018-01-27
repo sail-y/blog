@@ -1,5 +1,5 @@
 ---
-title: Netty-元澳门分析(三）
+title: Netty-源码分析(三）
 date: 2017-11-19 17:41:07
 tags: [Netty,java]
 categories: Netty
@@ -189,5 +189,39 @@ clear()方法只会重置readerIndex和writerIndex()，不会产生数据的移�
 ## 引用计数
 
 引用计数是一种通过在某个对象所持有的资源不再被其他对象引用时释放该对象所持有的资源来优化内存使用和性能的技术。Netty在第4版为ByteBuf和ByteBufHolder引入了引用技术技术，它们都实现了`interface ReferenceCounted`。
+
+ReferenceCounted包含了获取引用数量（refCnt），增加计数（retain），减少计数（realse)等API，用过OC的都应该比较熟悉。
+
+**AbstractReferenceCountedByteBuf**的**retain0()**方法是一个死循环，这段代码确保了ByteBuf的引用计数变为0的时候不会再次被使用。里面用了CAS来确保refCnt是原子的修改，没有并发问题。
+
+### AtomicIntegerFieldUpdater VS AtomicInteger
+
+**AbstractReferenceCountedByteBuf**维护了一个**AtomicIntegerFieldUpdater**来修改volatile修饰的refCnt，那么我们都知道JDK5提供了一个**AtomicInteger**来对int进行原子修改，为什么Netty不用我们更熟悉的**AtomicInteger**呢？
+
+AtomicIntegerFieldUpdater要点总结：
+
+1. 更新器更新的必须是int类型变量，不能是其包装类型。
+2. 更新器更新的必须是volatile类型变量，确保线程之间共享变量值的立即**[可见性](http://www.saily.top/2016/12/05/concurrency3/#可见性)**。
+3. 变量不能是static的，必须是实例变量。因为Unsafe.objectFieldOffset()方法不支持静态变量（CAS操作本质上是通过对象实例的偏移量来直接进行赋值）。
+4. 更新器只能修改它课件范围内的变量，因为更新器是通过反射来得到这个变量，如果变量不可见就会报错。
+
+如果要更新的变量是包装类型，我们可以使用AtomicReferenceFieldUpdater来进行更新。
+
+```bash
+if (fieldt != int.class)
+    throw new IllegalArgumentException("Must be integer type");
+
+if (!Modifier.isVolatile(modifiers))
+    throw new IllegalArgumentException("Must be volatile type");
+```
+
+### 为什么不用AtomicInteger
+
+这是Netty为了性能上的考虑，因为使用AtomicInteger，创建多个ByteBuf也会随之创建多个AtomicInteger对象，但是**AtomicIntegerFieldUpdater**是static修饰的，只有一个对象，由此可见Netty对性能的优化也是考虑到了极致。
+
+## 数据 -> ByteBuf
+
+Netty是在AbstractNioChannel的NioByteUnsafe内部类的read()方法将入站数据转换成ByteBuf对象的。
+
 
 

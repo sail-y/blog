@@ -92,6 +92,8 @@ ServerSocketChannel的实现，使用了基于NIO selector的实现接受连接�
 
 在这个方法里才真正创建了一个新的channel，并且绑定到上面。
 
+![](/img/netty/netty6-7.png)
+
 最后调用到doBind方法，在netty中，do开头的基本都是私有方法。
 
 `final ChannelFuture regFuture = initAndRegister();`

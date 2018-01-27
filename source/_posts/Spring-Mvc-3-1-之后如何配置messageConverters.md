@@ -17,7 +17,8 @@ These classes are a replacement for the existing:
 AnnotationMethodHandlerAdapter
 AnnotationMethodHandlerExceptionResolver
 <!--more-->
-> ```xml
+
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:mvc="http://www.springframework.org/schema/mvc"
@@ -31,7 +32,8 @@ AnnotationMethodHandlerExceptionResolver
     <mvc:annotation-driven />
 
 </beans>
-> ```
+```
+
 > The above registers a RequestMappingHandlerMapping, a RequestMappingHandlerAdapter, and an ExceptionHandlerExceptionResolver (among others) in support of processing requests with annotated controller methods using annotations such as @RequestMapping , @ExceptionHandler, and others.
 
 
@@ -57,7 +59,8 @@ This is the complete list of HttpMessageConverters set up by mvc:annotation-driv
 我之前在不知道的时候，使用AnnotationMethodHandlerAdapter 进行配置，结果在有<mvc:annotation-driven />存在的情况下，我自己配置的AnnotationMethodHandlerAdapter 怎么都不起作用，于是去掉了<mvc:annotation-driven />标签，手动注册了AnnotationMethodHandlerAdapter ，和DefaultAnnotationHandlerMapping。结果引发了其他问题，比如文件无法上传的问题。
 
 阅读文档发现Spring提供了基于<mvc:annotation-driven />自定义messageConverters的方法，如下所示：
-```
+
+```xml
 <mvc:annotation-driven conversion-service="conversionService">
     <mvc:message-converters>
         <bean class="org.example.MyHttpMessageConverter"/>
@@ -65,8 +68,10 @@ This is the complete list of HttpMessageConverters set up by mvc:annotation-driv
     </mvc:message-converters>
 </mvc:annotation-driven>
 ```
+
 下面展示我自己的配置
-```
+
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"

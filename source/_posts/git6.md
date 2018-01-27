@@ -25,7 +25,7 @@ categories: git
 
 先在github上创建2个仓库：
 
-https://github.com/sail-y/git\_parent.git		
+https://github.com/sail-y/git_parent.git		
 https://github.com/sail-y/git\_child.git		
 
 

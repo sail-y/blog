@@ -10,19 +10,23 @@ http://docs.docker.com/engine/installation/centos/
 我是centos6.5，内核在 3.8 以上   
 通过以下命令查看您的 CentOS 内核：  
 
-	uname -r
+`uname -r`
 
 如果执行以上命令后，输出的内核版本号低于 3.8，请参考下面的方法来来升级您的 Linux 内核。  
 
 对于 CentOS 6.5 而言，内核版本默认是 2.6。首先，可通过以下命令安装最新内核：  
 
-	rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
-	rpm -ivh http://www.elrepo.org/elrepo-release-6-5.el6.elrepo.noarch.rpm
-	yum -y --enablerepo=elrepo-kernel install kernel-lt
+```bash
+rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+rpm -ivh http://www.elrepo.org/elrepo-release-6-5.el6.elrepo.noarch.rpm
+yum -y --enablerepo=elrepo-kernel install kernel-lt
+```
 
 随后，编辑以下配置文件：  
 	
-	vi /etc/grub.conf
+```bash
+vi /etc/grub.conf
+```
 
 将`default=1`修改为`default=0`。
 <!--more-->
@@ -34,7 +38,7 @@ http://docs.docker.com/engine/installation/centos/
 
 接下来按照官网文档的步骤安装  
 
-```
+```bash
 sudo yum update
 sudo tee /etc/yum.repos.d/docker.repo <<-'EOF'
 [dockerrepo]
@@ -45,7 +49,8 @@ gpgcheck=1
 gpgkey=https://yum.dockerproject.org/gpg
 EOF
 sudo yum install docker-engine
-```  
+```
+
 我在这里遇到了下面的一个问题：
 
 	Error: docker-engine conflicts with docker-io-1.7.1-2.el6.x86_64
@@ -100,13 +105,14 @@ docker默认的images存放路径是/var/lib/docker
 	
 下面还有一个私库的问题，不用localhost访问出现了：
 
-```
+```bash
 unable to ping registry endpoint https://10.168.248.36:5000/v0/
 v2 ping attempt failed with error: Get https://10.168.248.36:5000/v2/: tls: oversized record received with length 20527
  v1 ping attempt failed with error: Get https://10.168.248.36:5000/v1/_ping: tls: oversized record received with length 20527
-
 ```
+
 依然是修改`/etc/sysconfig/docker`里面的other_args，加上部署私库的机器的IP。
 
 	 --insecure-registry=yourip:5000
+	 
 这样就可以正常的push和pull了

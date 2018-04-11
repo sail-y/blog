@@ -1261,3 +1261,14 @@ redis将数据写入AOF缓冲区，单独开一个现场做fsync操作，每秒�
 
 	cat /proc/sys/net/core/somaxconn
 	echo 511 > /proc/sys/net/core/somaxconn
+	
+## Redis总结
+
+如果你的数据量不大，单master就可以容纳，一般来说你的缓存的总量在10G以内就可以，那么建议按照以下架构去部署redis。
+
+redis持久化+备份方案+容灾方案+replication（主从+读写分离）+sentinal（哨兵集群，3个节点，高可用性），可以支撑的数据量在10G以内，可以支撑的写QPS在几万左右，可以支撑的读QPS可以上10万以上（随你的需求，水平扩容slave节点就可以），可用性在99.99%。
+
+
+如果你的数据量很大，比如（国内排名前三的大电商网站，x宝，x东，x宁易购），数据量是很大的，redis cluster多master分布式存储数据，可以水平扩容。如果要支撑更多的数据量，1T+以上没问题，只要扩容master即可，读写QPS分别都达到几十万都没问题，只要扩容master，redis cluster对读写分离支持不太好，需要执行`readonly`才能去slave上读。
+
+Redis Cluster支撑99.99%可用性也没问题，slave -> master的主备切换，冗余slave去进一步提升可用性的方案（每个master挂一个slave，但是整个集群再加个3个slave冗余一下）。

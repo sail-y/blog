@@ -16,6 +16,7 @@ categories: kafka
 	
 	mv zookeeper-3.4.5 zk
 
+<!--more-->
 配置zookeeper相关的环境变量
 
 ```bash
@@ -39,7 +40,7 @@ mkdir data
 cd data
 echo 0 >> myid
 ```
-<!--more-->
+
 
 这是eshop-cache01节点的搭建，另外2个节点，一样的步骤去搭建。
 

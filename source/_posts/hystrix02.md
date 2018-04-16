@@ -10,7 +10,7 @@ categories: spring
 ### 创建Command
 
 一个HystrixCommand或一个HystrixObservableCommand对象，代表了对某个依赖服务发起的一次请求或者调用，构造的时候，可以在构造函数中传入任何需要的参数。
-
+<!--more-->
 HystrixCommand主要用于仅仅会返回一个结果的调用
 HystrixObservableCommand主要用于可能会返回多条结果的调用
 
@@ -111,7 +111,7 @@ queue()，返回一个Future
 observer()，立即订阅Observable，然后启动8大执行步骤，返回一个拷贝的Observable，订阅时理解回调给你结果
 toObservable()，返回一个原始的Observable，必须手动订阅才会去执行8大步骤
 
-![hystrix执行时的8大流程以及内部原理](/hystrix/img/hystrix执行时的8大流程以及内部原理.png)
+![hystrix执行时的8大流程以及内部原理](/img/hystrix/hystrix执行时的8大流程以及内部原理.png)
 
 
 ## Request Cache
@@ -233,60 +233,60 @@ protected String getFallback() {
 
 ### 断路器配置
 
-####  circuitBreaker.enabled
+* circuitBreaker.enabled
 
-控制断路器是否允许工作，包括跟踪依赖服务调用的健康状况，以及对异常情况过多时是否允许触发短路，默认是true。
+	控制断路器是否允许工作，包括跟踪依赖服务调用的健康状况，以及对异常情况过多时是否允许触发短路，默认是true。
+	
+	```java
+	HystrixCommandProperties.Setter()
+	   .withCircuitBreakerEnabled(boolean value)
+	```
 
-```java
-HystrixCommandProperties.Setter()
-   .withCircuitBreakerEnabled(boolean value)
-```
+* circuitBreaker.requestVolumeThreshold
 
-#### circuitBreaker.requestVolumeThreshold
+	设置一个rolling window，滑动窗口中，最少要有多少个请求时，才触发开启短路。举例来说，如果设置为20（默认值），那么在一个sleepWindowInMilliseconds秒的滑动窗口内，如果只有19个请求，即使这19个请求都是异常的，也是不会触发开启短路器的。
+	
+	```java
+	HystrixCommandProperties.Setter()
+	   .withCircuitBreakerRequestVolumeThreshold(int value)
+	```
 
-设置一个rolling window，滑动窗口中，最少要有多少个请求时，才触发开启短路。举例来说，如果设置为20（默认值），那么在一个sleepWindowInMilliseconds秒的滑动窗口内，如果只有19个请求，即使这19个请求都是异常的，也是不会触发开启短路器的。
+* circuitBreaker.sleepWindowInMilliseconds
 
-```java
-HystrixCommandProperties.Setter()
-   .withCircuitBreakerRequestVolumeThreshold(int value)
-```
+	设置在断路之后，需要在多长时间内直接reject请求，然后在这段时间之后，再重新到holf-open状态，尝试允许请求通过以及自动恢复，默认值是5000毫秒。这个值也是设置滑动窗口长度的一个值。
+	
+	```java
+	HystrixCommandProperties.Setter()
+	   .withCircuitBreakerSleepWindowInMilliseconds(int value)
+	```
+	
+* circuitBreaker.errorThresholdPercentage
 
-#### circuitBreaker.sleepWindowInMilliseconds
+	设置异常请求量的百分比，当异常请求达到这个百分比时，就触发打开短路器，默认是50，也就是50%。
+	
+	```java
+	HystrixCommandProperties.Setter()
+	   .withCircuitBreakerErrorThresholdPercentage(int value)
+	```
 
-设置在断路之后，需要在多长时间内直接reject请求，然后在这段时间之后，再重新到holf-open状态，尝试允许请求通过以及自动恢复，默认值是5000毫秒。这个值也是设置滑动窗口长度的一个值。
+* circuitBreaker.forceOpen
 
-```java
-HystrixCommandProperties.Setter()
-   .withCircuitBreakerSleepWindowInMilliseconds(int value)
-```
+	如果设置为true的话，直接强迫打开短路器，相当于是手动短路了，手动降级，默认false。
+	
+	```java
+	HystrixCommandProperties.Setter()
+	   .withCircuitBreakerForceOpen(boolean value)
+	```
 
-#### circuitBreaker.errorThresholdPercentage
+* circuitBreaker.forceClosed
 
-设置异常请求量的百分比，当异常请求达到这个百分比时，就触发打开短路器，默认是50，也就是50%。
-
-```java
-HystrixCommandProperties.Setter()
-   .withCircuitBreakerErrorThresholdPercentage(int value)
-```
-
-#### circuitBreaker.forceOpen
-
-如果设置为true的话，直接强迫打开短路器，相当于是手动短路了，手动降级，默认false。
-
-```java
-HystrixCommandProperties.Setter()
-   .withCircuitBreakerForceOpen(boolean value)
-```
-
-#### circuitBreaker.forceClosed
-
-如果设置为ture的话，直接强迫关闭短路器，相当于是手动停止短路了，手动升级，默认false。
-
-
-```java
-HystrixCommandProperties.Setter()
-   .withCircuitBreakerForceClosed(boolean value)
-```
+	如果设置为ture的话，直接强迫关闭短路器，相当于是手动停止短路了，手动升级，默认false。
+	
+	
+	```java
+	HystrixCommandProperties.Setter()
+	   .withCircuitBreakerForceClosed(boolean value)
+	```
 
 ### 配置实战
 
@@ -420,22 +420,22 @@ public class RejectTest {
 
 我们在调用一些第三方服务或者分布式系统的一些其他服务的时候，如果别的服务不稳定，导致大量超时，我们没有处理好，可能会导致我们自己的服务也会出问题，大量的线程卡死。所以我们必须做超时的控制，给我们的服务提供安全保护的措施。
 
-#### execution.isolation.thread.timeoutInMilliseconds
+1. execution.isolation.thread.timeoutInMilliseconds
 
-手动设置timeout时长，一个command运行超出这个时间，就被认为是timeout，然后将hystrix command标识为timeout，同时执行fallback降级逻辑
+	手动设置timeout时长，一个command运行超出这个时间，就被认为是timeout，然后将hystrix command标识为timeout，同时执行fallback降级逻辑
+	
+	默认是1000，也就是1000毫秒
+	
+	HystrixCommandProperties.Setter()
+	   .withExecutionTimeoutInMilliseconds(int value)
 
-默认是1000，也就是1000毫秒
-
-HystrixCommandProperties.Setter()
-   .withExecutionTimeoutInMilliseconds(int value)
-
-#### execution.timeout.enabled
+2. execution.timeout.enabled
 
 
-控制是否要打开timeout机制，默认是true
-
-HystrixCommandProperties.Setter()
-   .withExecutionTimeoutEnabled(boolean value)
+	控制是否要打开timeout机制，默认是true
+	
+	HystrixCommandProperties.Setter()
+	   .withExecutionTimeoutEnabled(boolean value)
    
    
 ## 总结

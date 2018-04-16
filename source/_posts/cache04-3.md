@@ -10,6 +10,7 @@ categories: storm
 
 1. 大数据不仅仅只是大数据工程师要关注的东西
 2. 大数据也是Java程序员在构建各类系统的时候一种全新的思维，以及架构理念，比如Storm，Hive，Spark，ZooKeeper，HBase，Elasticsearch，等等
+<!--more-->
 
 	Storm：实时缓存热点数据统计->缓存预热->缓存热点数据自动降级
 	
@@ -23,7 +24,7 @@ categories: storm
 	
 	Elasticsearch：海量数据的复杂检索以及搜索引擎的构建，支撑有大量数据的各种企业信息化系统的搜索引擎，电商/新闻等网站的搜索引擎，等等
 	
-<!--more-->
+
 
 ## Apache Storm简介
 

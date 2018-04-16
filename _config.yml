@@ -5,14 +5,14 @@
 # Site
 title: 帆的博客
 subtitle: 扬帆起航
-description: 我的滑板鞋，时尚时尚最时尚
+description: 记录工作和学习中遇到的问题
 author: 杨帆
 email: hyyangfan@gmail.com
 language: zh-CN
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://sail-y.github.io
+url: http://www.saily.top/
 root: /
 permalink: :year/:month/:day/:title/
 tag_dir: tags
@@ -84,7 +84,7 @@ feed:
 sitemap:
     path: sitemap.xml
 ## Themes: https://github.com/hexojs/hexo/wiki/Themes
-theme: jacman
+theme: next
 stylus:
   compress: true
 exclude_generator:

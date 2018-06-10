@@ -113,99 +113,25 @@ hystrix:
             timeoutInMilliseconds: 40000
 ```
 
-这段英文摘自issue中的一个回复，说明了feign的retry逻辑以及相关的关键性配置。
-
->Since Feign has its own retry logic, most of the ribbon.* properties regarding timeouts and retries have little effect on FeignClients. There are some special cases where some properties might effect your FeignClients.
-
->1. If your FeignClient is making a GET request, you can use ribbon.OkToRetryOnAllOperations to disable retries on opperations other than connection exceptions. See the (crazy) logic here https://github.com/spring-cloud/spring-cloud-netflix/blob/1.1.x/spring-cloud-netflix-core/src/main/java/org/springframework/cloud/netflix/feign/ribbon/FeignLoadBalancer.java#L83.
-2. ribbon.ConnectTimeout, ribbon.ReadTimeout, ribbon.FollowRedirects, can also be used to change the behavior of FeignClients.
 
 
->The default FeignClient retry logic can be found in Retryer.Default. This logic will retry the request 5 times. There is also a NEVER_RETRY class included that you can use to never retry the requests.
+在不同的版本中，Spring Cloud的重试机制是比较混乱的，周立老师对重试机制的详细解释：http://www.itmuch.com/spring-cloud-sum/spring-cloud-retry/
 
->Note: By default Hystrix is involved in the picture as well since all FeignClient requests are wrapped in circuit breakers, keep that in mind when dealing with timeouts. A timeout can occur at the hystrix level as well as at the client level.
+Feign本身也具备重试能力，在早期的Spring Cloud中，Feign使用的是 `feign.Retryer.Default#Default()` ，重试5次。但Feign整合了Ribbon，Ribbon也有重试的能力，此时，就可能会导致行为的混乱。
 
-这段英文就跟我上面说的差不多，但是还有最大的坑，是我在文章或者资料里面没有找到的，不知道是不是因为版本的原因，我的Spring Cloud版本是Edgware.SR3。我配置好了以后无论我如何测试，Spring Retry都没有为我进行重试操作。
+Spring Cloud意识到了此问题，因此做了改进，将Feign的重试改为 `feign.Retryer#NEVER_RETRY` ，如需使用Feign的重试，只需使用Ribbon的重试配置即可。因此，对于Camden以及以后的版本，Feign的重试可使用如下属性进行配置：
 
-没办法只能翻源码了，先看看Spring Retry是如何被配置的。
-
-**FeignClientsConfiguration.java**里面对Feign的Retry进行了配置。
-
-```java
-@Bean
-@ConditionalOnMissingBean
-public Retryer feignRetryer() {
-	return Retryer.NEVER_RETRY;
-}
-
-@Bean
-@Scope("prototype")
-@ConditionalOnMissingBean
-public Feign.Builder feignBuilder(Retryer retryer) {
-	return Feign.builder().retryer(retryer);
-}
+```yaml
+ribbon:
+  MaxAutoRetries: 1
+  MaxAutoRetriesNextServer: 2
+  OkToRetryOnAllOperations: false
 ```
 
-大家发现没有，Feign给我们默认配置的Retryer是什么？
-
-```java
-/**
-   * Implementation that never retries request. It propagates the RetryableException.
-*/
-Retryer NEVER_RETRY = new Retryer() {
-	
-	@Override
-	public void continueOrPropagate(RetryableException e) {
-	  throw e;
-	}
-	
-	@Override
-	public Retryer clone() {
-	  return this;
-	}
-};
-```
-
-怪不得一直没有重试！原来无论你在配置文件里怎么配置，feign的重试都没有开启，需要自己去加个配置类。
+相关Issue可参考：https://github.com/spring-cloud/spring-cloud-netflix/issues/467
 
 
-```java
-/**
- * @author yangfan
- * @date 2018/04/12
- */
-@Configuration
-public class FeignConfig {
-    @Bean
-    public Retryer feignRetryer() {
-        return new Retryer.Default();
-    }
-}
-```
-
-
-结合之前对Eureka配置的优化，我们就可以愉快的进行测试了，开启2个服务访问几次，可以发现随机访问。然后干掉一个服务，再次访问，依然没有问题，不会出现500等情况。Feign Retry自动为我们选择了另外可用的服务发送了重试请求。
-
-具体的重试代码，可以查看`SynchronousMethodHandler.invoke()`方法。可以打断点到`retryer.continueOrPropagate(e);`这一行，在没有配置`Retryer`之前，这一行会直接抛出异常，结束重试。在添加自己配置`new Retryer.Default()`以后，他会执行重试逻辑，continue这个循环。
-
-```java
-@Override
-public Object invoke(Object[] argv) throws Throwable {
-RequestTemplate template = buildTemplateFromArgs.create(argv);
-Retryer retryer = this.retryer.clone();
-while (true) {
-  try {
-    return executeAndDecode(template);
-  } catch (RetryableException e) {
-    retryer.continueOrPropagate(e);
-    if (logLevel != Logger.Level.NONE) {
-      logger.logRetry(metadata.configKey(), logLevel);
-    }
-    continue;
-  }
-}
-}
-```
+结合之前对Eureka配置的优化，我们就可以愉快的进行测试了，开启2个服务访问几次，可以发现随机访问。然后干掉一个服务，再次访问，依然没有问题，不会出现500等情况。Feign自动为我们选择了另外可用的服务发送了重试请求。
 
 
 ## 灰度发布方案

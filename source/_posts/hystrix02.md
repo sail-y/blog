@@ -2,7 +2,7 @@
 title: Hystrix流程和原理讲解
 date: 2018-03-26 22:16:48
 tags: [spring-cloud,hystrix]
-categories: spring
+categories: hystrix
 ---
 
 ## Hystrix流程讲解

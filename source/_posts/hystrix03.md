@@ -2,7 +2,7 @@
 title: Hystrix高级进阶
 date: 2018-04-15 10:33:01
 tags: [spring-cloud,hystrix]
-categories: spring
+categories: hystrix
 ---
 
 

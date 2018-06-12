@@ -2,7 +2,7 @@
 title: Hystrix介绍和简单使用
 date: 2018-03-11 12:05:39
 tags: [spring-cloud,hystrix]
-categories: spring
+categories: hystrix
 ---
 
 # Hystrix是什么？

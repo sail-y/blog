@@ -1,7 +1,7 @@
 ---
 title: ElasticSearch03-集群和架构讲解
 tags: [ElasticSearch]
-date: 2018-06-12 08:57:00
+date: 2018-06-20 08:57:00
 categories: ElasticSearch
 ---
 
@@ -12,7 +12,7 @@ categories: ElasticSearch
 Elasticsearch是一套分布式的系统，分布式是为了应对大数据量。它隐藏了复杂的分布式机制
 
 * 分片机制（我们之前随随便便就将一些document插入到es集群中去了，我们有没有care过数据怎么进行分片的，数据到哪个shard中去）
-
+<!--more-->
 * cluster discovery（集群发现机制：在第一篇文章中做那个集群status从yellow转green的实验里，直接启动了第二个es进程，那个进程就作为一个node自动就发现了集群，并且加入了进去，还接受了部分数据，replica shard）
 
 * shard负载均衡（举例，假设现在有3个节点，总共有25个shard要分配到3个节点上去，es会自动进行均匀分配，以保持每个节点的均衡的读写负载请求）
@@ -54,4 +54,4 @@ ES会自动的负载均衡保持每个节点的shard负载均衡。
 
 
 
-
+## ES副本集

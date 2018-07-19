@@ -1,5 +1,5 @@
 ---
-title: Git-简介
+title: Git-简介基本操作
 date: 2017-08-28 21:04:37
 tags: [git]
 categories: git

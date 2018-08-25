@@ -5,6 +5,8 @@ date: 2018-06-03 11:46:54
 categories: ElasticSearch
 ---
 
+此为龙果学院课程学习笔记，记录以后翻看
+
 # 简介
 
 官网：http://www.elastic.co/products/elasticsearch

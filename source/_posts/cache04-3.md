@@ -5,6 +5,7 @@ tags: [storm]
 categories: storm
 ---
 
+此为龙果学院课程笔记，记录以供以后翻看
 
 ## java系统跟大数据技术的关系
 

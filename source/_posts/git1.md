@@ -187,7 +187,7 @@ Config file location
 设置一下:
 
 ```bash
-➜  .git git:(master) git config --local user.name '杨帆'
+➜  .git git:(master) git config --local user.name '帆'
 ➜  .git git:(master) git config --local user.email 'test@test.com'
 ➜  .git git:(master) git config --list
 user.name=yangfan
@@ -199,7 +199,7 @@ core.bare=false
 core.logallrefupdates=true
 core.ignorecase=true
 core.precomposeunicode=true
-user.name=杨帆
+user.name=帆
 user.email=test@test.com
 ```
 
@@ -215,7 +215,7 @@ user.email=test@test.com
 	ignorecase = true
 	precomposeunicode = true
 [user]
-	name = 杨帆
+	name = 帆
 	email = test@test.com
 ```
 
@@ -256,7 +256,7 @@ nothing to commit, working tree clean
 ```bash
 ➜  mygit git:(master) git log
 commit 112c95fdbf9e8361e68b99d8bc9f658923461dc1 (HEAD -> master)
-Author: 杨帆 <test@test.com>
+Author: 帆 <test@test.com>
 Date:   Fri Sep 15 11:30:05 2017 +0800
 
     second commit

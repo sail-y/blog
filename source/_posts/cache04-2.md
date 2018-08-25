@@ -5,6 +5,8 @@ tags: [zookeeper, kafka]
 categories: kafka
 ---
 
+此为龙果学院课程笔记，记录以供以后翻看
+
 # zookeeper集群搭建
 
 将zookeeper-3.4.5.tar.gz拷贝到/usr/local目录下。

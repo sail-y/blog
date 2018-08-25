@@ -5,6 +5,8 @@ tags: [redis]
 categories: 高可用缓存架构实战
 ---
 
+此为龙果学院课程笔记，记录以供以后翻看
+
 # Redis
 
 Redis 是完全开源免费的，遵守BSD协议，是一个高性能的key-value数据库。

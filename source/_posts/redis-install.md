@@ -56,13 +56,20 @@ make && make test && make install
 6. 修改redis.conf中的部分配置为生产环境
 	
 	```bash
-	daemonize	yes							让redis以daemon进程运行
-	pidfile		/var/run/redis_6370.pid 	设置redis的pid文件位置
-	port		6370						设置redis的监听端口号
-	dir 		/var/redis/6370				设置持久化文件的存储位置
-	appendonly  yes	 						打开数据持久化
-	requirepass yourpass	 	  			设置密码
-	bind   		127.0.0.1					设置连接Redis的地址
+	# 让redis以daemon进程运行
+	daemonize	yes							
+	# 设置redis的pid文件位置
+	pidfile		/var/run/redis_6370.pid 
+	# 设置redis的监听端口号
+	port		6370						
+	# 设置持久化文件的存储位置
+	dir 		/var/redis/6370				
+	# 打开数据持久化
+	appendonly  yes	 						
+	# 设置密码
+	requirepass yourpass	 	  			
+	# 设置连接Redis的地址
+	bind   		127.0.0.1					
 	```
 7. 启动redis
 

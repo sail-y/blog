@@ -5,6 +5,8 @@ tags: [多级缓存架构]
 categories: 高可用缓存架构实战
 ---
 
+此为龙果学院课程笔记，记录以供以后翻看
+
 ## 上亿流量的商品详情页系统的多级缓存架构
 
 很多人以为做个缓存其实就是用一下redis访问一下就可以了，这只是简单的缓存使用方式。做复杂的缓存，支撑电商等复杂的场景下的高并发的缓存，遇到的问题非常非常之多，绝对不是说简单的访问一下redis就可以了。
@@ -61,7 +63,7 @@ categories: 高可用缓存架构实战
 
 #### 部署第一个nginx，作为应用层nginx
 
-我这里部署到我机器上192.168.2.201
+我这里部署到我机器上192.168.2.201，教程参考http://jinnianshilongnian.iteye.com/blog/2186270
 
 #### 部署openresty
 
@@ -219,7 +221,7 @@ server {
         content_by_lua_file /usr/hello/lua/hello.lua;  
     }  
 }
-```  
+```
 
 --
 
@@ -412,11 +414,10 @@ requestPath = "/"..requestPath.."?productId="..productId.."&shopId="..shopId
 
 	在`nginx.conf`的http模块里添加：
 	
-	```
+	```lua
 	# 添加nginx本地缓存的支持
 	lua_shared_dict my_cache 128m;
 	```
-
 	修改`hello.conf`：
 	
 	```
@@ -425,7 +426,7 @@ requestPath = "/"..requestPath.."?productId="..productId.."&shopId="..shopId
    	 default_type 'text/html';
     	content_by_lua_file /usr/hello/lua/product.lua;
 	}
-   ```	
+   ```
 	修改lua/product.lua脚本，注意192.168.2.171是我本机的ip，启动了Java项目：
 	
 	```lua

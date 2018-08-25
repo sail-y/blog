@@ -276,13 +276,13 @@ ref: refs/heads/dev
 
 ```text
 commit bd1bf5d33911594452c43f990904f393f6037607 (HEAD -> dev)
-Author: 杨帆 <test@test.com>
+Author: 帆 <test@test.com>
 Date:   Thu Sep 21 15:14:45 2017 +0800
 
     add a new line in test.txt
 
 commit 41c3327a9cf94bcb85799f0253fba0707036292c (master)
-Author: 杨帆 <test@test.com>
+Author: 帆 <test@test.com>
 Date:   Thu Sep 21 14:29:37 2017 +0800
 
     add a new line in test
@@ -292,13 +292,13 @@ Date:   Thu Sep 21 14:29:37 2017 +0800
 
 ```text
 commit 41c3327a9cf94bcb85799f0253fba0707036292c (HEAD -> master)
-Author: 杨帆 <test@test.com>
+Author: 帆 <test@test.com>
 Date:   Thu Sep 21 14:29:37 2017 +0800
 
     add a new line in test
 
 commit c7a801e2d02195a49d6741d61f1e6b471664b3f6
-Author: 杨帆 <test@test.com>
+Author: 帆 <test@test.com>
 Date:   Thu Sep 21 11:06:54 2017 +0800
 ```
 
@@ -318,19 +318,19 @@ Fast-forward
 
 ```text
 commit bd1bf5d33911594452c43f990904f393f6037607 (HEAD -> master, dev)
-Author: 杨帆 <test@test.com>
+Author: 帆 <test@test.com>
 Date:   Thu Sep 21 15:14:45 2017 +0800
 
     add a new line in test.txt
 
 commit 41c3327a9cf94bcb85799f0253fba0707036292c
-Author: 杨帆 <test@test.com>
+Author: 帆 <test@test.com>
 Date:   Thu Sep 21 14:29:37 2017 +0800
 
     add a new line in test
 
 commit c7a801e2d02195a49d6741d61f1e6b471664b3f6
-Author: 杨帆 <test@test.com>
+Author: 帆 <test@test.com>
 Date:   Thu Sep 21 11:06:54 2017 +0800
 
     gitignore

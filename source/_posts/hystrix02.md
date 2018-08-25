@@ -5,6 +5,8 @@ tags: [spring-cloud,hystrix]
 categories: hystrix
 ---
 
+此为龙果学院课程学习笔记，记录以后翻看
+
 ## Hystrix流程讲解
 
 ### 创建Command

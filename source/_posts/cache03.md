@@ -1,6 +1,6 @@
 ---
 title: 高可用缓存架构实战3-Redis高可用集群实战
-date: 2018-02-12 17:27:23
+date: 2018-02-15 17:27:23
 tags: [redis]
 categories: 高可用缓存架构实战
 ---
@@ -54,10 +54,12 @@ Sentinel（哨兵）是Redis 的高可用性解决方案：由一个或多个Sen
 
 哨兵集群必须部署2个以上节点，如果哨兵集群仅仅部署了个2个哨兵实例
 
+```
 +----+         +----+
 | M1 |---------| R1 |
 | S1 |         | S2 |
 +----+         +----+
+```
 
 Configuration: quorum = 1（如果有quorum个哨兵投票选举，就认为master宕机，进行切换）
 
@@ -91,7 +93,7 @@ Configuration: quorum = 2，majority
 	
 2. 脑裂导致的数据丢失
 
-	![](https://images2015.cnblogs.com/blog/27612/201707/27612-20170701230311383-1540605556.png)
+	![](/img/cache/cache03-1.png)
 	脑裂，也就是说，某个master所在机器突然脱离了正常的网络，跟其他slave机器不能连接，但是实际上master还运行着，此时哨兵可能就会认为master宕机了，然后开启选举，将其他slave切换成了master，这个时候，集群里就会有两个master，也就是所谓的脑裂。此时虽然某个slave被切换成了master，但是可能client还没来得及切换到新的master，还继续写向旧master的数据可能也丢失了，因此旧master再次恢复的时候，会被作为一个slave挂到新的master上去，自己的数据会清空，重新从新的master复制数据。
 
 
@@ -861,166 +863,166 @@ repl_backlog_histlen:4565
 
 Redis扩容方法：
 
-1. 加入新master
+##### 加入新master
 
-	203上执行：
+203上执行：
 	
-	```bash
-	mkdir -p /var/redis/7007
-	cd /etc/redis
-	cp 7006.conf 7007.conf
-	vi 7007.conf
-	# 改一下里面的配置
-	port 7007
-	cluster-enabled yes
-	cluster-config-file /etc/redis-cluster/node-7007.conf
-	cluster-node-timeout 15000
-	daemonize	yes							
-	pidfile		/var/run/redis_7007.pid 						
-	dir 		/var/redis/7007		
-	logfile /var/log/redis/7007.log
-	bind 192.168.2.203
-	appendonly yes
+```bash
+mkdir -p /var/redis/7007
+cd /etc/redis
+cp 7006.conf 7007.conf
+vi 7007.conf
+# 改一下里面的配置
+port 7007
+cluster-enabled yes
+cluster-config-file /etc/redis-cluster/node-7007.conf
+cluster-node-timeout 15000
+daemonize	yes							
+pidfile		/var/run/redis_7007.pid 						
+dir 		/var/redis/7007		
+logfile /var/log/redis/7007.log
+bind 192.168.2.203
+appendonly yes
 	
-	cd /etc/init.d/
-	cp redis_7006 redis_7007
-	vi redis_7007
-	# REDISPORT=7007
+cd /etc/init.d/
+cp redis_7006 redis_7007
+vi redis_7007
+# REDISPORT=7007
 	
-	/etc/init.d/redis_7007 start
-	```
+/etc/init.d/redis_7007 start
+```
 	
-	启动完成后，加入master，在201上执行：
+启动完成后，加入master，在201上执行：
 	
-	```bash
-	redis-trib.rb add-node 192.168.2.203:7007 192.168.2.201:7001
-	>>> Adding node 192.168.2.203:7007 to cluster 192.168.2.201:7001
-	>>> Performing Cluster Check (using node 192.168.2.201:7001)
-	S: 158414bbcaa2cf0b9b30a81d2e31fb35ba5b4972 192.168.2.201:7001
-	   slots: (0 slots) slave
-	   replicates cc8a78087798e148b257d2ae33815a25715109e8
-	S: 19f6027db2837cc56dd581a3c826a687d096207a 192.168.2.203:7006
-	   slots: (0 slots) slave
-	   replicates a7d09608d3669b0bff9152dc4c62fc2f8e5c2e43
-	M: cc8a78087798e148b257d2ae33815a25715109e8 192.168.2.202:7004
-	   slots:0-5460 (5461 slots) master
-	   1 additional replica(s)
-	M: 5183cdee2295a07af3e98226887da2a645d979d1 192.168.2.203:7005
-	   slots:10923-16383 (5461 slots) master
-	   1 additional replica(s)
-	S: 8861dda48f95e748bc0e7df2757cdc723c897f28 192.168.2.201:7002
-	   slots: (0 slots) slave
-	   replicates 5183cdee2295a07af3e98226887da2a645d979d1
-	M: a7d09608d3669b0bff9152dc4c62fc2f8e5c2e43 192.168.2.202:7003
-	   slots:5461-10922 (5462 slots) master
-	   1 additional replica(s)
-	[OK] All nodes agree about slots configuration.
-	>>> Check for open slots...
-	>>> Check slots coverage...
-	[OK] All 16384 slots covered.
-	>>> Send CLUSTER MEET to node 192.168.2.203:7007 to make it join the cluster.
-	[OK] New node added correctly.
-	```
+```bash
+redis-trib.rb add-node 192.168.2.203:7007 192.168.2.201:7001
+>>> Adding node 192.168.2.203:7007 to cluster 192.168.2.201:7001
+>>> Performing Cluster Check (using node 192.168.2.201:7001)
+S: 158414bbcaa2cf0b9b30a81d2e31fb35ba5b4972 192.168.2.201:7001
+   slots: (0 slots) slave
+   replicates cc8a78087798e148b257d2ae33815a25715109e8
+S: 19f6027db2837cc56dd581a3c826a687d096207a 192.168.2.203:7006
+   slots: (0 slots) slave
+   replicates a7d09608d3669b0bff9152dc4c62fc2f8e5c2e43
+M: cc8a78087798e148b257d2ae33815a25715109e8 192.168.2.202:7004
+   slots:0-5460 (5461 slots) master
+   1 additional replica(s)
+M: 5183cdee2295a07af3e98226887da2a645d979d1 192.168.2.203:7005
+   slots:10923-16383 (5461 slots) master
+   1 additional replica(s)
+S: 8861dda48f95e748bc0e7df2757cdc723c897f28 192.168.2.201:7002
+   slots: (0 slots) slave
+   replicates 5183cdee2295a07af3e98226887da2a645d979d1
+M: a7d09608d3669b0bff9152dc4c62fc2f8e5c2e43 192.168.2.202:7003
+   slots:5461-10922 (5462 slots) master
+   1 additional replica(s)
+[OK] All nodes agree about slots configuration.
+>>> Check for open slots...
+>>> Check slots coverage...
+[OK] All 16384 slots covered.
+>>> Send CLUSTER MEET to node 192.168.2.203:7007 to make it join the cluster.
+[OK] New node added correctly.
+```
 	
-	确认一下，发现新加入的7007的master没有被分配任何的slot，所以还要需要处理：
+确认一下，发现新加入的7007的master没有被分配任何的slot，所以还要需要处理：
 	
-	```bash
-	redis-trib.rb check 192.168.2.201:7001
-	>>> Performing Cluster Check (using node 192.168.2.201:7001)
-	S: 158414bbcaa2cf0b9b30a81d2e31fb35ba5b4972 192.168.2.201:7001
-	   slots: (0 slots) slave
-	   replicates cc8a78087798e148b257d2ae33815a25715109e8
-	M: 5fe91cff7ab6c20b2e2ccc0815b0a7227119f52e 192.168.2.203:7007
-	   slots: (0 slots) master
-	   0 additional replica(s)
-	S: 19f6027db2837cc56dd581a3c826a687d096207a 192.168.2.203:7006
-	   slots: (0 slots) slave
-	   replicates a7d09608d3669b0bff9152dc4c62fc2f8e5c2e43
-	M: cc8a78087798e148b257d2ae33815a25715109e8 192.168.2.202:7004
-	   slots:0-5460 (5461 slots) master
-	   1 additional replica(s)
-	M: 5183cdee2295a07af3e98226887da2a645d979d1 192.168.2.203:7005
-	   slots:10923-16383 (5461 slots) master
-	   1 additional replica(s)
-	S: 8861dda48f95e748bc0e7df2757cdc723c897f28 192.168.2.201:7002
-	   slots: (0 slots) slave
-	   replicates 5183cdee2295a07af3e98226887da2a645d979d1
-	M: a7d09608d3669b0bff9152dc4c62fc2f8e5c2e43 192.168.2.202:7003
-	   slots:5461-10922 (5462 slots) master
-	   1 additional replica(s)
-	[OK] All nodes agree about slots configuration.
-	>>> Check for open slots...
-	>>> Check slots coverage...
-	[OK] All 16384 slots covered.
-	```	
+```bash
+redis-trib.rb check 192.168.2.201:7001
+>>> Performing Cluster Check (using node 192.168.2.201:7001)
+S: 158414bbcaa2cf0b9b30a81d2e31fb35ba5b4972 192.168.2.201:7001
+   slots: (0 slots) slave
+   replicates cc8a78087798e148b257d2ae33815a25715109e8
+M: 5fe91cff7ab6c20b2e2ccc0815b0a7227119f52e 192.168.2.203:7007
+   slots: (0 slots) master
+   0 additional replica(s)
+S: 19f6027db2837cc56dd581a3c826a687d096207a 192.168.2.203:7006
+   slots: (0 slots) slave
+   replicates a7d09608d3669b0bff9152dc4c62fc2f8e5c2e43
+M: cc8a78087798e148b257d2ae33815a25715109e8 192.168.2.202:7004
+   slots:0-5460 (5461 slots) master
+   1 additional replica(s)
+M: 5183cdee2295a07af3e98226887da2a645d979d1 192.168.2.203:7005
+   slots:10923-16383 (5461 slots) master
+   1 additional replica(s)
+S: 8861dda48f95e748bc0e7df2757cdc723c897f28 192.168.2.201:7002
+   slots: (0 slots) slave
+   replicates 5183cdee2295a07af3e98226887da2a645d979d1
+M: a7d09608d3669b0bff9152dc4c62fc2f8e5c2e43 192.168.2.202:7003
+   slots:5461-10922 (5462 slots) master
+   1 additional replica(s)
+[OK] All nodes agree about slots configuration.
+>>> Check for open slots...
+>>> Check slots coverage...
+[OK] All 16384 slots covered.
+```
 
-2. reshard一些数据过去
+##### reshard一些数据过去
 
-	resharding的意思就是把一部分hash slot从一些node上迁移到另外一些node上。
+resharding的意思就是把一部分hash slot从一些node上迁移到另外一些node上。
 	
-	```bash
-	redis-trib.rb reshard 192.168.2.201:7001
-	How many slots do you want to move (from 1 to 16384)? 4096
-	What is the receiving node ID? 5fe91cff7ab6c20b2e2ccc0815b0a7227119f52e
-	Please enter all the source node IDs.
-	  Type 'all' to use all the nodes as source nodes for the hash slots.
-	  Type 'done' once you entered all the source nodes IDs.
-	Source node #1:cc8a78087798e148b257d2ae33815a25715109e8
-	Source node #2:5183cdee2295a07af3e98226887da2a645d979d1
-	Source node #3:a7d09608d3669b0bff9152dc4c62fc2f8e5c2e43
-	Source node #4:done
-	```
+```bash
+redis-trib.rb reshard 192.168.2.201:7001
+How many slots do you want to move (from 1 to 16384)? 4096
+What is the receiving node ID? 5fe91cff7ab6c20b2e2ccc0815b0a7227119f52e
+Please enter all the source node IDs.
+  Type 'all' to use all the nodes as source nodes for the hash slots.
+  Type 'done' once you entered all the source nodes IDs.
+Source node #1:cc8a78087798e148b257d2ae33815a25715109e8
+Source node #2:5183cdee2295a07af3e98226887da2a645d979d1
+Source node #3:a7d09608d3669b0bff9152dc4c62fc2f8e5c2e43
+Source node #4:done
+```
 	
-	要把之前3个master算上，总共4096个hashslot迁移到新的第四个master上去，
+要把之前3个master算上，总共4096个hashslot迁移到新的第四个master上去，
 
-3. 添加node作为slave
+##### 添加node作为slave
 
-	203执行：
+203执行：
 	
-	```bash
-	mkdir -p /var/redis/7008
-	cd /etc/redis
-	cp 7006.conf 7008.conf
-	vi 7008.conf
-	# 改一下里面的配置
-	port 7008
-	cluster-enabled yes
-	cluster-config-file /etc/redis-cluster/node-7008.conf
-	cluster-node-timeout 15000
-	daemonize	yes							
-	pidfile		/var/run/redis_7008.pid 						
-	dir 		/var/redis/7008		
-	logfile /var/log/redis/7008.log
-	bind 192.168.2.203
-	appendonly yes
+```bash
+mkdir -p /var/redis/7008
+cd /etc/redis
+cp 7006.conf 7008.conf
+vi 7008.conf
+# 改一下里面的配置
+port 7008
+cluster-enabled yes
+cluster-config-file /etc/redis-cluster/node-7008.conf
+cluster-node-timeout 15000
+daemonize	yes							
+pidfile		/var/run/redis_7008.pid 						
+dir 		/var/redis/7008		
+logfile /var/log/redis/7008.log
+bind 192.168.2.203
+appendonly yes
 	
-	cd /etc/init.d/
-	cp redis_7006 redis_7008
-	vi redis_7008
-	# REDISPORT=7008
+cd /etc/init.d/
+cp redis_7006 redis_7008
+vi redis_7008
+# REDISPORT=7008
 	
-	/etc/init.d/redis_7008 start
-	```
+/etc/init.d/redis_7008 start
+```
 	
-	201执行，将新的节点挂载到7004`cc8a78087798e148b257d2ae33815a25715109e8 `上面去：
+201执行，将新的节点挂载到7004`cc8a78087798e148b257d2ae33815a25715109e8 `上面去：
 	
-	```bash
-	redis-trib.rb add-node --slave --master-id cc8a78087798e148b257d2ae33815a25715109e8 192.168.2.203:7008 192.168.2.201:7001
-	```
+```bash
+redis-trib.rb add-node --slave --master-id cc8a78087798e148b257d2ae33815a25715109e8 192.168.2.203:7008 192.168.2.201:7001
+```
 	
-4. 删除node
+##### 删除node
 
-	先用resharding将数据都移除到其他节点，确保node为空之后，才能执行remove操作，之前7007上是4096个slot，所以要移动3次，分别是移动1365个slot到7003，1365个slot到7004，1366个slot到7005上。
+先用resharding将数据都移除到其他节点，确保node为空之后，才能执行remove操作，之前7007上是4096个slot，所以要移动3次，分别是移动1365个slot到7003，1365个slot到7004，1366个slot到7005上。
 	
-	```bash
-	redis-trib.rb reshard 192.168.2.201:7001
-	redis-trib.rb del-node 192.168.2.201:7001 5fe91cff7ab6c20b2e2ccc0815b0a7227119f52e
-	>>> Removing node 5fe91cff7ab6c20b2e2ccc0815b0a7227119f52e from cluster 192.168.2.201:7001
-	>>> Sending CLUSTER FORGET messages to the cluster...
-	>>> SHUTDOWN the node.
-	```
+```bash
+redis-trib.rb reshard 192.168.2.201:7001
+redis-trib.rb del-node 192.168.2.201:7001 5fe91cff7ab6c20b2e2ccc0815b0a7227119f52e
+>>> Removing node 5fe91cff7ab6c20b2e2ccc0815b0a7227119f52e from cluster 192.168.2.201:7001
+>>> Sending CLUSTER FORGET messages to the cluster...
+>>> SHUTDOWN the node.
+```
 	
-	当你清空了一个master的hashslot时，redis cluster就会自动将其slave挂载到其他master上去，这个时候就只要删除掉master就可以了。
+当你清空了一个master的hashslot时，redis cluster就会自动将其slave挂载到其他master上去，这个时候就只要删除掉master就可以了。
 	
 #### Redis Cluster的Slave自动迁移
 
@@ -1203,7 +1205,7 @@ redis cluster的高可用的原理，几乎跟哨兵是类似的
 
 ### fork耗时导致高并发请求延时
 
-RDB和AOF的时候，其实会有生成RDB快照，AOF rewrite，耗费磁盘IO的过程，主进程fork子进程。fork的时候，子进程是需要拷贝父进程的空间内存页表的，也是会耗费一定的时间的，一般来说，如果父进程内存有1个G的数据，那么fork可能会耗费在20ms左右，如果是10G~30G，那么就会耗费20 * 10，甚至20 * 30，也就是几百毫秒的时间。
+RDB和AOF的时候，其实生成RDB快照，AOF rewrite会有耗费磁盘IO的过程，主进程fork子进程。fork的时候，子进程是需要拷贝父进程的空间内存页表的，也是会耗费一定的时间的，一般来说，如果父进程内存有1个G的数据，那么fork可能会耗费在20ms左右，如果是10G~30G，那么就会耗费20 * 10，甚至20 * 30，也就是几百毫秒的时间。
 
 `info stats`中的latest_fork_usec，可以看到最近一次fork的时长。redis单机QPS一般在几万，fork可能一下子就会拖慢几万条操作的请求时长，从几毫秒变成1秒。
 
@@ -1213,7 +1215,7 @@ fork耗时跟redis主进程的内存有关系，一般控制redis的内存在10G
 
 ### AOF的阻塞问题
 
-redis将数据写入AOF缓冲区，单独开一个现场做fsync操作，每秒一次。但是redis主线程会检查两次fsync的时间，如果距离上次fsync时间超过了2秒，那么**数据写请求**就会阻塞。everysec，最多丢失2秒的数据，一旦fsync超过2秒的延时，整个redis就被拖慢。
+redis将数据写入AOF缓冲区，单独开一个线程做fsync操作，每秒一次。但是redis主线程会检查两次fsync的时间，如果距离上次fsync时间超过了2秒，那么**数据写请求**就会阻塞。everysec，最多丢失2秒的数据，一旦fsync超过2秒的延时，整个redis就被拖慢。
 
 优化思路：
 

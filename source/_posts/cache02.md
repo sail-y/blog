@@ -9,7 +9,7 @@ categories: 高可用缓存架构实战
 
 # Redis企业应用实战
 
-上一篇说了redis的持久化的原理和操作，但是在企业中，持久化到底是怎么去用得呢？企业级的数据备份和各种灾难下的数据恢复，是怎么做的呢？
+上一篇说了redis的持久化的原理和操作，但是在企业中，持久化到底是怎么去用的呢？企业级的数据备份和各种灾难下的数据恢复，是怎么做的呢？
 
 ## 企业级的持久化的配置策略
 
@@ -18,12 +18,12 @@ categories: 高可用缓存架构实战
 
 `save 60 10000`：如果你希望尽可能确保，RDB最多丢1分钟的数据，那么尽量就是每隔1分钟都生成一个快照，但是低峰期数据量很少，也没必要这样设置。
 
-10000->生成RDB，1000->RDB，这个根据你自己的应用和业务的数据量，你自己去决定。
+1分内10000个key发生变更->生成RDB，1分内1000->RDB，这个根据应用和业务的数据量，自己去决定。
 
-AOF一定要打开，fsync配置，everysec
+AOF一定要打开，fsync配置`everysec`
 
 `auto-aof-rewrite-percentage 100`: 就是当前AOF大小膨胀到超过上次100%，上次的两倍就重写。
-`auto-aof-rewrite-min-size 64mb`: 至少64m才重写，根据你的数据量来定，16mb，32mb。
+`auto-aof-rewrite-min-size 64mb`: 至少64m才重写，根据你的数据量来定，可改成16mb，32mb等等。
 
 <!--more-->
 
@@ -45,7 +45,7 @@ RDB非常适合做冷备，每次生成之后，就不会再有修改了
 ### 每小时copy一次备份，删除48小时前的数据
 
 
-redis_rdb_copy_hourly.sh
+`redis_rdb_copy_hourly.sh`
 
 ```bash
 #!/bin/sh 
@@ -59,6 +59,8 @@ del_date=`date -d -48hour +%Y%m%d%H`
 rm -rf /usr/local/redis/snapshotting/$del_date
 ```
 
+设置定时任务
+
 ```bash
 chmod 777 redis_rdb_copy_hourly.sh
 crontab -e
@@ -69,7 +71,7 @@ crontab -e
 ### 每天copy一次备份
 
 
-redis_rdb_copy_daily.sh
+`redis_rdb_copy_daily.sh`
 
 ```bash
 #!/bin/sh 
@@ -82,6 +84,8 @@ cp /var/redis/6379/dump.rdb /usr/local/redis/snapshotting/$cur_date
 del_date=`date -d -1month +%Y%m%d`
 rm -rf /usr/local/redis/snapshotting/$del_date
 ```
+
+设置定时任务
 
 ```bash
 chmod 777 redis_rdb_copy_daily.sh
@@ -96,14 +100,14 @@ crontab -e
 
 2. 如果是redis进程所在机器挂掉，那么重启机器后，尝试重启redis进程，尝试直接基于AOF日志文件进行数据恢复
 
-	>AOF没有破损，也是可以直接基于AOF恢复的。
+	>如果AOF没有破损，可以直接基于AOF恢复的。
 
-	>AOF append-only，顺序写入，如果AOF文件破损，那么用redis-check-aof fix
+	>AOF append-only，表示是顺序写入的，如果AOF文件破损，那么用redis-check-aof fix命令修复
 
-3. 如果redis当前最新的AOF和RDB文件出现了丢失/损坏，那么可以尝试基于该机器上当前的某个最新的RDB数据副本进行数据恢复，当前最新的AOF和RDB文件都出现了丢失/损坏到无法恢复，一般不是机器的故障，人为（不小心被删除）。
+3. 如果redis当前最新的AOF和RDB文件出现了丢失/损坏，那么可以尝试基于该机器上当前的某个最新的RDB数据副本进行数据恢复，当前最新的AOF和RDB文件都出现了丢失/损坏到无法恢复，一般不是机器的故障，那可能是人为（不小心被删除）。
 	> 找到RDB最新的一份备份，小时级的备份可以了，小时级的肯定是最新的，copy到redis里面去，就可以恢复到某一个小时的数据（注意如果存在`appendonly.aof`文件，会优先读取`appendonly.aof`文件）		
 	
-	> 虽然你删除了appendonly.aof，但是因为打开了aof持久化，redis就一定会优先基于aof去恢复，即使文件不在，那就创建一个新的空的aof文件。正确的操作如下：停止redis，关闭aof，拷贝rdb备份，重启redis，确认数据恢复，直接在命令行热修改redis配置，打开aof，这个时候redis就会将内存中的数据对应的日志，写入aof文件中。此时aof和rdb两份数据文件的数据就同步了，在redis-cli中执行`config set appendonly yes`热修改配置参数，但是这个时候配置文件中的实际的参数没有被修改，再次停止redis，手动修改配置文件，打开aof的命令，再次重启redis。
+	> 虽然删除了appendonly.aof，但是因为打开了aof持久化，redis就一定会优先基于aof去恢复，即使文件不在，那就会创建一个新的空的aof文件。正确的操作如下：停止redis，关闭aof，拷贝rdb备份，重启redis，确认数据恢复，直接在命令行热修改redis配置，打开aof，这个时候redis就会将内存中的数据对应的日志，写入aof文件中。此时aof和rdb两份数据文件的数据就同步了，在redis-cli中执行`config set appendonly yes`热修改配置参数，但是这个时候配置文件中的实际的参数没有被修改，再次停止redis，手动修改配置文件，打开aof的命令，再次重启redis。
 
 4. 如果当前机器上的所有RDB文件全部损坏，那么从远程的云服务上拉取最新的RDB快照回来恢复数据
 
@@ -114,7 +118,7 @@ crontab -e
 
 ### redis高并发跟整个系统的高并发之间的关系
 
-做高并发的话，不可避免的是需要把底层的缓存搞得很好。如果是用mysql来做高并发，即时做到了，那么也是通过一系列复杂的分库分表，而且mysql高并发一般用在订单系统，事务要求比较高的地方，QPS能到几万，就已经比较高了。
+做高并发的话，不可避免的是需要把底层的缓存做好。如果是用mysql来做高并发，即使做到了，那么也是通过一系列复杂的分库分表，而且mysql高并发一般用在订单系统，事务要求比较高的地方，QPS能到几万，就已经比较高了。
 
 但是如果要做一些电商的商品详情页，真正的超高并发，QPS上十万，甚至是百万，一秒钟百万的请求量，光是redis是不够的，但是redis是整个大型的缓存架构、支撑高并发的架构中，非常重要的一个环节。
 
@@ -128,7 +132,7 @@ crontab -e
 
 单机的redis几乎不太可能说QPS超过10万+，除非一些特殊情况，比如你的机器性能特别好，配置特别高，物理机，维护做的特别好，而且你的整体的操作不是太复杂。
 
-**读写分离**，一般都是用来支撑**读高并发**的，写的请求是比较少的，可能写请求也就一秒钟几千，一两千，大量的请求都是读，一秒钟二十万次读。
+**读写分离**，一般都是用来支撑**读高并发**的，写的请求是比较少的，可能写请求也就一秒钟几千，一两千，大量的请求都是读，比如一秒钟二十万次读。
 
 读写分离：
 
@@ -221,11 +225,11 @@ slave不会过期key，只会等待master过期key。如果master过期了一个
 	
 2. backlog
 
-	backlog主要是用来做全量复制中断候的增量复制的，master node有一个backlog，默认是1MB大小，master node给slave node复制数据时，也会将数据在backlog中同步写一份。
+	backlog主要是用来做全量复制中断后的增量复制的，master node有一个backlog，默认是1MB大小，master node给slave node复制数据时，也会将数据在backlog中同步写一份。
 	
 3. master run_id介绍
 
-	`info server`可以看到master run_id，如果是根据host+ip定位master node，是不靠谱的，如果master node重启或者数据出现了变化，那么slave node应该根据不同的run\_id区分，run\_id不同就做全量复制，如果需要不更改run\_id重启redis，可以使用`redis-cli debug reload`命令。
+	`info server`可以看到master run\_id，如果是根据host+ip定位master node，是不靠谱的，如果master node重启或者数据出现了变化，那么slave node应该根据不同的run\_id区分，run\_id不同就做全量复制，如果需要不更改run\_id重启redis，可以使用`redis-cli debug reload`命令。
 	
 4. psync
 
@@ -245,7 +249,7 @@ rdb生成、rdb通过网络拷贝、slave旧数据的清理、slave aof rewrite�
 
 ##### 增量复制
 
-1. 如果全量复制过程中，master-slave网络连接断掉，那么salve重新连接master时，会触发增量复制。
+1. 如果全量复制过程中，master-slave网络连接断掉，那么slave重新连接master时，会触发增量复制。
 2. master直接从自己的backlog中获取部分丢失的数据，发送给slave node，默认backlog就是1MB。
 3. msater就是根据slave发送的psync中的offset来从backlog中获取数据的。
 

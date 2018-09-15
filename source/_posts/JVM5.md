@@ -17,7 +17,7 @@ categories: JVM
 /**
  * Created by YangFan on 2016/11/1 下午3:34.
  * <p/>
- *  VM 参数: -verbose:gc -XX:+PrintGCDetails -Xms20M -Xmx20M -Xmn10M -XX:SurvivorRatio=8 -XX:UseSerialGC
+ *  VM 参数: -verbose:gc -XX:+PrintGCDetails -Xms20M -Xmx20M -Xmn10M -XX:SurvivorRatio=8 -XX:+UseSerialGC
  */
 public class EdenGC {
     private static final int _1MB = 1024 * 1024;
@@ -57,7 +57,7 @@ Heap
 /**
  * Created by YangFan on 2016/11/1 下午3:34.
  * <p/>
- *  VM 参数: -verbose:gc -XX:+PrintGCDetails -Xms20M -Xmx20M -Xmn10M -XX:SurvivorRatio=8
+ *  VM 参数: -verbose:gc -XX:+PrintGCDetails -XX:PretenureSizeThreshold=3M -Xms20M -Xmx20M -Xmn10M -XX:SurvivorRatio=8 -XX:+UseSerialGC
  */
 public class EdenGC {
     private static final int _1MB = 1024 * 1024;
@@ -74,16 +74,18 @@ public class EdenGC {
 运行结果：
 
 ```plain
+[GC (Allocation Failure) [DefNew: 6357K->554K(9216K), 0.0055719 secs] 6357K->4650K(19456K), 0.0056074 secs] [Times: user=0.00 sys=0.00, real=0.01 secs] 
 Heap
- def new generation   total 9216K, used 1655K [0x00000007bec00000, 0x00000007bf600000, 0x00000007bf600000)
-  eden space 8192K,  20% used [0x00000007bec00000, 0x00000007bed9de40, 0x00000007bf400000)
-  from space 1024K,   0% used [0x00000007bf400000, 0x00000007bf400000, 0x00000007bf500000)
-  to   space 1024K,   0% used [0x00000007bf500000, 0x00000007bf500000, 0x00000007bf600000)
+ def new generation   total 9216K, used 6991K [0x00000007bec00000, 0x00000007bf600000, 0x00000007bf600000)
+  eden space 8192K,  78% used [0x00000007bec00000, 0x00000007bf2490f0, 0x00000007bf400000)
+  from space 1024K,  54% used [0x00000007bf500000, 0x00000007bf58ab68, 0x00000007bf600000)
+  to   space 1024K,   0% used [0x00000007bf400000, 0x00000007bf400000, 0x00000007bf500000)
  tenured generation   total 10240K, used 4096K [0x00000007bf600000, 0x00000007c0000000, 0x00000007c0000000)
-   the space 10240K,  40% used [0x00000007bf600000, 0x00000007bfa00010, 0x00000007bfa00200, 0x00000007c0000000)
- Metaspace       used 2994K, capacity 4494K, committed 4864K, reserved 1056768K
-  class space    used 324K, capacity 386K, committed 512K, reserved 1048576K
+   the space 10240K,  40% used [0x00000007bf600000, 0x00000007bfa00020, 0x00000007bfa00200, 0x00000007c0000000)
+ Metaspace       used 3201K, capacity 4496K, committed 4864K, reserved 1056768K
+  class space    used 350K, capacity 388K, committed 512K, reserved 1048576K
 ```
+
 看到对象超过了3M，直接进入了tenured generation(老年代)。
 
 ### 长期存活的对象将进入老年代

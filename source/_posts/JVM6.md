@@ -9,7 +9,7 @@ categories: JVM
 ## JDK的命令行工具
 JDK的安装目录bin下提供了很多工具，这些工具其实是jdk/lib/tools.jar的包装而已。
 ### jps：虚拟机进城状况工具
-jps(JVM Process Status Tool):可以列出正在运行的虚拟机进城，并显示虚拟机执行主类以及这些进城的本地虚拟机唯一ID(Local Virtual Machine IIdentifier, LVMID)，这个LVMID跟系统里的PID是一致的。
+jps(JVM Process Status Tool):可以列出正在运行的虚拟机进程，并显示虚拟机执行主类以及这些进程的本地虚拟机唯一ID(Local Virtual Machine IIdentifier, LVMID)，这个LVMID跟系统里的PID是一致的。
 <!--more-->
 jps命令格式：
 
@@ -32,7 +32,7 @@ jps执行样例：
 | -v  | 输出虚拟机进城启动时JVM参数|
 
 ### jstat：虚拟机统计信息监视工具
-jstat(JVM Statistics Monitoring Tool)是用于监视虚拟机各种运行状态的命令行工具。它可以显示本地或者远程虚拟机进程中的类装载、内存、垃圾手机、JIT编译等运行数据。
+jstat(JVM Statistics Monitoring Tool)是用于监视虚拟机各种运行状态的命令行工具。它可以显示本地或者远程虚拟机进程中的类装载、内存、垃圾收集、JIT编译等运行数据。
 
 jstat命令格式为：
 

@@ -156,15 +156,28 @@ public class RequestCollapserTest {
 }
 ```
 
-**输出结果**
-
+**CacheController#getProductInfos**
 
 ```java
-GetProductInfosCollapser getProductInfosCollapser = new GetProductInfosCollapser(Long.valueOf(productId));
-            futures.add(getProductInfosCollapser.queue());
+List<Future<ProductInfo>> futures = new ArrayList<>();
+for (String productId : productIds.split(",")) {
+    GetProductInfosCollapser getProductInfosCollapser = new GetProductInfosCollapser(Long.valueOf(productId));
+    futures.add(getProductInfosCollapser.queue());
+}
+
+for (Future<ProductInfo> future : futures) {
+    try {
+        System.out.println("CacheController结果：" + future.get());
+    } catch (InterruptedException | ExecutionException e) {
+        e.printStackTrace();
+    }
+}
 ```
 
 把所有需要查询的商品通过HystrixCollapser发送，HystrixCollapser会为自动为我们讲请求合并以后访问。可能第一次访问的时候会超时，因为开发环境项目刚启动，第一次访问比较慢，第二次就好了。
+
+**输出结果**
+
 
 ```
 createCommand方法执行，params=1,2,3,4,5,6,7
@@ -224,7 +237,7 @@ hystrix command fallback语义，很容易就可以实现多级降级的策略�
 
 伪代码：
 
-```
+```java
 @Override
 protected ProductInfo getFallback() {
 	return new FirstLevelFallbackCommand(productId).execute();
@@ -351,12 +364,12 @@ public class GetProductInfoFacadeCommand extends HystrixCommand<ProductInfo> {
 5. 依赖标准的监控和报警机制来捕获到系统的异常运行情况
 6. 在24小时之后，看一下调用延迟的占比，以及流量，来计算出让短路器生效的最小的配置数字
 7. 直接对hystrix配置进行热修改，然后继续在hystrix dashboard上监控
-8 看看修改配置后的系统表现有没有改善
+8. 看看修改配置后的系统表现有没有改善
 
 
 **最佳方案：**
 
-1. 线程池大小：假设一个请求200ms，QPS30。那么每秒的高峰访问次数 * 99%的访问延时 + buffer = 30 * 0.2 + 4 = 10线程，10个线程每秒处理30次访问应该足够了，每个线程处理3次访问
+1. 线程池大小：假设一个请求200ms，QPS30。那么每秒的高峰访问次数 \* 99%的访问延时 + buffer = 30 \* 0.2 + 4 = 10线程，10个线程每秒处理30次访问应该足够了，每个线程处理3次访问。
 2. timeout：合理的timeout设置应该为300ms，也就是99.5%的访问延时，计算方法是，因为判断每次访问延时最多在250ms（TP99如果是200ms的话），再加一次重试时间50ms，就是300ms，感觉也应该足够了
 
 如果线程池设置得比较死，那么如果某个服务高峰期来了线程不够用，别的服务又占着线程池不用，这样就很不合理了，所以Hystrix也为我们提供了动态调整线程池的方案。
@@ -370,23 +383,21 @@ public class GetProductInfoFacadeCommand extends HystrixCommand<ProductInfo> {
 
 2. maximumSize
 
-	设置线程池的最大大小，只有在设置allowMaximumSizeToDivergeFromCoreSize的时候才能生效
+	设置线程池的最大大小，只有在设置`allowMaximumSizeToDivergeFromCoreSize`的时候才能生效
 	
 	默认是10
 	
-	HystrixThreadPoolProperties.Setter()
-	   .withMaximumSize(int value)
-
+	`HystrixThreadPoolProperties.Setter().withMaximumSize(int value)
+`
 3. keepAliveTimeMinutes
 
 	设置保持存活的时间，单位是分钟，默认是1
 	
-	如果设置allowMaximumSizeToDivergeFromCoreSize为true，那么coreSize就不等于maxSize，此时线程池大小是可以动态调整的，可以获取新的线程，也可以释放一些线程
+	如果设置`allowMaximumSizeToDivergeFromCoreSize`为true，那么coreSize就不等于maxSize，此时线程池大小是可以动态调整的，可以获取新的线程，也可以释放一些线程
 	
 	如果coreSize < maxSize，那么这个参数就设置了一个线程多长时间空闲之后，就会被释放掉
 	
-	HystrixThreadPoolProperties.Setter()
-	   .withKeepAliveTimeMinutes(int value)
+	`HystrixThreadPoolProperties.Setter().withKeepAliveTimeMinutes(int value)`
 
 4. allowMaximumSizeToDivergeFromCoreSize
 
@@ -394,5 +405,4 @@ public class GetProductInfoFacadeCommand extends HystrixCommand<ProductInfo> {
 	
 	默认是false
 	
-	HystrixThreadPoolProperties.Setter()
-	   .withAllowMaximumSizeToDivergeFromCoreSize(boolean value)
+	`HystrixThreadPoolProperties.Setter().withAllowMaximumSizeToDivergeFromCoreSize(boolean value)`

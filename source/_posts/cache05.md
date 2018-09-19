@@ -22,20 +22,23 @@ categories: 高可用缓存架构实战
 
 缓存预热的方案和流程：
 
-1. nginx+lua将访问流量上报到kafka中
+1、 nginx+lua将访问流量上报到kafka中
 
-	要统计出来当前最新的实时的热数据是哪些，我们就得将商品详情页访问的请求对应的流量，日志，实时上报到kafka中。
+要统计出来当前最新的实时的热数据是哪些，我们就得将商品详情页访问的请求对应的流量，日志，实时上报到kafka中。
 
-2.  storm从kafka中消费数据，实时统计出每个商品的访问次数，访问次数基于LRU内存数据结构的存储方案
+2、 storm从kafka中消费数据，实时统计出每个商品的访问次数，访问次数基于LRU内存数据结构的存储方案
 
-	[如何使用storm？](http://www.saily.top/2018/02/20/cache04-3/)
+[如何使用storm？](http://www.saily.top/2018/02/22/cache04-3/)
 
-	优先用内存中的一个LRUMap去存放，性能高，而且没有外部依赖。否则的话，依赖redis，我们就是要防止redis挂掉数据丢失的情况，就不合适了; 用mysql，扛不住高并发读写; 用hbase，hadoop生态系统，维护麻烦，太重了。其实我们只要统计出最近一段时间访问最频繁的商品，然后对它们进行访问计数，同时维护出一个前N个访问最多的商品list即可。计算好每个task大致要存放的商品访问次数的数量，计算出大小。然后构建一个LRUMap，apache commons collections有开源的实现，设定好map的最大大小，就会自动根据LRU算法去剔除多余的数据，保证内存使用限制。即使有部分数据被干掉了，然后下次来重新开始计数，也没关系，因为如果它被LRU算法干掉，那么它就不是热数据，说明最近一段时间都很少访问了。
+优先用内存中的一个LRUMap去存放，这样做性能高，而且没有外部依赖。否则依赖redis的话，我们本就是要防止redis挂掉数据丢失的情况，就不合适了; 用mysql，扛不住高并发读写; 用hbase，hadoop生态系统，维护麻烦，太重了。其实我们只要统计出最近一段时间访问最频繁的商品，然后对它们进行访问计数，同时维护出一个前N个访问最多的商品list即可。计算好每个task大致要存放的商品访问次数的数量，计算出大小。然后构建一个LRUMap，apache commons collections有开源的实现，设定好map的最大大小，就会自动根据LRU算法去剔除多余的数据，保证内存使用限制。即使有部分数据被干掉了，然后下次来重新开始计数，也没关系，因为如果它被LRU算法干掉，那么它就不是热数据，说明最近一段时间都很少访问了。
 	
-3. 每个storm task启动的时候，基于zk分布式锁，将自己的id写入zk同一个节点中
-4. 每个storm task负责完成自己这里的热数据的统计，每隔一段时间，就遍历一下这个map，然后维护一个前3个商品的list，更新这个list
-5. 写一个后台线程，每隔一段时间，比如1分钟，都将排名前3的热数据list，同步到zk中去，存储到这个storm task对应的一个znode中去
-6. 我们需要一个服务，比如说，代码可以跟缓存数据生产服务放一起，但是也可以放单独的服务，这个服务可能部署了很多个实例。每次服务启动的时候，就会去拿到一个storm task的列表，然后根据taskid，一个一个的去尝试获取taskid对应的znode的zk分布式锁。如果能获取到分布式锁的话，那么就将那个storm task对应的热数据的list取出来，然后将数据从mysql中查询出来，写入缓存中，进行缓存的预热。因为是多个服务实例，分布式的并行的去做，都基于zk分布式锁做了协调（没有并发冲突问题），分布式并行缓存的预热，效率很高。
+3、每个storm task启动的时候，基于zk分布式锁，将自己的id写入zk同一个节点中
+
+4、每个storm task负责完成自己这里的热数据的统计，每隔一段时间，就遍历一下这个map，然后维护一个前3个商品的list，更新这个list
+
+5、写一个后台线程，每隔一段时间，比如1分钟，都将排名前3的热数据list，同步到zk中去，存储到这个storm task对应的一个znode中去
+
+6、我们需要一个服务，比如说，代码可以跟缓存数据生产服务放一起，但是也可以放单独的服务，这个服务可能部署了很多个实例。每次服务启动的时候，就会去拿到一个storm task的列表，然后根据taskid，一个一个的去尝试获取taskid对应的znode的zk分布式锁。如果能获取到分布式锁的话，那么就将那个storm task对应的热数据的list取出来，然后将数据从mysql中查询出来，写入缓存中，进行缓存的预热。因为是多个服务实例，分布式的并行的去做，都基于zk分布式锁做了协调（没有并发冲突问题），分布式并行缓存的预热，效率很高。
 
 
 ## 基于nginx+lua完成商品详情页访问流量实时上报kafka的开发
@@ -148,18 +151,24 @@ template.render("product.html", context)
 修改配置：
 
 1. 在nginx.conf中，http部分，加入resolver 8.8.8.8;
-2. 在`/usr/local/kafka/config/server.properties`中加入`advertised.host.name = 192.168.2.201`(ip各自实例的ip)，杀掉并重启三个kafka进程。`nohup bin/kafka-server-start.sh config/server.properties &`
+2. 在`/usr/local/kafka/config/server.properties`中加入`advertised.host.name = 192.168.2.201`(各kafka实例的ip)，杀掉并重启三个kafka进程。`nohup bin/kafka-server-start.sh config/server.properties &`
 3. 启动eshop-cache缓存服务，因为nginx中的本地缓存可能不在了
 
 
-下面试试消息是否上报成功。
+下面试试消息是否上报成功，先创建kafka topic。
 
 ```bash
 bin/kafka-topics.sh --zookeeper 192.168.2.201:2181,192.168.2.202:2181,192.168.2.203:2181 --topic access-log --replication-factor 1 --partitions 1 --create
-bin/kafka-console-consumer.sh --zookeeper 192.168.2.201:2181,192.168.2.202:2181,192.168.2.203:2181 --topic access-log --from-beginning
 ```
 
 访问：http://192.168.2.203/product?productId=1&requestPath=product&shopId=1
+
+启动consumer，订阅access-log主题可以看到消息已经发送过来了。
+
+```bash
+bin/kafka-console-consumer.sh --zookeeper 192.168.2.201:2181,192.168.2.202:2181,192.168.2.203:2181 --topic access-log --from-beginning
+```
+
 
 
 ![cache05_1.png](/img/cache/cache05_1.png)
@@ -200,7 +209,7 @@ https://github.com/sail-y/eshop-cache
 
 **在storm中实时的计算出瞬间出现的热点**
 
-我们可以基于storm来计算热点数据，比如我们将访问的次数排序，将后面95%的数据访问量取一个平均值。这个时候要设定一个阈值，如果超出95%平均值的n倍，例如5倍，我们就认为是瞬间出现的热点数据，判断其可能在短时间内继续扩大的访问量，甚至达到平均值几十倍，或者几百倍，当发现说第一个商品的访问次数，小于平均值的5倍，就安全了，就break掉这个循环。
+我们可以基于storm来计算热点数据，比如我们将访问的次数排序，将后面95%的数据访问量取一个平均值。这个时候要设定一个阈值，如果超出95%平均值的n倍，例如5倍，我们就认为是瞬间出现的热点数据，判断其可能在短时间内继续扩大的访问量，甚至达到平均值几十倍，或者几百倍，当发现第一个商品的访问次数，小于平均值的5倍，就安全了，就break掉这个循环。
 
 **流量分发nginx的分发策略降级**
 
@@ -266,7 +275,7 @@ cache_ngx:set(hot_product_cache_key, "true", 60*60)
 
 
 /usr/servers/nginx/sbin/nginx -s reload
-``` 
+```
 
 ---
 

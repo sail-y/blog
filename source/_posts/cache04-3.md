@@ -208,9 +208,9 @@ jps
 storm jar /usr/local/storm-helloworld-1.0-SNAPSHOT.jar com.roncoo.eshop.storm.WorkCountTopology WorkCountTopology
 ```
 
-![storm_ui_wordcount](storm_ui_wordcount.png)
+![storm_ui_wordcount](/img/cache/storm_ui_wordcount.png)
 
-![storm_ui_wordcount](storm_ui_wordcount_1.png)
+![storm_ui_wordcount](/img/cache/storm_ui_wordcount_1.png)
 
 如何kill掉一个topology：
 

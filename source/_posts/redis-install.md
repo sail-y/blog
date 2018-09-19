@@ -69,7 +69,8 @@ make && make test && make install
 	# 设置密码
 	requirepass yourpass	 	  			
 	# 设置连接Redis的地址
-	bind   		127.0.0.1					
+	# 如果提供给其他机器访问，请在此处设置IP为机器IP
+	bind  127.0.0.1					
 	```
 7. 启动redis
 
@@ -84,7 +85,6 @@ make && make test && make install
 	ps -ef | grep redis
 	```
 9. 让redis跟随系统启动自动启动，在`/etc/init.d/redis_6370`脚本中，最上面，加入两行注释
-
 
 	```text
 	#!/bin/sh

@@ -102,15 +102,15 @@ Hystrix会将每一个依赖服务的调用成功，失败，拒绝，超时，�
 
 对于execute()，直接抛出异常
 对于queue()，返回一个Future，调用get()时抛出异常
-对于observe()，返回一个Observable对象，但是调用subscribe()方法订阅它时，理解抛出调用者的onError方法
-对于toObservable()，返回一个Observable对象，但是调用subscribe()方法订阅它时，理解抛出调用者的onError方法。
+对于observe()，返回一个Observable对象，但是调用subscribe()方法订阅它时，立即抛出调用者的onError方法
+对于toObservable()，返回一个Observable对象，但是调用subscribe()方法订阅它时，立即抛出调用者的onError方法。
 
 ### 不同执行方式走的流程
 
 
 execute()，获取一个Future.get()，然后拿到单个结果
 queue()，返回一个Future
-observer()，立即订阅Observable，然后启动8大执行步骤，返回一个拷贝的Observable，订阅时理解回调给你结果
+observer()，立即订阅Observable，然后启动8大执行步骤，返回一个拷贝的Observable，订阅时立即回调给你结果
 toObservable()，返回一个原始的Observable，必须手动订阅才会去执行8大步骤
 
 ![hystrix执行时的8大流程以及内部原理](/img/hystrix/hystrix执行时的8大流程以及内部原理.png)
@@ -128,6 +128,14 @@ toObservable()，返回一个原始的Observable，必须手动订阅才会去�
 
 HystrixCommand和HystrixObservableCommand都可以指定一个缓存key，然后hystrix会自动进行缓存，接着在同一个request context内，再次访问的时候，就会直接取用缓存。用请求缓存，可以避免重复执行网络请求，多次调用一个command，那么只会执行一次，后面都是直接取缓存。
 
+指定缓存key，只需要实现一个`getCacheKey `方法：
+
+```java
+@Override
+protected String getCacheKey() {
+    return "product_info_" + productId;
+}
+```
 
 ### 实例
 
@@ -196,9 +204,9 @@ public FilterRegistrationBean filterRegistrationBean() {
 
 ```java
 public static void flushCache(Long productId) {
-        HystrixRequestCache.getInstance(KEY,
-                HystrixConcurrencyStrategyDefault.getInstance()).clear(String.valueOf(productId));
-    }
+    HystrixRequestCache.getInstance(KEY,
+            HystrixConcurrencyStrategyDefault.getInstance()).clear(String.valueOf(productId));
+}
 ```
 
 
@@ -427,17 +435,14 @@ public class RejectTest {
 	手动设置timeout时长，一个command运行超出这个时间，就被认为是timeout，然后将hystrix command标识为timeout，同时执行fallback降级逻辑
 	
 	默认是1000，也就是1000毫秒
-	
-	HystrixCommandProperties.Setter()
-	   .withExecutionTimeoutInMilliseconds(int value)
+		`HystrixCommandProperties.Setter().withExecutionTimeoutInMilliseconds(int value)`
 
 2. execution.timeout.enabled
 
 
 	控制是否要打开timeout机制，默认是true
 	
-	HystrixCommandProperties.Setter()
-	   .withExecutionTimeoutEnabled(boolean value)
+	`HystrixCommandProperties.Setter().withExecutionTimeoutEnabled(boolean value)`
    
    
 ## 总结

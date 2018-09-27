@@ -100,4 +100,4 @@ public static <T> Collector<T, ?, Integer> summingInt(ToIntFunction<? super T> m
             (a, b) -> { a[0] += b[0]; return a; },
             a -> a[0], CH_NOID);
 }
-``
+```

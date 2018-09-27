@@ -16,7 +16,7 @@ Supplier<A> supplier();
 BiConsumer<A, T> accumulator();
 BinaryOperator<A> combiner();
 Function<A, R> finisher();
-// 收集器特性，只有3个值，CONCURRENT，UNORDERED，IDENTITY\_FINISH
+// 收集器特性，只有3个值，CONCURRENT，UNORDERED，IDENTITY_FINISH
 // CONCURRENT标识同一个结果容器可以由多个线程多次调用。
 // UNORDERED标识收集器并不承诺保证流的顺序。
 // IDENTITY_FINISH标识finisher函数就是identity函数。
@@ -119,7 +119,7 @@ public final <R, A> R collect(Collector<? super P_OUT, A, R> collector) {
 
 ```java
 public static <T, I> TerminalOp<T, I>
-    makeRef(Collector<? super T, I, ?> collector) {
+makeRef(Collector<? super T, I, ?> collector) {
     Supplier<I> supplier = Objects.requireNonNull(collector).supplier();
     BiConsumer<I, ? super T> accumulator = collector.accumulator();
     BinaryOperator<I> combiner = collector.combiner();
@@ -129,12 +129,12 @@ public static <T, I> TerminalOp<T, I>
         public void begin(long size) {
             state = supplier.get();
         }
-
+	
         @Override
         public void accept(T t) {
             accumulator.accept(state, t);
         }
-
+	
         @Override
         public void combine(ReducingSink other) {
             state = combiner.apply(state, other.state);
@@ -145,7 +145,7 @@ public static <T, I> TerminalOp<T, I>
         public ReducingSink makeSink() {
             return new ReducingSink();
         }
-
+	
         @Override
         public int getOpFlags() {
             return collector.characteristics().contains(Collector.Characteristics.UNORDERED)

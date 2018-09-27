@@ -37,14 +37,13 @@ Remote Procedure Call, 远程过程调用，很多RPC框架是跨语言的。
 >Protocol buffers are Google's language-neutral, platform-neutral, extensible mechanism for serializing structured data – think XML, but smaller, faster, and simpler. You define how you want your data to be structured once, then you can use special generated source code to easily write and read your structured data to and from a variety of data streams and using a variety of languages.
 
 
-Protocol buffers是谷歌提供的语言中立、平台中立，用于序列化结构数据的可扩展的机制，就像XML一样，但是它的体积更小，它的速度更快、更简单。数据结构你只需要定义一次就可以了
-，然后就可以使用生成的各种语言源代码去轻松的读写你的各种结构化数据。
+Protocol buffers是谷歌提供的语言中立、平台中立，用于序列化结构数据的可扩展的机制，就像XML一样，但是它的体积更小，它的速度更快、更简单。数据结构你只需要定义一次就可以了，然后就可以使用生成的各种语言源代码去轻松的读写你的各种结构化数据。
 
 ## 下载
 
 https://github.com/google/protobuf/releases
 
-先下载环境，注意不要下错了，我这里下载`protoc-3.3.0-osx-x86_64.zip`，配置好环境后可执行protoc命令。
+先下载环境，注意不要下错了，因为我是MAC，所以我这里下载`protoc-3.3.0-osx-x86_64.zip`，配置好环境变量后可执行protoc命令。
 
 ## Demo 
 
@@ -53,9 +52,9 @@ https://developers.google.com/protocol-buffers/docs/javatutorial
 然后我们照着官方的demo来写一个。
 
 
-首先需要编写一个`.proto`文件。
+首先需要编写一个`Student.proto`文件。
 
-```
+```proto
 syntax = "proto2";
 
 package com.sail.protobuf;

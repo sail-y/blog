@@ -42,47 +42,50 @@ categories: jdk8
 	
 	```java
 	public class StudentComparator {
-    public int compareStudentByScore(Student student1, Student student2) {
+	
+	public int compareStudentByScore(Student student1, Student student2) {
         return student1.getScore() - student2.getScore();
-    }
+   }
 
-    public int compareStudentByName(Student student1, Student student2) {
-        return student1.getName().compareToIgnoreCase(student2.getName());
-    }
+   public int compareStudentByName(Student student1, Student student2) {
+       return student1.getName().compareToIgnoreCase(student2.getName());
+   }
 }
 	```
 	这里演示了如何使用
+	
 	```java	
 	StudentComparator studentComparator = new StudentComparator();
-    students.sort((o1, o2) -> studentComparator.compareStudentByScore(o1, o2));
-    students.sort(studentComparator::compareStudentByScore);
+   students.sort((o1, o2) -> studentComparator.compareStudentByScore(o1, o2));
+   students.sort(studentComparator::compareStudentByScore);
 	```
 3. 类名::实例方法名
 	新增2个方法
+	
 	```java
 	public int compareByScore(Student student) {
         return this.getScore() - student.getScore();
-    }
+   }
 
-    public int comparByeName(Student student) {
-        return this.getName().compareToIgnoreCase(student.getName());
-    }
+   public int comparByeName(Student student) {
+       return this.getName().compareToIgnoreCase(student.getName());
+   }
 	```
 	然后演示
 	
 	```java
 	//使用lambda表达式和类型对象的实例方法
-    students.sort((o1, o2) -> o1.compareByScore(o2));
-    // 使用方法引用
-	 // 引用的是类型对象的实例方法
-	 // 这种方式的调用，lambda表达式的第一个参数是作为调用方，然后其他的lambda表达式参数都作为实例方法的参数传入
-    students.sort(Student::compareByScore);
+   students.sort((o1, o2) -> o1.compareByScore(o2));
+   // 使用方法引用
+	// 引用的是类型对象的实例方法
+	// 这种方式的调用，lambda表达式的第一个参数是作为调用方，然后其他的lambda表达式参数都作为实例方法的参数传入
+   students.sort(Student::compareByScore);
 	```
 4. 构造方法引用：类名::new
 	
 	```java
 	Supplier<Student> supplier = () -> new Student();
-    // 构造方法引用
-    Supplier<Student> supplier2 = Student::new;
+   // 构造方法引用
+   Supplier<Student> supplier2 = Student::new;
 	```
 	

@@ -189,7 +189,7 @@ Sink完美封装了Stream每一步操作，并给出了[处理->转发]的模式
 
 我们再来考察一下上游的Sink是如何找到下游Sink的。一种可选的方案是在*PipelineHelper*中设置一个Sink字段，在流水线中找到下游Stage并访问Sink字段即可。但Stream类库的设计者没有这么做，而是设置了一个`Sink AbstractPipeline.opWrapSink(int flags, Sink downstream)`方法来得到Sink，该方法的作用是返回一个新的包含了当前Stage代表的操作以及能够将结果传递给downstream的Sink对象。为什么要产生一个新对象而不是返回一个Sink字段？这是因为使用opWrapSink()可以将当前操作与下游Sink（上文中的downstream参数）结合成新Sink。试想只要从流水线的最后一个Stage开始，不断调用上一个Stage的opWrapSink()方法直到最开始（不包括stage0，因为stage0代表数据源，不包含操作），就可以得到一个代表了流水线上所有操作的Sink，用代码表示就是这样：
 
-```Java
+```java
 // AbstractPipeline.wrapSink()
 // 从下游向上游不断包装Sink。如果最初传入的sink代表结束操作，
 // 函数返回时就可以得到一个代表了流水线上所有操作的Sink。
@@ -204,7 +204,7 @@ final <P_IN> Sink<P_IN> wrapSink(Sink<E_OUT> sink) {
 
 现在流水线上从开始到结束的所有的操作都被包装到了一个Sink里，执行这个Sink就相当于执行整个流水线，执行Sink的代码如下：
 
-```Java
+```java
 // AbstractPipeline.copyInto(), 对spliterator代表的数据执行wrappedSink代表的操作。
 final <P_IN> void copyInto(Sink<P_IN> wrappedSink, Spliterator<P_IN> spliterator) {
     ...
@@ -223,9 +223,9 @@ final <P_IN> void copyInto(Sink<P_IN> wrappedSink, Spliterator<P_IN> spliterator
 
 最后一个问题是流水线上所有操作都执行后，用户所需要的结果（如果有）在哪里？首先要说明的是不是所有的Stream结束操作都需要返回结果，有些操作只是为了使用其副作用(*Side-effects*)，比如使用`Stream.forEach()`方法将结果打印出来就是常见的使用副作用的场景（事实上，除了打印之外其他场景都应避免使用副作用），对于真正需要返回结果的结束操作结果存在哪里呢？
 
-> 特别说明：副作用不应该被滥用，也许你会觉得在Stream.forEach()里进行元素收集是个不错的选择，就像下面代码中那样，但遗憾的是这样使用的正确性和效率都无法保证，因为Stream可能会并行执行。大多数使用副作用的地方都可以使用[归约操作](./5-Streams%20API(II).md)更安全和有效的完成。
+> 特别说明：副作用不应该被滥用，也许你会觉得在Stream.forEach()里进行元素收集是个不错的选择，就像下面代码中那样，但遗憾的是这样使用的正确性和效率都无法保证，因为Stream可能会并行执行。大多数使用副作用的地方都可以使用[归约操作](https://github.com/CarpenterLee/JavaLambdaInternals/blob/master/5-Streams%20API(II).md)更安全和有效的完成。
 
-```Java
+```java
 // 错误的收集方式
 ArrayList<String> results = new ArrayList<>();
 stream.filter(s -> pattern.matcher(s).matches())
@@ -240,8 +240,8 @@ List<String>results =
 
 <table width="350px"><tr><td align="center">返回类型</td><td align="center">对应的结束操作</td></tr><tr><td>boolean</td><td>anyMatch() allMatch() noneMatch()</td></tr><tr><td>Optional</td><td>findFirst() findAny()</td></tr><tr><td>归约结果</td><td>reduce() collect()</td></tr><tr><td>数组</td><td>toArray()</td></tr></table>
 
-1. 对于表中返回boolean或者Optional的操作（Optional是存放 一个 值的容器）的操作，由于值返回一个值，只需要在对应的Sink中记录这个值，等到执行结束时返回就可以了。
-2. 对于归约操作，最终结果放在用户调用时指定的容器中（容器类型通过[收集器](./5-Streams%20API(II).md#收集器)指定）。collect(), reduce(), max(), min()都是归约操作，虽然max()和min()也是返回一个Optional，但事实上底层是通过调用[reduce()](./5-Streams%20API(II).md#多面手reduce)方法实现的。
+1. 对于表中返回boolean或者Optional的操作（Optional是存放 一个 值的容器）的操作，由于只返回一个值，只需要在对应的Sink中记录这个值，等到执行结束时返回就可以了。
+2. 对于归约操作，最终结果放在用户调用时指定的容器中（容器类型通过[收集器](https://github.com/CarpenterLee/JavaLambdaInternals/blob/master/5-Streams%20API(II).md#收集器)指定）。collect(), reduce(), max(), min()都是归约操作，虽然max()和min()也是返回一个Optional，但事实上底层是通过调用[reduce()](https://github.com/CarpenterLee/JavaLambdaInternals/blob/master/5-Streams%20API(II).md#多面手reduce)方法实现的。
 3. 对于返回是数组的情况，毫无疑问的结果会放在数组当中。这么说当然是对的，但在最终返回数组之前，结果其实是存储在一种叫做*Node*的数据结构中的。Node是一种多叉树结构，元素存储在树的叶子当中，并且一个叶子节点可以存放多个元素。这样做是为了并行执行方便。关于Node的具体结构，我们会在下一节探究Stream如何并行执行时给出详细说明。
 
 ## 结语

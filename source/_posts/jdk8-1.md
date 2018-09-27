@@ -35,7 +35,7 @@ new Thread(() -> {
 示例如下：
 
 ```java
-List<Integer> list = Arrays.assList(1,2,3,4,5);
+List<Integer> list = Arrays.asList(1,2,3,4,5);
 // foreach语法
 for(Integer i : list) {
 	System.out.println(i);	
@@ -60,7 +60,7 @@ default void forEach(Consumer<? super T> action) {
 
 ```
 接受了一个Consumer参数，这个接口是JDK8新增的一个函数式接口。			
-什么是函数式接口？
+## 什么是函数式接口？
 
 1. 一个接口，有且只有一个抽象方法，这个接口就称为函数式接口。
 2. 如果我们在某个接口上声明了@FunctionalInterface注解，那么编译器就会按照函数式接口的定义来要求该接口。
@@ -111,7 +111,7 @@ public class Test {
 ## Lambda表达式的作用
 
 Lambda表达式为Java添加了缺失的函数式编程特性，使我们能将函数当作一等公民看待。		
-在将函数作为一等公民的语言中，Lambda表达式是类型是函数。但在Java中，Lambda表达式是对象，他们必须依附于一类特别的对象类型----函数式接口（functional interface）。
+在将函数作为一等公民的语言中，Lambda表达式的类型是函数。但在Java中，Lambda表达式是对象，他们必须依附于一类特别的对象类型----函数式接口（functional interface）。
 
 
 ### 例子
@@ -127,7 +127,7 @@ list.stream().map(String::toUpperCase).forEach(System.out::println);
 ```java
 Function<String, String> function = String::toUpperCase;
 System.out.println(function.apply("hello"));
-``` 
+```
 
 那么对象会被当做lambda表达式的第一个参数传入，上面的代码就相当于"hello".toUpperCase();
 

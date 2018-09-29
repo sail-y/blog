@@ -43,6 +43,7 @@ SelectionKey key = channel.register(selector, Selectionkey.OP_READ);
 register()方法会返回一个SelectionKey 对象，这个对象代表了注册到该Selector的通道。 
 与Selector一起使用时，Channel必须处于非阻塞模式下。这意味着不能将FileChannel与Selector一起使用，因为FileChannel不能切换到非阻塞模式。而套接字通道都可以。 
 register()方法的第二个参数是一个“interest集合”，意思是在通过Selector监听Channel时对什么事件感兴趣。可以监听四种不同类型的事件，这四种事件用SelectionKey的四个常量来表示： 
+
 1. Connect事件-SelectionKey.OP_CONNECT 
 2. Accept事件-SelectionKey.OP_ACCEPT 
 3. Read事件-SelectionKey.OP_READ 
@@ -80,6 +81,56 @@ selectionKey.isReadable();
 selectionKey.isWritable();
 ```
 
+### Channel
+
+从SelectionKey访问Channel：
+
+```java
+Channel channel = selectionKey.channel();
+```
+
+### Selector
+
+从SelectionKey访问Selector：
+
+```json
+Selector selector = selectionKey.selector();
+```
+
+### 附加的对象
+
+可以将一个对象或者更多信息附加到SelectionKey上，这样就能方便的识别某个给定的通道。例如：
+
+```java
+selectionKey.attach(theObject);
+Object attachedObj = selectionKey.attachment();
+```
+
+还可以在向Selector注册Channel的时候附加对象，例如：
+
+```java
+SelectionKey key = channel.register(selector, SelectionKey.OP_READ, theObject);
+```
+
+## 选择通道
+
+向Selector注册了通道以后，可以用select()方法返回你所感兴趣的事件（如连接、接受、读或写）已经准备就绪的那些通道。select()方法有几个重载：
+
+**int select()** 		
+阻塞到至少有一个通道在你注册的事件上就绪了。 
+	
+**int select(long timeout)** 		
+和select()一样，除了最长会阻塞timeout毫秒。 
+
+**int selectNow()** 		
+不会阻塞，不管什么通道就绪都立刻返回。如果自从前一次选择操作后，没有通道变成可选择的，则返回零。 
+
+select()方法返回的int值表示自上次调用select()方法后有多少通道已经就绪。 
+调用了select()方法，并且返回值表明有一个或更多个通道就绪了，然后可以调用selectedKeys()方法，访问就绪通道，例如：
+
+```java
+Set selectedKeys = selector.selectedKeys();
+```
 
 ## 实战
 

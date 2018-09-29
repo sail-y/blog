@@ -89,7 +89,7 @@ Netty ByteBuf所提供的3种缓冲区类型：
 
 堆上的ByteBuf，这是最常用的类型，ByteBuf将数据存储到JVM的堆空间中， 并且将实际的数据存放到byte array中来实现。		
 
-优点：由于数据是存储在JVM的堆红，因此可以快速的创建与快速的释放，并且它提供了直接访问内部字节数组的方法。
+优点：由于数据是存储在JVM的堆中，因此可以快速的创建与快速的释放，并且它提供了直接访问内部字节数组的方法。
 
 缺点：每次读写数据时，都需要先将数据复制到直接缓冲区中再进行网络传输。
 
@@ -124,7 +124,7 @@ DirectBuffer（直接缓冲区）
 
 Composite Buffer（复合缓冲区）
 
-复合缓冲区为多个ByteBuf提供一个聚合视图。在这里你可以根据需要添加或者删除ByteBuf实例， 是一个JDK的ByteBuffer实全缺失的特性。
+复合缓冲区为多个ByteBuf提供一个聚合视图。在这里你可以根据需要添加或者删除ByteBuf实例， 是一个JDK的ByteBuffer实现缺失的特性。
 
 ```java
 public class ByteBufTest2 {
@@ -203,7 +203,7 @@ AtomicIntegerFieldUpdater要点总结：
 1. 更新器更新的必须是int类型变量，不能是其包装类型。
 2. 更新器更新的必须是volatile类型变量，确保线程之间共享变量值的立即**[可见性](http://www.saily.top/2016/12/05/concurrency3/#可见性)**。
 3. 变量不能是static的，必须是实例变量。因为Unsafe.objectFieldOffset()方法不支持静态变量（CAS操作本质上是通过对象实例的偏移量来直接进行赋值）。
-4. 更新器只能修改它课件范围内的变量，因为更新器是通过反射来得到这个变量，如果变量不可见就会报错。
+4. 更新器只能修改它可见范围内的变量，因为更新器是通过反射来得到这个变量，如果变量不可见就会报错。
 
 如果要更新的变量是包装类型，我们可以使用AtomicReferenceFieldUpdater来进行更新。
 

@@ -8,7 +8,7 @@ categories: Netty
 # Thrift
 
 * Thrift最初由Facebook研发，主要用于各个服务之间的RPC通信，**支持跨语言**，常用的语言比如C++，Java，Python，PHP，Ruby，Erlang，Perl，Haskell，C#，Cocoa，JavaScript，Node.js，SmallTalk and OCaml都支持。
-* Thrift是一个典型的CS（客户端/服务端）结构，客户端和服务端可以使用不同语言开发。既然客户端和服务端能使用不同的语言开发，那么一定就要有一种中间语言来关联客户端和服务端的语言，这种语言就是**IDL（Interface Description L anguage）**。
+* Thrift是一个典型的CS（客户端/服务端）结构，客户端和服务端可以使用不同语言开发。既然客户端和服务端能使用不同的语言开发，那么一定就要有一种中间语言来关联客户端和服务端的语言，这种语言就是**IDL（Interface Description Language）**。
 * Thrift不支持无符号类型，因为很多变成语言不存在无符号类型，比如Java
 
 ## Thrift数据类型
@@ -33,73 +33,74 @@ categories: Netty
 
 ## Thrift工作原理
 
-* 如何实现多语言之间的通信？
-	* 数据传输使用socket（多重语言均支持），数据再已特定的格式（string等）发送，接受方语言进行解析。
-	* 定义thrift的文件，由thrift文件（IDL）生成双方语言的接口、model，在生成的model以及接口中会有解码编码的代码
+**如何实现多语言之间的通信？**
+
+* 数据传输使用socket（多重语言均支持），数据再以特定的格式（string等）发送，接受方语言进行解析。
+* 定义thrift的文件，由thrift文件（IDL）生成双方语言的接口、model，在生成的model以及接口中会有解码编码的代码
 	
 
 ### 结构体（struct）
 
-* 就像C语言一样，Thrift支持struct类型，目的就是将一些数据聚合在一起，方便传输管理。struct的定义形式如下：
+就像C语言一样，Thrift支持struct类型，目的就是将一些数据聚合在一起，方便传输管理。struct的定义形式如下：
 
-	```
-	struct Prople {
-		1:string name;
-		2:i32 age;
-		3:string gender;
-	}
-	```
+```
+struct Prople {
+	1:string name;
+	2:i32 age;
+	3:string gender;
+}
+```
 
 ### 枚举
 
-* 枚举的定义形式和Java的Enum定义累死：
+枚举的定义形式和Java的Enum定义类似：
 	
-	```
-	enum Gender {
-		MALE,
-		FEMALE
-	}
-	```
+```
+enum Gender {
+	MALE,
+	FEMALE
+}
+```
 	
 ### 异常（exception）
 
-* Thrift支持自定义exception，规则与struct一样
+Thrift支持自定义exception，规则与struct一样
  
-	```
-	exception RequestException {
-		1:i32 code;
-		2:string reasone;
-	}
-	```
+```
+exception RequestException {
+	1:i32 code;
+	2:string reasone;
+}
+```
 
 ### 服务（service）
 
-* Thrift定义服务相当于Java中创建Interface一样，创建的service经过代码生成命令之后就会生成客户端和服务端的框架代码。定义形式如下：
+Thrift定义服务相当于Java中创建Interface一样，创建的service经过代码生成命令之后就会生成客户端和服务端的框架代码。定义形式如下：
 
-	```
-	service HelloWorldService {
-	 //service中定义的函数，相当于Java interface中定义的方法
-	 string doAction(1:string name, 2:i32 age);
-	}
-	```
+```
+service HelloWorldService {
+ //service中定义的函数，相当于Java interface中定义的方法
+ string doAction(1:string name, 2:i32 age);
+}
+```
 	
 ### 类型定义
 
-* Thrift支持类似C++一样的typedef定义：
+Thrift支持类似C++一样的typedef定义：
 
-	```
-	typedef i32 int
-	typedef i64 long
-	```
+```
+typedef i32 int
+typedef i64 long
+```
 	
 ###  常量（const）
 
-* thrift也支持常量定义，使用const关键字：
+thrift也支持常量定义，使用const关键字：
 	
-	```
-	const i32 MAX_RETRIES_TIME = 10
-	const string MY_WEBSIZE = "http://facebook.com"
-	```
+```
+const i32 MAX_RETRIES_TIME = 10
+const string MY_WEBSIZE = "http://facebook.com"
+```
 	
 ### 命名空间
 
@@ -111,25 +112,25 @@ categories: Netty
 
 ### 文件包含
 
-* Thrift支持文件包含，相当于C/C++中的include，Java中的import。使用关键字include定义：
+Thrift支持文件包含，相当于C/C++中的include，Java中的import。使用关键字include定义：
 	
-	`include "global.thrift"`
+`include "global.thrift"`
 
 ### 注释
 
-* Thrift注释方式支持shell风格的注释，支持C/C++风格的注释，即#和//开头的语句都当作注释，/**/包裹的语句也是注释。
+Thrift注释方式支持shell风格的注释，支持C/C++风格的注释，即#和//开头的语句都当作注释，/**/包裹的语句也是注释。
 
 
 ### 可选与必选
 
-* Thrift提供两个关键字required，optional，分别用于表示对应的字段是必填的还是可以选的
+Thrift提供两个关键字required，optional，分别用于表示对应的字段是必填的还是可以选的
 
-	```
-	struct People {
-		1:required string name;
-		2:optional i32 age;
-	}
-	```
+```
+struct People {
+	1:required string name;
+	2:optional i32 age;
+}
+```
 	
 ### 生成代码
 

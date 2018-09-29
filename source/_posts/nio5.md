@@ -14,11 +14,15 @@ categories: io
 ```java
 /**
  * 模拟聊天
+ *
  * @author yangfan
  * @date 2017/08/27
  */
 public class NioServer {
 
+    /**
+     * 保存客户端连接
+     */
     private static Map<String, SocketChannel> clientMap = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
@@ -33,15 +37,18 @@ public class NioServer {
         while (true) {
             try {
                 int nums = selector.select();
+                // 拿到触发OP_ACCEPT事件的SelectionKey集合，访问对应通道
                 Set<SelectionKey> selectionKeys = selector.selectedKeys();
 
                 selectionKeys.forEach(selectionKey -> {
                     final SocketChannel client;
                     try {
+                        // 通道已连接
                         if (selectionKey.isAcceptable()) {
                             ServerSocketChannel server = (ServerSocketChannel) selectionKey.channel();
                             client = server.accept();
                             client.configureBlocking(false);
+                            // 连接后注册读取事件
                             client.register(selector, SelectionKey.OP_READ);
 
 
@@ -49,7 +56,10 @@ public class NioServer {
                             String key = "[" + UUID.randomUUID().toString() + "]";
                             clientMap.put(key, client);
 
-                        } else if (selectionKey.isReadable()) {
+                        }
+                        // 通道有数据写入
+                        else if (selectionKey.isReadable()) {
+                            // 已经变成SocketChannel
                             client = (SocketChannel) selectionKey.channel();
 
 
@@ -89,7 +99,7 @@ public class NioServer {
 
 
                                 }
-                            }else if (count == -1) {
+                            } else if (count == -1) {
                                 // 判断是否客户端断开了连接
                                 clientMap.remove(senderKey);
                             }
@@ -123,7 +133,7 @@ serverSocket.bind(new InetSocketAddress(8899));
 
 open()一个Selector后，channel调用register将自己注册到selector上，并传入**SelectionKey.OP_ACCEPT**表示等待连接。
 
-接下来`selector.select();`会阻塞，直到有客户端连接，程序才会继续往下走，`selector.selectedKeys()`返回有状态变化可以被使用的keys)，每一个判断分支后对应的channel可以强转为对应的Channel。
+接下来`selector.select();`会阻塞，直到有客户端连接，程序才会继续往下走，`selector.selectedKeys()`返回有状态变化可以被使用的keys，每一个判断分支后对应的channel可以强转为对应的Channel。
 
 比如代码中注册为**OP_ACCEPT**的是ServerSocketChannel，而注册为**OP_READ**的是一个SocketChannel。最后不要忘记将selectedKeys清空，否则下次循环进入，遗留下来的selectKey.channel()是获取不到对应的Channel的。
 
@@ -131,13 +141,13 @@ open()一个Selector后，channel调用register将自己注册到selector上，�
 用命令先测试一下，结果如下，一方发送一条消息后，都收到了消息输出，并且带上了连接的时候生成的客户端ID。
 
 
-![](img/nio/nio5-1.png)
+![](/img/nio/nio5-1.png)
 
 
 
 ## 客户端
 
-NIO客户端的开发，代码也跟服务端的节奏差不多，只是由ServerSocketChannel，换成了SocketChannel。
+NIO客户端的开发，代码跟服务端的差不多，只是由ServerSocketChannel，换成了SocketChannel。
 
 ```java
 
@@ -165,7 +175,7 @@ public class NioClient {
                 selectionKeys.forEach(selectionKey -> {
                     try {
 
-                        // 表示已经与服务端简历连接
+                        // 表示已经与服务端建立连接
                         if (selectionKey.isConnectable()) {
                             SocketChannel client = (SocketChannel) selectionKey.channel();
                             if (client.isConnectionPending()) {
@@ -195,7 +205,7 @@ public class NioClient {
                                 });
                             }
 
-                            //发送完数据后，向selectr注册读取时间，等待服务器的返回结果
+                            // 发送完数据后，向selector注册读取事件，等待服务器的返回结果
                             client.register(selector, SelectionKey.OP_READ);
                         } else if (selectionKey.isReadable()) {
                             SocketChannel client = (SocketChannel) selectionKey.channel();
@@ -227,3 +237,33 @@ public class NioClient {
 }
 ```
 
+启动客户端后输出：
+
+![](/img/nio6-1.png)
+
+mac用户会看到后面有很多框框，感觉有点奇怪，是哪里出问题了呢？
+
+单独用一个例子来说明：
+
+```java
+public class ChartSetTest {
+
+    public static void main(String[] args) {
+
+        ByteBuffer buffer = ByteBuffer.allocate(512);
+
+        final byte[] msg = "中文".getBytes();
+
+        buffer.put(msg);
+        buffer.flip();
+
+        System.out.println(new String(msg));
+        System.out.println(String.valueOf(StandardCharsets.UTF_8.decode(buffer).array()));
+
+    }
+}
+```
+
+在这个例子中，真相就是buffer的数组在这里是6个字节，decode转换成中文以后，数组里就只有2个元素了，但是长度还是6，还有4个\u0000占位，可以在debug的时候看出来，这也就解释了前面的输出为什么会是那样了。
+
+![](/img/nio/nio6-2.jpg)

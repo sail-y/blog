@@ -17,7 +17,7 @@ gRPC是基于Protobuf开发的RPC框架，简化了protobuf的开发，提供了
 
 ## Demo
 
-照着https://grpc.io/docs/quickstart/java.html测试一下官方的Demo。
+照着 https://grpc.io/docs/quickstart/java.html 测试一下官方的Demo。
 
 记得要把`Update a gRPC service`部分做了。
 
@@ -29,7 +29,7 @@ https://github.com/grpc/grpc-java
 这个是gRPC-java项目，先引入gRPC的依赖。
 
 
-```code
+```gradle
 compile 'io.grpc:grpc-netty:1.4.0'
 compile 'io.grpc:grpc-protobuf:1.4.0'
 compile 'io.grpc:grpc-stub:1.4.0'
@@ -37,7 +37,7 @@ compile 'io.grpc:grpc-stub:1.4.0'
 
 然后配置gradle的grpc插件
 
-```code
+```gradle
 apply plugin: 'java'
 apply plugin: 'com.google.protobuf'
 

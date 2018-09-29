@@ -31,7 +31,7 @@ Sharded Cluster（分片集群）共有3个组件：
 
 1. shard（也可以配置成副本集，确保高可用）
 2. query router（查询路由器）
-3. config sever（配置服务器，一般会配置成副本集，确保高可用；以前的本本才去的方式使用3台独立的mongod实例）
+3. config sever（配置服务器，一般会配置成副本集，确保高可用；以前的版本采取的方式使用3台独立的mongod实例）
 
 config server保存了数据的分布情况，哪些数据在哪一个分片中，而query router提供了用户接口对分片进行操作。
 

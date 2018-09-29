@@ -11,7 +11,7 @@ categories: Netty
 
 Netty处理器重要概念：
 
-1. Netty的处理器可以分为两类：入站处理器与出战处理器。
+1. Netty的处理器可以分为两类：入站处理器与出站处理器。
 2. 入站处理器的顶层是ChannelInboundHandler，出站处理器的顶层是ChannelOutboundHandler。
 3. 数据处理时常用的各种编解码器本质上都是处理器。
 4. 编解码器：无论我们向网络中写入的数据是什么类型（int、char、String、二进制等），数据在网络中传递时，其都是以字节流的形式呈现的；将数据由原本的形式转换为字节流的操作称为编码（encode），将数据由字节转换为它原本的格式或是其他格式的操作称为解码（decode），编解码统一称为codec。
@@ -72,7 +72,7 @@ Netty为我们提供了一个抽象类**ByteToMessageDecoder**，它是一个Cha
 
 ## MessageToByteEncoder&ByteToMessageDecoder
 
-Netty为我们提供了一个**MessageToByteEncoder**，基本大多数的解码器都直接或间接的实现了这个抽象类，我们也实现这个类，是需要直线它的encode方法。
+Netty为我们提供了一个**MessageToByteEncoder**，基本大多数的解码器都直接或间接的实现了这个抽象类，我们也实现这个类，是需要实现它的encode方法。
 相对应的，编码器是**ByteToMessageDecoder**，需要实现它的decode方法。
 
 ### 自定义解码器

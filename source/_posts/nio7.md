@@ -107,6 +107,13 @@ public class OldClient {
 }
 ```
 
+结果:
+
+```json
+发送总字节数：41500918，耗时：251
+```
+
+
 下面是NIO的方式：
 
 
@@ -191,6 +198,12 @@ public class NewIOClient {
         fileChannel.close();
     }
 }
+```
+
+输出：
+
+```json
+发送总字节数：41500918, 耗时：103
 ```
 
 

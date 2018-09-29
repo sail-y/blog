@@ -69,7 +69,7 @@ ServerBootStrap在调用bind()方法后，通过**channelFactory**反射的方�
 
 ## AttributeMap
 
-![](http://img.blog.csdn.net/20160526102928345?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQv/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center)
+![](/img/netty/netty7-4.png)
 
 AttributeMap接口只有一个attr()方法，接收一个AttributeKey类型的key，返回一个Attribute类型的value。AttributeMap这是是绑定在Channel或者ChannelHandlerContext上的一个附件，相当于依附在这两个对象上的寄生虫一样，相当于附件一样。
 
@@ -117,7 +117,7 @@ ChannelInitializer本身也是一个特殊的Inbound处理器，用来初始化c
 
 ## ChannelHandlerContext
 
-每创建一个ChannelHandler，随之也会闯进一个ChannelHandlerContext。
+每创建一个ChannelHandler，随之也会创建一个ChannelHandlerContext。
 
 ChannelPipeline里面真实存放的对象实际上是**ChannelHandlerContext**，ChannelHandlerContext里又维护了ChannelHannlder。所以ChannelHandlerContext实际上是ChannelPipeline和ChannelHandler的桥梁，它提供了api可以获取Channel对象，和与之关联的ChannelHandler对象、ChannelPipeline对象。
 

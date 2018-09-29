@@ -422,7 +422,7 @@ WriteResult({ "nMatched" : 3, "nUpserted" : 0, "nModified" : 3 })
 
 ### save
 
-mongo提供了一个save操作，它的行为取决于你是否传入了\_id参数，如果你没有传，会洗澡一个，如果你传了_id，则会进行修改。
+mongo提供了一个save操作，它的行为取决于你是否传入了\_id参数，如果你没有传，会先造一个，如果你传了_id，则会进行修改。
 
 ```javascript
 > db.personalinfo.save({'_id':5,'username':'zhangsan'})

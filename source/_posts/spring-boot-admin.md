@@ -52,6 +52,6 @@ categories: spring
 
 ## 页面展示
 
-![](img/login.png)
-![](img/page1.png)
-![](img/page2.png)
+![](/img/login.png)
+![](/img/page1.png)
+![](/img/page2.png)

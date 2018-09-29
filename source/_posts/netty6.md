@@ -119,7 +119,7 @@ public T newChannel() {
 }
 ```
 
-newSocket方法还提到了在github上的一个问题https://github.com/netty/netty/issues/2308。这里就出现了Netty调用了NIO的方法，像SelectionKey注册了OP_ACCEPT事件，表示可以接受连接了。并且在父类中调用了`ch.configureBlocking(false);`设置为非阻塞。**AbstractNioChannel**也包含了一个**SelectableChannel**的引用，这个其实就是对NIO的Channel的一个包装就提现出来了。
+newSocket方法还提到了在github上的一个问题 https://github.com/netty/netty/issues/2308 。这里就出现了Netty调用了NIO的方法，像SelectionKey注册了OP_ACCEPT事件，表示可以接受连接了。并且在父类中调用了`ch.configureBlocking(false);`设置为非阻塞。**AbstractNioChannel**也包含了一个**SelectableChannel**的引用，这个其实就是对NIO的Channel的一个包装就体现出来了。
 
 
 ```java
@@ -290,8 +290,7 @@ class Reactor implements Runnable {
     selector = p.openSelector();
     serverSocket = p.openServerSocketChannel();
      */
-    public void run() {  // normally in a new
-        Thread
+    public void run() {  // normally in a new Thread
         try {
             while (!Thread.interrupted()) {
                 selector.select();
@@ -408,7 +407,7 @@ Reactor模式的流程：
 
 1. 当应用向**Initiation Dispatcher**注册具体的事件处理器时，应用会标识出该事件处理器希望**Initiation Dispatcher**在某个事件发生时向其通知的该事件，该事件与Handle关联。
 2. **Initiation Dispatcher**会要求每个事件处理器向其传递内部的Handle。该Handle向操作系统标识了事件处理器。
-3. 当所有的事件处理器注册完毕后，应用汇调用handle_events方法来启动**Initiation Dispatcher**的事件循环。这时，**Initiation Dispatcher**会将每个注册的事件管理器的Handle合并起来，并使用同步事件分离器等待这些事件的发生。比如说，TCP协议层会使用select同步事件分离器操作来等待客户端发送的数据到达已经连接的socket handle上。
+3. 当所有的事件处理器注册完毕后，应用会调用`handle_events`方法来启动**Initiation Dispatcher**的事件循环。这时，**Initiation Dispatcher**会将每个注册的事件管理器的Handle合并起来，并使用同步事件分离器等待这些事件的发生。比如说，TCP协议层会使用select同步事件分离器操作来等待客户端发送的数据到达已经连接的socket handle上。
 4. 当与某个事件源对应的Handle变为ready状态时（比如说，TCP socket变为等待读状态时），同步事件分离器就会通知**Initiation Dispatcher**。
 5. **Initiation Dispatcher**会触发事件处理器的回调方法，从而相应这个处于ready状态的Handle。当事件发生时，**Initiation Dispatcher**会将事件源激活的Handle作为[key]来寻找并分发恰当的事件处理器回调方法。
 6. **Initiation Dispatcher**会回调事件处理器的handle_events回调方法来执行特定于应用的功能（开发者自己所编写的功能），从而响应这个事件。所发生的事件类型可以作为该方法参数并被该方法内部使用来执行额外的特定于服务的分离与分发。

@@ -1,5 +1,5 @@
 ---
-title: Java NIO Buffer详解2
+title: Java NIO DirectBuffer详解
 date: 2017-08-17 20:31:12
 tags: [java,io]
 categories: io
@@ -28,7 +28,7 @@ public static ByteBuffer allocateDirect(int capacity) {
 
 <!--more-->
 
-`DirectByteBuffer`创建的buffer是从直接内存中开辟的空间分配，我们叫做对外内存，不会被gc回收，里面用到了很多没有开源的sun的api。
+`DirectByteBuffer`创建的buffer是从直接内存中开辟的空间分配，我们叫做堆外内存，不会被gc回收，里面用到了很多没有开源的sun的api。
 
 
 new DirectByteBuffer()，这个对象本身是在堆上创建的，但是源码里的
@@ -54,11 +54,11 @@ long address;
 以下内容转自[知乎](https://www.zhihu.com/question/57374068?utm_source=wechat_session&utm_medium=social&utm_campaign=ge13_1&utm_division=ge13_2)：
 
 >DirectByteBuffer 自身是一个Java对象，在Java堆中；而这个对象中有个long类型字段address，记录着一块调用 malloc() 申请到的native memory。
-
+>
 >HotSpot VM里的GC除了CMS之外都是要移动对象的，是所谓“compacting GC”。
 >
 >如果要把一个Java里的 byte[] 对象的引用传给native代码，让native代码直接访问数组的内容的话，就必须要保证native代码在访问的时候这个 byte[] 对象不能被移动，也就是要被“pin”（钉）住。
-
+>
 >可惜HotSpot VM出于一些取舍而决定不实现单个对象层面的object pinning，要pin的话就得暂时禁用GC——也就等于把整个Java堆都给pin住。HotSpot VM对JNI的Critical系API就是这样实现的。这用起来就不那么顺手。
 >
 >所以 Oracle/Sun JDK / OpenJDK 的这个地方就用了点绕弯的做法。它假设把 HeapByteBuffer 背后的 byte[] 里的内容拷贝一次是一个时间开销可以接受的操作，同时假设真正的I/O可能是一个很慢的操作。

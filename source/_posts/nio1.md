@@ -53,6 +53,11 @@ java.io中最为核心的一个概念是流(Stream)，面向流的编程，里�
 
 读取文件
 
+**NioTest2.txt**
+
+```text
+hello world welcome
+```
 
 ```java
 public class NioTest2 {

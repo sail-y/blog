@@ -18,20 +18,20 @@ Torvalds 开始着手开发 Git 是为了作为一种过渡方案来替代 BitKe
 <!--more-->
 
 
-## github
+# github
 
 github是一个面向开源及私有软件项目的托管平台，因为只支持git 作为唯一的版本库格式进行托管，故名github。
 github于2008年4月10日正式上线，除了git代码仓库托管及基本的 Web管理界面以外，还提供了订阅、讨论组、文本渲染、在线文件编辑器、协作图谱（报表）、代码片段分享（Gist）等功能。目前，其注册用户已经超过350万，托管版本数量也是非常之多，其中不乏知名开源项目 Ruby on Rails、jQuery、python 等。
 
 
-## gitlab
+# gitlab
 
 GitLab是一个利用Ruby on Rails开发的开源应用程序，实现一个自托管的Git项目仓库，可通过Web界面进行访问公开的或者私人项目。
 它拥有与GitHub类似的功能，能够浏览源代码，管理缺陷和注释。可以管理团队对仓库的访问，它非常易于浏览提交过的版本并提供一个文件历史库。团队成员可以利用内置的简单聊天程序（Wall）进行交流。它还提供一个代码片段收集功能可以轻松实现代码复用，便于日后有需要的时候进行查找。
 GitLab要求服务器端采用Gitolite搭建（为了方便安装，现已经用gitlab-shell代替Gitolite）
 
 
-## Git常用命令
+# Git常用命令
 
 * 获得版本库
 	* git init
@@ -150,7 +150,7 @@ nothing to commit, working tree clean
 还有一种更加简便的方式：将当前目录下有修改的文件进行`add`操作并提交：
 `git commit -am 'add another line'`
 
-# git log
+## git log
 
 如果要查看之前的提交，可以用`git log`命令进行查看。
 

@@ -405,12 +405,11 @@ db.article.mapReduce(function(){
 { "_id" : "redis", "value" : { "count" : 1 } }
 { "_id" : "ruby", "value" : 3 }
 { "_id" : "scala", "value" : { "count" : 1 } }
-```    
+```
 
 为什么会出现这样的结果？有的是对象，有的是值，之前说过，如果map产出的values的结果只有一个，是不会执行reduce阶段的，这里可以用finalize来保证结果的统一。
 
 ```js
-
 db.article.mapReduce(function(){ 
     this.tags.forEach(function(currrnt){
                 emit(currrnt, {count:1})

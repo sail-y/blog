@@ -29,7 +29,7 @@ if (header == null || !header.toLowerCase().startsWith("basic ")) {
 }
 ```
 
-就是如果你的header里面没有Authorization，或者Authorization不是以basic 开头的，直接就返回401了。虽然我忘记了传这个参数，但是日志里没有任何提示，这个错误真是让我好一顿找才给解决。
+就是如果你的header里面没有Authorization(BasicAuthenticationFilter.doFilterInternal)，或者Authorization不是以basic 开头的，直接就返回401了。虽然我忘记了传这个参数，但是日志里没有任何提示，这个错误真是让我好一顿找才给解决。
 
 这里面是`client_id:client_secret`的base64编码。到这还没完，因为Spring Cloud F版会有那个PasswordEncoder，所以他在校验secret的时候会和服务器配置的时候会进行加密，如果存储的密钥不是相应的加密方式，他也会报错，这个错误在网上都搜得到了。
 
@@ -172,5 +172,78 @@ public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
 }
 ```
 
+## 问题4 invalid_token 错误消息定制
+
+如果传入的token是错误的，那么会得到这样格式的一个错误消息：
+
+```json
+{
+  "error": "invalid_token",
+  "error_description": "Cannot convert access token to JSON"
+}
+```
+
+实际上有可能是这个token在redis里没有等好几种错误
+
+DefaultTokenServices.loadAuthentication(String accessTokenValue)
+
+```java
+if (accessToken == null) {
+	throw new InvalidTokenException("Invalid access token: " + accessTokenValue);
+}
+else if (accessToken.isExpired()) {
+	tokenStore.removeAccessToken(accessToken);
+	throw new InvalidTokenException("Access token expired: " + accessTokenValue);
+}
+
+OAuth2Authentication result = tokenStore.readAuthentication(accessToken);
+if (result == null) {
+	// in case of race condition
+	throw new InvalidTokenException("Invalid access token: " + accessTokenValue);
+}
+```
+
+想要定制化这个错误消息，需要制定一个AuthExceptionEntryPoint.
+
+```java
+@Log4j2
+@Component
+public class AuthExceptionEntryPoint implements AuthenticationEntryPoint {
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Override
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+        log.info("Token失效，禁止访问 {}", request.getRequestURI());
+        response.setCharacterEncoding(StandardCharsets.UTF_8.displayName());
+        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+        RestResp result = RestResp.error(CommonErrorCode.UNAUTHORIZED, "Token错误");
+        response.setStatus(HttpStatus.SC_OK);
+        PrintWriter printWriter = response.getWriter();
+        printWriter.append(objectMapper.writeValueAsString(result));
+    }
+}
+```
+
+然后ResourceServerConfiguration里增加配置
 
 
+```java
+@Override
+    public void configure(ResourceServerSecurityConfigurer resources) {
+    resources.expressionHandler(expressionHandler);
+    resources.authenticationEntryPoint(authExceptionEntryPoint);
+    resources.accessDeniedHandler(iuMiaoAccessDeniedHandler);
+    resources.tokenStore(redisTokenStore());
+}
+```
+
+就能得到自定义的错误。
+
+```json
+{
+    "code": "10000401",
+    "msg": "未授权: Token错误"
+}
+```

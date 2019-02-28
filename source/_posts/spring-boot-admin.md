@@ -2,7 +2,7 @@
 title: spring-boot-admin
 date: 2017-08-12 14:18:20
 tags: [spring, java]
-categories: spring
+categories: spring boot/cloud
 ---
 
 # Spring Boot Admin

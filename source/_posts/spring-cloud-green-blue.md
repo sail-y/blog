@@ -2,7 +2,7 @@
 title: (转)Spring Cloud 实践-降级、限流、滚动、灰度、AB、金丝雀等等等等
 date: 2018-04-14 12:18:32
 tags: [spring-cloud,微服务]
-categories: spring
+categories: spring boot/cloud
 ---
 
 # spring cloud 实践

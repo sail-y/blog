@@ -2,7 +2,7 @@
 title: 集成JWT到Spring Boot项目
 date: 2016-12-08 14:46:56
 tags: [spring, java]
-categories: spring
+categories: spring boot/cloud
 ---
 
 这篇文章我们来讲一下如何集成JWT到Spring Boot项目中来完成接口的权限验证。

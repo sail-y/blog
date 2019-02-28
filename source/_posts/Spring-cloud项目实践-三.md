@@ -1,7 +1,7 @@
 title: Spring cloud项目实践(三)
 date: 2016-03-22 08:22:18
 tags: [spring-cloud,微服务]
-categories: spring
+categories: spring boot/cloud
 ---
 # 持续集成
 

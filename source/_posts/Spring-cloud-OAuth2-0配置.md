@@ -1,7 +1,7 @@
 title: Spring-cloud OAuth2.0配置
 date: 2016-03-31 16:13:49
 tags: [spring-cloud,微服务]
-categories: spring
+categories: spring boot/cloud
 ---
 
 在spring cloud项目环境中配置oauth2.0认证。	

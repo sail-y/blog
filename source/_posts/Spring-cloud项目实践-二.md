@@ -1,7 +1,7 @@
 title: Spring cloud项目实践(二)
 date: 2016-03-21 21:44:07
 tags: [spring-cloud,微服务]
-categories: spring
+categories: spring boot/cloud
 ---
 
 # 配置中心和服务注册中心

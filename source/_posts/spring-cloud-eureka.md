@@ -2,7 +2,7 @@
 title: (转)eureka缓存细节以及生产环境的最佳配置
 date: 2018-04-14 13:29:08
 tags: [spring-cloud,微服务]
-categories: spring
+categories: spring boot/cloud
 ---
 
 本文转自 [eureka缓存细节以及生产环境的最佳配置](http://bhsc881114.github.io/2018/04/01/eureka%E7%BC%93%E5%AD%98%E7%BB%86%E8%8A%82%E4%BB%A5%E5%8F%8A%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E7%9A%84%E6%9C%80%E4%BD%B3%E9%85%8D%E7%BD%AE/)

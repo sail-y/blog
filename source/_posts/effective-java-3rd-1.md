@@ -11,7 +11,7 @@ categories: Effective Java
 
 传统方式允许客户端获取一个类的实例，是提供一个公有的构造方法。有另外一种技术获取实例，它应该在每个程序员的工具箱里。类可以提供一个公有的静态工厂方法，就是一个简单的静态方法，它会返回这个类的实例。这里有一个来自`Boolean`(原生类型boolean的包装类)类的简单例子，这个方法将一个原生类型的布尔值转换成一个Boolean对象引用：
 <!--more-->
->对于一个类来说，若想让客户端能够获取到其实例，传统⽅式是提供⼀个公有的构造⽅法。 实际上，还有另外一种技术应该成为每个程序员⼯具箱的一部分。类可以提供⼀个公有的静态⼯厂方法，它仅仅是一个可以返回类实例的静态⽅法⽽已。如下这个简单的示例来⾃于 Boolean(即boolean装箱后的类型)。该方法会将⼀个boolean原⽣值转换为⼀一个Boolean对象引用:
+>对于一个类来说，若想让客户端能够获取到其实例，传统⽅式是提供⼀个公有的构造⽅法。 实际上，还有另外一种技术应该成为每个程序员⼯具箱的一部分。类可以提供⼀个公有的静态⼯厂方法，它仅仅是一个可以返回类实例的静态⽅法⽽已。如下这个简单的示例来⾃于 Boolean(即boolean装箱后的类型)。该方法会将⼀个boolean原⽣值转换为⼀个Boolean对象引用:
 
 >The traditional way for a class to allow a client to obtain an instance is to provide a public constructor. There is another technique that should be a part of every programmer’s toolkit. A class can provide a public static factory method, which is simply a static method that returns an instance of the class. Here’s a simple example from Boolean (the boxed primitive class for boolean). This method translates a boolean primitive value into a Boolean object reference:
 

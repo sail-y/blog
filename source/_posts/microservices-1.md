@@ -1,7 +1,7 @@
 ---
-title: Spring Cloud微服务-1
+title: Spring Cloud微服务-1-什么是微服务
 tags: [Spring Cloud, 微服务]
-date: 2019-03-18 18:56:58
+date: 2019-04-10 18:56:58
 categories: 微服务
 ---
 
@@ -164,3 +164,26 @@ SOA主要的挑战是元数据的管理，服务于服务之间的通信会生�
 * DevOps with holistic service monitoring.
 
 
+# SOA和微服务的差异性
+
+## 文章1
+
+
+https://www.ibm.com/blogs/cloud-computing/2018/09/06/soa-versus-microservices/
+
+>The main distinction comes down to scope. To put it simply, service-oriented architecture (SOA) has an enterprise scope, while the microservices architecture has an application scope.
+
+SOA着重点在企业范围，微服务着重点在应用范围。
+
+![](https://www.ibm.com/blogs/cloud-computing/wp-content/uploads/2018/08/SOA_microservices.png)
+
+从这个图可以看出来，SOA的范围更大，他关注的是应用与应用之间的关系。而微服务是应用内部的关联。
+
+## 文章2
+
+https://dzone.com/articles/microservices-vs-soa-is-there-any-difference-at-al
+
+>Service Oriented Architecture is less about how to modularize an application, and more about how to compose an application by integration of distributed, separately-maintained and deployed software components. It is enabled by technologies and standards that make it easier for components to communicate and cooperate over a network, especially an IP network.
+
+
+![](/imgs/spring-cloud/sc01-01.jpg)

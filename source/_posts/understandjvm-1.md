@@ -126,6 +126,7 @@ class MyChild1 extends MyParent1 {
 
 
 ```java
+
 /**
  * 用javap反编译后
  *
@@ -150,7 +151,7 @@ class MyChild1 extends MyParent1 {
  * ldc表示将int，float或是String类型的常量值从常量池推送至栈顶
  * bipush表示将单字节(-128 ~ 127)的常量值推送至栈顶
  * sipush表示将一个短整型常量值(-32768 ~ 32767)推送至栈顶
- * iconst_1表示将int类型1推送至栈顶(iconst_1 ~ iconst_5)
+ * iconst_1表示将int类型1推送至栈顶(iconst_m1 ~ iconst_5)
  *
  * @author yangfan
  * @date 2018/12/04
@@ -173,9 +174,223 @@ class MyParent2 {
      */
     public static final String str = "hello world";
 
+    public static final short s = 127;
+
+    public static final int i = 0;
+
+    public static final int m = 6;
+
     static {
         System.out.println("MyParent2 static block");
     }
 }
 
 ```
+
+其实这些助记符在rt.jar里都能找到，比如iconst就在com.sun.org.apache.bcel.internal.generic.ICONST里。
+
+### 例3
+
+```java
+/**
+ * 当一个常量的值并非编译期间可以确定的，那么其值就不会被放到调用类的常量池中，
+ * 这时程序在运行时，会导致主动使用这个常量所在的类，显然会导致这个类被初始化。
+ * 
+ * @author yangfan
+ * @date 2019/03/26
+ */
+public class MyTest3 {
+    public static void main(String[] args) {
+        System.out.println(MyParent3.str);
+    }
+}
+
+class MyParent3 {
+    public static final String str = UUID.randomUUID().toString();
+
+    static {
+        System.out.println("MyParent3 static code");
+    }
+}
+```
+
+### 例4
+
+```java
+/**
+ * 对于数组实例来说，其类型是由JVM在运行期动态生成的，表示为class [Lcom.sail.jvm.classloader.MyParent4
+ * 这种形式。动态生成的类型，其父类型就是Object。
+ * <p>
+ * 对于数组来说，JavaDoc经常将构成数组的元素称为Component，实际上就是将数组降低一个未读后的类型。
+ * <p>
+ * 助记符：
+ * anewarray：表示创建一个引用类型的（如类、接口、数组）数组，并将其引用值亚茹栈顶
+ * newarray：表示创建一个指定的原始类型（如int、float、char等）的数组，并将其引用值压入栈顶
+ *
+ * @author yangfan
+ * @date 2019/03/26
+ */
+public class MyTest4 {
+    public static void main(String[] args) {
+        // 首次主动使用
+//        MyParent4 myParent4 = new MyParent4();
+
+        // 不会输出，并没有使用
+        MyParent4[] myParent4s = new MyParent4[1];
+        // class [Lcom.sail.jvm.classloader.MyParent4;
+        System.out.println(myParent4s.getClass());
+
+        MyParent4[][] myParent4s1 = new MyParent4[1][1];
+        // class [[Lcom.sail.jvm.classloader.MyParent4;
+        System.out.println(myParent4s1.getClass());
+
+        // class java.lang.Object
+        System.out.println(myParent4s.getClass().getSuperclass());
+        // class java.lang.Object
+        System.out.println(myParent4s1.getClass().getSuperclass());
+
+        System.out.println("=======");
+        int[] ints = new int[1];
+        // class [I
+        System.out.println(ints.getClass());
+        // class java.lang.Object
+        System.out.println(ints.getClass().getSuperclass());
+
+        char[] chars = new char[1];
+        System.out.println(chars.getClass());
+        boolean[] booleans = new boolean[1];
+        System.out.println(booleans.getClass());
+        short[] shorts = new short[1];
+        System.out.println(shorts.getClass());
+        byte[] bytes = new byte[1];
+        System.out.println(bytes.getClass());
+    }
+}
+
+class MyParent4 {
+    static {
+        // 会输出
+        System.out.println("MyParent4 static block");
+    }
+}
+/*
+
+public class com.sail.jvm.classloader.MyTest4 {
+  public com.sail.jvm.classloader.MyTest4();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static void main(java.lang.String[]);
+    Code:
+       0: iconst_1
+       1: anewarray     #2                  // class com/sail/jvm/classloader/MyParent4
+       4: astore_1
+       5: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;
+       8: aload_1
+       9: invokevirtual #4                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      12: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/Object;)V
+      15: iconst_1
+      16: iconst_1
+      17: multianewarray #6,  2             // class "[[Lcom/sail/jvm/classloader/MyParent4;"
+      21: astore_2
+      22: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;
+      25: aload_2
+      26: invokevirtual #4                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      29: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/Object;)V
+      32: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;
+      35: aload_1
+      36: invokevirtual #4                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      39: invokevirtual #7                  // Method java/lang/Class.getSuperclass:()Ljava/lang/Class;
+      42: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/Object;)V
+      45: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;
+      48: aload_2
+      49: invokevirtual #4                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      52: invokevirtual #7                  // Method java/lang/Class.getSuperclass:()Ljava/lang/Class;
+      55: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/Object;)V
+      58: iconst_1
+      59: newarray       int
+      61: astore_3
+      62: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;
+      65: aload_3
+      66: invokevirtual #4                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      69: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/Object;)V
+      72: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;
+      75: aload_3
+      76: invokevirtual #4                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      79: invokevirtual #7                  // Method java/lang/Class.getSuperclass:()Ljava/lang/Class;
+      82: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/Object;)V
+      85: return
+}
+
+*/
+```
+
+### 例5
+
+```java
+/**
+ * 当一个接口在初始化时，并不要求其父接口都完成了初始化
+ * 只有在真正使用到父接口的时候（如引用接口中定义的常量时），才会初始化
+ * @author yangfan
+ * @date 2019/03/26
+ */
+public class MyTest5 {
+    public static void main(String[] args) {
+        // 删除MyParent5.class文件后再运行
+        // 把MyChild5.class删了，也没有问题
+        System.out.println(MyChild5.b);
+    }
+}
+
+interface MyParent5 {
+    int a = 5;
+}
+
+interface MyChild5 extends MyParent5 {
+//    int b = 6;
+    // 此时要求MyParent5.class必须存在
+    int b = new Random().nextInt(4);
+}
+```
+
+### 例6
+
+```java
+/**
+ * @author yangfan
+ * @date 2019/03/26
+ */
+public class MyTest6 {
+    public static void main(String[] args) {
+        Singleton singleton = Singleton.getInstance();
+        System.out.println("counter:1 " + Singleton.counter1);
+        System.out.println("counter:2 " + Singleton.counter2);
+    }
+}
+
+class Singleton {
+    public static int counter1;
+
+    // 在这里输出1
+//    public static int counter2 = 0;
+
+    private static Singleton singleton = new Singleton();
+    private Singleton() {
+        counter1++;
+        counter2++; // 准备阶段的重要意义（分配内存，给默认值）
+
+        System.out.println(counter1);
+        System.out.println(counter2);
+    }
+
+    // 在这里输出0
+    public static int counter2 = 0;
+
+    public static Singleton getInstance() {
+        return singleton;
+    }
+}
+```
+

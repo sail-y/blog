@@ -15,15 +15,6 @@ https://martinfowler.com/articles/microservices.html
 
 <!--more-->
 
->For as long as we've been involved in the software industry, there's been a desire to build systems by plugging together components, much in the way we see things are made in the physical world. During the last couple of decades we've seen considerable progress with large compendiums of common libraries that are part of most language platforms.
-
->When talking about components we run into the difficult definition of what makes a component. Our definition is that a component is a unit of software that is independently replaceable and upgradeable.
-
->Microservice architectures will use libraries, but their primary way of componentizing their own software is by breaking down into services. We define libraries as components that are linked into a program and called using in-memory function calls, while services are out-of-process components who communicate with a mechanism such as a web service request, or remote procedure call. (This is a different concept to that of a service object in many OO programs [3].)
-
->One main reason for using services as components (rather than libraries) is that services are independently deployable. If you have an application [4] that consists of a multiple libraries in a single process, a change to any single component results in having to redeploy the entire application. But if that application is decomposed into multiple services, you can expect many single service changes to only require that service to be redeployed. That's not an absolute, some changes will change service interfaces resulting in some coordination, but the aim of a good microservice architecture is to minimize these through cohesive service boundaries and evolution mechanisms in the service contracts.
-
-
 单体应用 -> 微服务应用
 
 [从0开始学微服务-胡忠想](https://time.geekbang.org/column/article/13882)
@@ -40,7 +31,7 @@ https://martinfowler.com/articles/microservices.html
 ## 什么是微服务
 
 * Martin Fowler：简而言之，微服务架构风格这种开发方法，是以开发一组小型服务的方式来开发一个独立的应用系统。**其中每个小型服务都运行在自己的进程中，并经常采用HTTP资源API这样轻量的机制来相互通信。**这些服务围绕这些功能进行构建，并能通过全自动的部署机制来进行独立部署。**这些微服务可以使用不同的语言来编写，并且可以使用不同的数据存储技术。**对这些微服务我们仅做最低限度的集中管理。
-* 微服务架构是一种架构模式，它提倡将单一应用程序划分成一组小的服务，服务之间相互协调、相互配合，为用户提供最终价值。没饿服务运行在其独立的进程中，服务于服务间采用轻量级的通信机制互相沟通（通常是基于HTTP的RESTful API）。每个服务都围绕着具体的业务进行构建，并且能够独立地被部署到生产环境、类生产环境等。另外，应尽量避免统一的、集中式的服务管理机制，对具体的一个服务而言，应根据业务上下文，选择合适的语言、工具对其进行构建。
+* 微服务架构是一种架构模式，它提倡将单一应用程序划分成一组小的服务，服务之间相互协调、相互配合，为用户提供最终价值。每个服务运行在其独立的进程中，服务于服务间采用轻量级的通信机制互相沟通（通常是基于HTTP的RESTful API）。每个服务都围绕着具体的业务进行构建，并且能够独立地被部署到生产环境、类生产环境等。另外，应尽量避免统一的、集中式的服务管理机制，对具体的一个服务而言，应根据业务上下文，选择合适的语言、工具对其进行构建。
 * 微服务是一种架构风格，一个大型复杂软件应用由一个或多个微服务组成。系统中的各个微服务可被独立部署，各个微服务之间是松耦合的。每个微服务仅关注完成一件任务并很好地完成该任务。在所有情况下，每个任务代表着一个小的业务能力。
 
 ## 微服务是一种架构风格
@@ -99,5 +90,77 @@ https://martinfowler.com/articles/microservices.html
 * 轻量级通信原则
 * 接口明确原则
 
-# Spring Cloud
+# SOA
+
+很多人会把SOA和微服务搞混，甚至理解为同一个东西。实际上SOA已经面世20多年了，和微服务是不一样的，接下来去维基百科看看SOA到底是什么。
+
+https://en.wikipedia.org/wiki/Service-oriented_architecture
+
+学技术，一定要去阅读原版的英文资料。
+
+>**Service-oriented architecture (SOA)** is a style of software design where services are provided to the other components by application components, through a communication protocol over a network. The basic principles of service-oriented architecture are independent of vendors, products and technologies.[1] A service is a discrete unit of functionality that can be accessed remotely and acted upon and updated independently, such as retrieving a credit card statement online.
+
+>A service has four properties according to one of many definitions of SOA:[2]
+
+>1. It logically represents a business activity with a specified outcome.		
+>2. It is self-contained.		
+>3. It is a black box for its consumers.
+>4. It may consist of other underlying services.[3]
+>
+>Different services can be used in conjunction to provide the functionality of a large software application,[5] a principle SOA shares with modular programming. Service-oriented architecture integrates distributed, separately-maintained and -deployed software components. It is enabled by technologies and standards that facilitate components' communication and cooperation over a network, especially over an IP network.
+
+SOA是一种软件设计风格，SOA包含了一些服务，服务是通过应用组件的形式，通过网络上的一些通信协议像向其他应用提供服务。不同的服务可以联合起来构成一个大型的应用，SOA遵循模块化编程，它的这种架构集成了分布式的，独自维护的，独自部署的软件组件。也是通过网络来通信的。
+
+好像看起来SOA的和微服务的概念也没什么太大差别？
+
+
+>In SOA, services use protocols that describe how they pass and parse messages using description metadata. This metadata describes both the functional characteristics of the service and quality-of-service characteristics. Service-oriented architecture aims to allow users to combine large chunks of functionality to form applications which are built purely from existing services and combining them in an ad hoc manner. A service presents a simple interface to the requester that abstracts away the underlying complexity acting as a black box. Further users can also access these independent services without any knowledge of their internal implementation.[6]
+
+
+在SOA里，服务是用元数据描述的服务的功能特性和质量特性。有没有想起wsdl实现的webservice？
+
+SOA里有3个角色
+
+* Service provider
+* Service broker, service registry or service repository
+* Service requester/consumer
+
+
+SOA可以借助webservice实现，通过标准的internet协议，通过网络来访问这些功能。比如SOAP，Jini，CORBA，Rest
+
+有很多技术都可以实现SOA，比如
+
+* Web services based on WSDL and SOAP
+* Messaging, e.g., with ActiveMQ, JMS, RabbitMQ
+* RESTful HTTP, with Representational state transfer (REST) constituting its own constraints-based architectural style
+* OPC-UA
+* WCF (Microsoft's implementation of Web services, forming a part of WCF)
+* Apache Thrift
+* SORCER
+
+## 缺点
+
+SOA已经被Web Service合并了，然而Web Service只是实现SOA的一种方式。在缺乏本地或二进制的数据传递调用的情况下，远程调用和效率都会变慢。XML是比较慢的，JSON相比XML会好一些。
+
+有状态的服务不利于管理。
+
+SOA主要的挑战是元数据的管理，服务于服务之间的通信会生成大量的消息。
+
+难以测试。
+
+
+## 微服务
+
+微服务是现代化的SOA架构，用于构建分布式的软件系统。在微服务架构中的服务都是一些进程，它们之间是通过网络来进行通信去完成一个目标。这些服务使用技术不可知的协议，在服务内部去封装语言和框架。微服务是一种SOA的一种新的实现方式，从2014年开始变得流行起来（在引入DevOps后）。它强调的是持续的部署和其他敏捷的实现。
+
+微服务没有统一的定义，但是有以下特征和原则
+
+* fine-grained interfaces (to independently deployable services),
+* business-driven development (e.g. domain-driven design),
+* IDEAL cloud application architectures,
+* polyglot programming and persistence,
+* lightweight container deployment,
+* decentralized continuous delivery, and
+* DevOps with holistic service monitoring.
+
 

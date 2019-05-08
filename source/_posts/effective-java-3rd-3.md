@@ -7,7 +7,7 @@ categories: Effective Java
 
 # 条款3：强制对单例属性使用私有构造方法或是枚举类型
 
->A *singleton* is simply a class that is instantiated exactly once [Gamma95]. Singletons typically represent either a stateless object such as a function (Item 24) or a system component that is intrinsically unique. **Making a class a singleton can make it difficult to test its clients** because it’s impossible to substitute a mock implementation for a singleton unless it implements an interface that serves as its type.
+>A *singleton* is simply a class that is instantiated exactly once [Gamma95]. Singletons typically represent either a stateless object such as a function (Item 24) or a system component that is intrinsically unique. **Making a class a singleton can make it difficult to test its clients** because it’s impossible to substitute a mock implementation for a singleton unless it implements an interface that serves as its type.		
 <!--more-->
 >所谓单例，指的是只会实例化⼀次的类[Gamma95]。单例要么表示⼀个⽆状态的对象（⽐
 如说函数，条款25），要么表示⼀个本质上独⼀⽆⼆的系统组件。将⼀个类设定为单例会使得其客户端难以测试，这是因为我们⽆法为单例替换模拟实现，除⾮它实现了作为其类型的接⼝。

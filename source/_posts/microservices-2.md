@@ -106,7 +106,7 @@ https://github.com/sail-y/spring-cloud-lecture
 
 执行`gradle task`，可以看到Spring Boot插件为我们提供了几个任务，其中一个是bootRun，可以直接启动应用。bootJar，可以把应用打包成一个**fat jar**。用`java -jar spring-lecture-0.0.1-SNAPSHOT.jar`就可以启动应用，这跟普通的jar包不一样。
 
-现在解压这个jar包来看看里面的内容
+现在解压这个jar包来看看里面的内容，跟传统的jar或者war包不一样，解压后并没有看到我们自己的代码编译后的文件在哪里，在根目录下的org里的class文件却并不是我们自己写的，下面分析一下解压后的目录结构
 
 ```java
 jar -xvf spring-lecture-0.0.1-SNAPSHOT.jar
@@ -133,7 +133,7 @@ BOOT-INF
 ```
 
 
-`BOOT-INF`里包含了编译后的配置文件和class文件，以及`lib`里包含的项目依赖的三方jar。
+`BOOT-INF`里包含了我们自己项目里编译后的配置文件和class文件，以及`lib`里包含的项目依赖的三方jar。
 
 接下来看META-INF
 
@@ -150,9 +150,9 @@ Main-Class: org.springframework.boot.loader.JarLauncher
 Main-Class是打包的jar包含main方法的启动类，Start-Class是Spring Boot自定义的属性。
 
 
-注意Main-Class最后有一个回车换行，这个是必须的，不然无法使用。
+**注意Main-Class最后有一个回车换行，这个是必须的，不然无法使用。**
 
-接下来看另外一个文件夹`org`
+接下来看另外一个文件夹`org`，这里面的类是Spring Boot打包插件在打jar包的时候自动放进去的，Spring Boot这些类功能很巧妙的解决了fat jar是如何打包出来的，以及BOOT-INF下面的类和jar包是如何被加载的。
 
 ```java
 org
@@ -217,23 +217,25 @@ protected void launch(String[] args) throws Exception {
 ```
 这里构建了一个类加载器。
 
-它会找到本身路径所在的jar包，得到一个archive对象。因为jar包的标准是只能加载根目录下的class文件，无法加载jar包里面的jar包，所以spring boot自己实现了类加载器来加载我们应用的第三方依赖和classes文件。
+>它会找到类当前路径所在的jar包，得到一个archive对象。因为jar包的标准是只能加载根目录下的class文件，无法加载jar包里面的jar包，所以spring boot自己实现了类加载器来加载我们应用的第三方依赖和classes文件。
 
-`JarLauncher.isNestedArchive`就包含了这部分的判断逻辑。处理了BOOT-INF/classes/的目录和以BOOT-INF/lib/开头的文件。
+>`JarLauncher.isNestedArchive`就包含了这部分的判断逻辑。处理了BOOT-INF/classes/的目录和以BOOT-INF/lib/开头的文件，此方法在getClassPathArchives内部被调用。
 
-`Launcher.createClassLoader`则是为了加载这2个目录下的class和jar包，最后代码跟踪到`new LaunchedURLClassLoader(urls, getClass().getClassLoader());`。这就是Spring Boot提供的全新的类加载器了。
+`ClassLoader classLoader = createClassLoader(getClassPathArchives());`则是为了加载这2个目录下的class和jar包，最后代码跟踪到`new LaunchedURLClassLoader(urls, getClass().getClassLoader());`。LaunchedURLClassLoader就是Spring Boot提供的全新的类加载器了。
+
+>URLClassLoader是ClassLoader的子类，它用于从指向 JAR 文件和目录的 URL 的搜索路径加载类和资源。也就是说，通过URLClassLoader就可以加载指定jar中的class到内存中。
 
 
-再来关注`ExecutableArchiveLauncher.getMainClass`，它从Manifest文件里读取了`Start-Class`，也就是我们自己的应用的启动类。
+再来关注`launch(args, getMainClass(), classLoader);`这行代码，getMainClass()从Manifest文件里读取了`Start-Class`，也就是我们自己的应用的启动类。
 
-然后是`launch`的调用
+然后是`launch`方法的调用
 
 ```java
 Thread.currentThread().setContextClassLoader(classLoader);
 createMainMethodRunner(mainClass, args, classLoader).run();
 ```
 
-再接着就是`Launcher.launch`，把SpringBoot提供的类加载器，设置成线程上下文类加载器。
+把SpringBoot提供的类加载器，设置成线程上下文类加载器。
 
 createMainMethodRunner创建main方法的执行器。这里有关键代码，我们的启动类是如何被加载和启动的。
 
@@ -479,95 +481,3 @@ Auto-configuration classes are regular Spring Configuration beans. They are loca
 配置扫描@Configuration组件的目录。
 
 
-
-## SpringApplication
-
-Class that can be used to bootstrap and launch a Spring application from a Java main method. By default class will perform the following steps to bootstrap your application:
-
-* Create an appropriate ApplicationContext instance (depending on your classpath)
-* Register a CommandLinePropertySource to expose command line arguments as Spring properties
-* Refresh the application context, loading all singleton beans
-* Trigger any CommandLineRunner beans
-
- 
- SpringApplications can read beans from a variety of different sources. It is generally recommended that a single @Configuration class is used to bootstrap your application, however, you may also set sources from:
-
-* The fully qualified class name to be loaded by AnnotatedBeanDefinitionReader
-* The location of an XML resource to be loaded by XmlBeanDefinitionReader, or a groovy script to be loaded by GroovyBeanDefinitionReader
-* The name of a package to be scanned by ClassPathBeanDefinitionScanner
-
-
-除了用@Configuration标记的类可以启动应用，还有上面介绍的3种方式可以启动应用。
-
-### run()方法
-
-这种有Class的，一般最后也用反射做了一些操作
-
-
-```java
-public static ConfigurableApplicationContext run(Class<?>[] primarySources,
-			String[] args) {
-	return new SpringApplication(primarySources).run(args);
-}
-```
-
-
-### 构造方法
-
-看看构造方法的说明：
-
->Create a new SpringApplication instance. The application context will load beans from the specified primary sources (see class-level documentation for details. The instance can be customized before calling run(String...).
-
-
-创建一个SpringApplication，应用上下文从指定的primary sources加载bean。
-
-构造方法的实现里有一行this.webApplicationType=WebApplicationType.deduceFromClasspath();，这行决定了应用是用的什么web容器启动的，非web环境，Servlet容器，或者Reactive（Spring 5新增的）。
-
-```java
-public SpringApplication(ResourceLoader resourceLoader, Class<?>... primarySources) {
-	this.resourceLoader = resourceLoader;
-	Assert.notNull(primarySources, "PrimarySources must not be null");
-	this.primarySources = new LinkedHashSet<>(Arrays.asList(primarySources));
-	this.webApplicationType = WebApplicationType.deduceFromClasspath();
-	setInitializers((Collection) getSpringFactoriesInstances(
-			ApplicationContextInitializer.class));
-	setListeners((Collection) getSpringFactoriesInstances(ApplicationListener.class));
-	this.mainApplicationClass = deduceMainApplicationClass();
-}
-```
-
-再看下一行代码`setInitializers((Collection) getSpringFactoriesInstances(ApplicationContextInitializer.class));`
-
-
-从getSpringFactoriesInstances方法代码里执行跟到SpringFactoriesLoader.loadSpringFactories这个方法中，有行很关键的代码：
-
-
-```java
-Enumeration<URL> urls = (classLoader != null ?
-					classLoader.getResources(FACTORIES_RESOURCE_LOCATION) :
-					ClassLoader.getSystemResources(FACTORIES_RESOURCE_LOCATION));
-					
-/**
- * The location to look for factories.
- * <p>Can be present in multiple JAR files.
- */
-public static final String FACTORIES_RESOURCE_LOCATION = "META-INF/spring.factories";					
-```
-
-SpringFactoriesLoader是框架内部用来加载工厂的一种机制，它会读取META-INF/spring.factories这个文件的内容，这个文件存在于多个jar文件中（所有的spring.factories都会被读取并加载），随便看一个，比如spring-boot-autoconfigure-2.1.4.RELEASE.jar里的，定义了7种类型的类，Spring会去加载这个文件中定义的工厂类。
-
-```properties
-# Initializers
-org.springframework.context.ApplicationContextInitializer=\
-org.springframework.boot.autoconfigure.SharedMetadataReaderFactoryContextInitializer,\
-org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener
-
-# Application Listeners
-org.springframework.context.ApplicationListener=\
-org.springframework.boot.autoconfigure.BackgroundPreinitializer
-
-# Auto Configuration Import Listeners
-org.springframework.boot.autoconfigure.AutoConfigurationImportListener=\
-org.springframework.boot.autoconfigure.condition.ConditionEvaluationReportAutoConfigurationImportListener
-....
-```

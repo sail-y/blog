@@ -1,7 +1,7 @@
 ---
 title: Effective Java 第三版-条款1_考虑使用静态工厂方法而非构造方法
 tags: [java]
-date: 2018-08-13 14:33:51
+date: 2018-08-13 21:33:51
 categories: Effective Java
 ---
 

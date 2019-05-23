@@ -1,7 +1,7 @@
 ---
 title: Effective Java 第三版-条款5_优先选择依赖注入而非硬编码资源的关联关系
 tags: [java]
-date: 2019-04-24 16:14:38
+date: 2019-04-24 20:14:38
 categories: Effective Java
 ---
 

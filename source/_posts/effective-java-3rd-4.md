@@ -1,7 +1,7 @@
 ---
 title: Effective Java 第三版-条款4_通过私有构造方法强制禁止类的实例化类型
 tags: [java]
-date: 2019-04-24 16:14:38
+date: 2019-04-24 20:14:38
 categories: Effective Java
 ---
 

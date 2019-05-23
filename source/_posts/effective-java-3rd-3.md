@@ -1,7 +1,7 @@
 ---
 title: Effective Java 第三版-3条款3_强制对单例属性使用私有构造方法或是枚举类型
 tags: [java]
-date: 2019-03-21 14:08:04
+date: 2019-03-21 21:08:04
 categories: Effective Java
 ---
 

@@ -254,6 +254,16 @@ public void run() throws Exception {
 
 `mainMethod.invoke(null, new Object[] { this.args });`这行代码反射，前面是null，是因为main方法是静态的，所以不需要传对象进去。
 
+不要忘了，这个main class是`Main-Class: org.springframework.boot.loader.JarLauncher`，不是我们自己编写的那个类，那个类在配置文件里叫做Stater-Class。
+
+**JarLauncher.java**
+
+```java
+public static void main(String[] args) throws Exception {
+	new JarLauncher().launch(args);
+}
+```
+
 
 以上就解释了jar包里的文件夹结构，以及加载启动类的流程。
 

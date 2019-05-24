@@ -8,7 +8,13 @@ categories: Effective Java
 # 条款4_通过私有构造方法强制禁止类的实例化类型
 
 >Occasionally you’ll want to write a class that is just a grouping of static methods and static fields. Such classes have acquired a bad reputation because some people abuse them to avoid thinking in terms of objects, but they do have valid uses. They can be used to group related methods on primitive values or arrays, in the manner of java.lang.Math or java.util.Arrays. They can also be used to group static methods, including factories (Item 1), for objects that implement some interface, in the manner of java.util.Collections. (As of Java 8, you can also put such methods in the interface, assuming it’s yours to modify.) Lastly, such classes can be used to group methods on a final class, since you can’t put them in a subclass.		
+
+<!--more-->
+
 >有时，你想要编写⼀个只包含⼀组静态⽅法和静态字段的类。这种类有⼀个不太好的名声，因为有些⼈会滥⽤他们，不从对象的⻆度来思考，⽽是坚信他们的想法是正确⽆误的。他们可⽤于将针对原⽣值或是数组的⽅法划分到⼀起，⽐如说java.lang.Math或是java.util.Arrays；还可以将静态⽅法划分到⼀起，包括⼯⼚（条款1），⽤于实现了某个接⼝的对象，⽐如说java.util.Collections（从Java 8开始，如果想要⾃⼰修改，那么你还可以将这类⽅法放到接⼝中）。最后，还可以将针对终态类的⽅法划分到⼀起，因为你⽆法再将他们放到⼦类中了。
+
+
+
 
 偶尔你会想写一个只有一组静态字段和静态方法的类。这样的类得到了一个坏的名声，因为有人会滥用他们，不从对象的角度思考，但它们有正确的用法。它们可以将原生只或数组的相关方法组合到一起，比如**java.lang.Math**或者**java.util.Arrays**。还可以将静态方法组合到一起，包括工厂（条款1），或是实现了某些接口的对象，比如说**java.util.Collections**，（在Java 8中，如果你想自己修改，你可以将这类方法放到接口中）。最后，可以将终态类上的方法进行分组，因为不能将它们放在子类中。
 

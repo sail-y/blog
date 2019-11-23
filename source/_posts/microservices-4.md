@@ -172,3 +172,97 @@ http://www.websocket.org/echo.html
 
 ![sc04-1](/img/spring-cloud/sc04-1.png)
 
+## SpringBoot单元测试
+
+SpringBoot为单元测试提供了非常方便的集成，引入依赖：
+
+```
+'org.springframework.boot:spring-boot-starter-test'
+```
+
+
+
+编写单元测试类：
+
+```java
+/**
+ * @author yangfan
+ * @date 2019/11/23
+ */
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class MyControllerTest {
+
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
+    private MockMvc mockMvc;
+
+    @Before
+    public void setUpMockMvc() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    }
+
+    @Test
+    public void testGetPerson() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/person")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+    }
+}
+```
+
+
+
+控制台输出结果：
+
+
+
+```
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /api/person
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Accept:"application/json;charset=UTF-8"]
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = com.test.springlecture.controller.MyController
+           Method = public com.test.springlecture.domain.Person com.test.springlecture.controller.MyController.getPerson()
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = [Content-Type:"application/json;charset=UTF-8"]
+     Content type = application/json;charset=UTF-8
+             Body = {"id":18,"name":"张三","birthday":"2019-11-23T09:59:18.761+0000"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+```
+
+
+
+SpringBoot重要组件就介绍到这里，后面的文章会介绍Apache kafka的使用以及和SpringBoot应用的集成。
+
+
+
+本文涉及到的源码：https://github.com/sail-y/spring-cloud-lecture/tree/master/spring-lecture

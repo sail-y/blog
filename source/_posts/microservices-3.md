@@ -1,7 +1,7 @@
 ---
 title: Spring Cloud微服务-3-SpringBoot源码初探
 tags: [Spring Cloud, 微服务]
-date: 2019-05-23 22:50:39
+date: 2019-11-23 22:50:39
 categories: 微服务
 ---
 
@@ -18,7 +18,7 @@ Class that can be used to bootstrap and launch a Spring application from a Java 
 
 <!--more-->
 
- 
+
  SpringApplications can read beans from a variety of different sources. It is generally recommended that a single @Configuration class is used to bootstrap your application, however, you may also set sources from:
 
 * The fully qualified class name to be loaded by AnnotatedBeanDefinitionReader
@@ -138,7 +138,7 @@ private Class<?> deduceMainApplicationClass() {
 
 SpringApplication对象构造完成后，接下来就调用了run()方法。
 
-## run()方法
+## run()方法& ApplicationContext
 
 运行Spring应用，创建并且刷新一个新的ApplicationContext。
 
@@ -166,6 +166,10 @@ ApplicationContext是Spring里非常重要的一个接口，看看它的注释�
 * 向注册的监听器发布事件的能力，继承自ApplicationEventPublisher接口
 * 解析消息的能力，支持国际化，继承自MessageSource接口
 * 继承父上下文的相关信息。子上下文有更高的优先级
+
+
+
+
 
 
 

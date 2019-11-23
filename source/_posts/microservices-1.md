@@ -186,4 +186,4 @@ https://dzone.com/articles/microservices-vs-soa-is-there-any-difference-at-al
 >Service Oriented Architecture is less about how to modularize an application, and more about how to compose an application by integration of distributed, separately-maintained and deployed software components. It is enabled by technologies and standards that make it easier for components to communicate and cooperate over a network, especially an IP network.
 
 
-![](/imgs/spring-cloud/sc01-01.jpg)
+![](/img/spring-cloud/sc01-1.jpg)

@@ -1,6 +1,6 @@
 ---
 
-title: Eureka源码01-入门
+title: Eureka源码01-eureka启动流程
 date: 2020-03-15 17:05:39
 tags: [spring-cloud,eureka]
 categories: eureka
@@ -26,54 +26,17 @@ IDE选用idea2018版本进行阅读，为什么选2018版本，eureka的源码�
 * 自我保护机制
 * 通信
 
-# 如何跑单元测试
+下面将从源码找到eureka的启动类，并作为入口进行源码分析。
 
-## 手动启动Eureka注册中心
+# 启动流程分析
 
-在eureka-server项目的单元测试里，有一个EurekaClientServerRestIntegrationTest类，下面通过这个类，尝试手动启动Eureka注册中心。类里有一个setUp方法，用过junit的都知道，这是是单元测试每次执行前都需要执行的，这里面的startServer需要做一些调整，注释掉之前的内容，对代码做以下修改。
+eureka-server依赖了eureka-client和eureka-core2个模块，server又当服务器，又当作客户端，因为在集群模式下，他们也会相互注册。注册中心相关核心的代码都在eureka-core模块里，也能看出来eureka是基于jersey（类似spring mvc)开发的接口，和客户端http请求，在服务之间相互通信。
 
-```java
-private static void startServer() throws Exception {
-//        File warFile = findWar();
-//
-//        server = new Server(8080);
-//
-//        WebAppContext webapp = new WebAppContext();
-//        webapp.setContextPath("/");
-//        webapp.setWar(warFile.getAbsolutePath());
-//        server.setHandler(webapp);
-//
-//        server.start();
-//
-//        eurekaServiceUrl = "http://localhost:8080/v2";
-    server = new Server(8080);
-
-    WebAppContext webAppCtx = new WebAppContext(new File("./eureka-server/src/main/webapp").getAbsolutePath(), "/");
-    webAppCtx.setDescriptor(new File("./eureka-server/src/main/webapp/WEB-INF/web.xml").getAbsolutePath());
-    webAppCtx.setResourceBase(new File("./eureka-server/src/main/resources").getAbsolutePath());
-    webAppCtx.setClassLoader(Thread.currentThread().getContextClassLoader());
-    server.setHandler(webAppCtx);
-    server.start();
-
-    eurekaServiceUrl = "http://localhost:8080/v2";
-}
-```
-
-这个类里也基本包含了我们需要核心关注的功能，例如`testRegistration`,`testHeartbeat`等等。
-
-## 启动eureka客户端
-
-在eureka-examples项目里，单元测试还包含了客户端的一些操作，例如`ExampleEurekaClient`类里。需要将`EurekaClientServerRestIntegrationTest.injectEurekaConfiguration`方法复制到`ExampleEurekaClient`类里，然后在main方法的第一行先调用一下，设置一些系统属性。
-
-# 源码分析
-
-eureka-server依赖了eureka-client和eureka-core2个模块，server又当服务器，又当作客户端，因为在集群模式下，他们也会相互注册。注册中心相关核心的代码都在eureka-core模块里，也能看出来eureka是基于jersey（类似spring mvc)开发的接口，和客户端http请求，在服务时间相互通信。
-
-<img src="../../img/spring-cloud/image-20200315153312195.png" alt="image-20200315153312195"  /><img src="../../img/spring-cloud/image-20200315153257597.png" alt="image-20200315153257597"  />
+<img src="/img/spring-cloud/image-20200315153312195.png" alt="image-20200315153312195"  /><img src="/img/spring-cloud/image-20200315153257597.png" alt="image-20200315153257597"  />
 
 然后eureka-resources里，其实就是一些css、js和jsp文件。
 
-<img src="../../img/spring-cloud/image-20200315153346879.png" alt="image-20200315153346879"  />
+<img src="/img/spring-cloud/image-20200315153346879.png" alt="image-20200315153346879"  />
 
 那么eureka-server本质上其实就是一个web应用，并且在eureka-server里发现还有一个web.xml文件，所以我们应该重点分析下`web.xml`文件，里面包含了一些listener和filter，这些类应该都是我们要重点看一下的源码，先猜一下这几个类都是干什么的。
 
@@ -86,7 +49,7 @@ eureka-server依赖了eureka-client和eureka-core2个模块，server又当服务
 
 文件下面的filter-mapping里默认没有开启限流的过滤器，Gzip也只过滤`/v2/apps`路径下的请求。
 
-## EurekaBootStrap
+## EurekaBootStrap（启动类，重要）
 
 这个类在eureka-core里，监听器要关注`contextInitialized`方法，这里就是eureka-server启动，初始化的入口。
 
@@ -139,7 +102,7 @@ applicationInfoManager = new ApplicationInfoManager(
   instanceConfig, new EurekaConfigBasedInstanceInfoProvider(instanceConfig).get());
 ```
 
-查看ApplicationInfoManager的javadoc说明，这个类用来初始化服务注册和被其他服务发现的一些配置，其中配置通过EurekaInstanceConfig设置，从MyDataCenterInstanceConfig的父类的构造方法可以看到，其实也是读取的eureka-client.properties文件加载的。和`DefaultEurekaServerConfig`一样`PropertiesInstanceConfig`也是提供了一些方法，实际是从配置文件读取，同时也提供了默认值。
+查看ApplicationInfoManager的javadoc说明，这个类用来初始化服务注册和被其他服务发现的一些配置，其中配置通过EurekaInstanceConfig设置，从MyDataCenterInstanceConfig的父类的构造方法可以看到，其实也是读取的eureka-client.properties文件加载的。和`DefaultEurekaServerConfig`一样`EurekaInstanceConfig`也是提供了一些方法，实际是从配置文件读取，同时也提供了默认值。
 
 `new EurekaConfigBasedInstanceInfoProvider(instanceConfig).get()`方法返回了InstanceInfo。InstanceInfo是服务实例本身的信息，用**构造器模式**`InstanceInfo.Builder.newBuilder()`构造了一个`InstanceInfo.Builder`实例，从instanceConfig里获取了大量配置，再加创建的几个类完成了构造。
 
@@ -227,5 +190,8 @@ EurekaMonitors.registerAllStats();
 
 注册一些监控和统计。
 
+# 总结
 
+启动流程，到这里就结束了，我们总结一下，源码里用了不少设计模式和优秀的实现机制，例如基于双检锁的单例模式、构建器模式，面向接口的配置读取等，这都是我们值得去学习的。
 
+![eureka server启动流程图](/img/spring-cloud/eureka server启动流程图.jpg)

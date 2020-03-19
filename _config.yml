@@ -95,5 +95,5 @@ deploy:
   type: git    #部署类型, 本文使用Github
   repository: 
     github: git@github.com:sail-y/sail-y.github.io.git  #部署的仓库的SSH
-    # coding: git@git.dev.tencent.com:saily/blog.git
+    coding: git@git.dev.tencent.com:saily/blog.git
   branch: master   #部署分支,一般使用master主分支

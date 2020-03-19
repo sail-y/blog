@@ -1,3 +1,11 @@
+---
+title: Eureka源码02-服务注册流程分析
+date: 2020-03-18 20:05:39
+tags: [spring-cloud,eureka]
+categories: eureka
+
+---
+
 # eureka client启动流程
 
 上一篇文章，我们分析了eureka server的启动流程，这一篇来分析一下eureka client的启动流程。我们先要找到启动入口在哪里。在eureka-examples里，有一个ExampleEurekaClient的测试类。要执行这个类，首先需要复制一段代码，设置一些基础属性，这是从eureka-server的单元测试里复制过来的：
@@ -57,6 +65,8 @@ public static void main(String[] args) throws UnknownHostException {
 
 在DiscoveryClient的构造方法里，做了很多操作，具体可以看下图。
 
+## 画图总结
+
 ![eureka client启动流程](/img/spring-cloud/eureka client启动流程.jpg)
 
 
@@ -96,10 +106,121 @@ public static void main(String[] args) throws UnknownHostException {
 
    
 
-# 总结
+## 总结
 
 eureka client在服务注册的这块代码，可以也是看到有用到工厂模式、装饰器模式，但是也有很多**槽点**：
 
 1. 服务注册，不应该放在`InstanceInfoReplicator`中，语意不明朗。
 2. 负责发送请求的HttpClient，类体系过于**复杂**，导致看代码的人根本找不到对应的client，最后是根据顶层接口(EurekaHttpClient)和项目依赖实际是使用jersey框架来进行restful接口暴露和调用，才找到真正发送服务注册请求的地方(AbstractJersey2EurekaHttpClient)。
 
+
+
+# eureka server收到注册请求的处理
+
+上面分析到了，eureka client向eureka server发起了http请求进行注册，下面就看一下在eureka server中，是如何接收并处理注册请求的。
+
+因为eureka是基于jersey开发，所以我们去找/v2/apps/{appId}这样的post请求路径处理类，这个请求是在eureka-core模块中`ApplicationsResource`的`getApplicationResource`。
+
+```java
+@Path("{appId}")
+public ApplicationResource getApplicationResource(
+  @PathParam("version") String version,
+  @PathParam("appId") String appId) {
+  CurrentRequestVersion.set(Version.toEnum(version));
+  return new ApplicationResource(appId, serverConfig, registry);
+}
+```
+
+跟到ApplicationResource里去找处理post的方法，就找到了接收注册请求的逻辑。
+
+```java
+@POST
+@Consumes({"application/json", "application/xml"})
+public Response addInstance(InstanceInfo info,
+                            @HeaderParam(PeerEurekaNode.HEADER_REPLICATION) String isReplication) {
+  ...
+```
+
+接收的是InstanceInfo，代表了一个服务实例。
+
+在单元测试里，有一个ApplicationResourceTest类，包含了许多功能的测试。接下来，在ApplicationResourceTest里，用断点的方式执行testGoodRegistration方法，对注册流程进行调试和源码分析。
+
+![image-20200319222757757](/img/spring-cloud/image-20200319222757757.png)
+
+InstanceInfo主要包含2部分数据：
+
+1. 主机名、ip地址、端口号、url地址
+2. lease（租约）的信息：保持心跳的间隔时间，最近心跳的时间，服务注册的时间，服务启动的时间。
+
+
+
+register逻辑：
+
+1. 检查了一些必要的参数
+
+2. 判断是否是在AWS数据中心，做额外的操作
+
+3. 调用registry.register(info, "true".equals(isReplication));（PeerAwareInstanceRegistry）。向服务实例注册表里注册。
+
+4. 调用[PeerAwareInstanceRegistry](http://www.saily.top/2020/03/15/springcloud/eureka01/#%E5%A4%84%E7%90%86%E6%B3%A8%E5%86%8C%E7%9B%B8%E5%85%B3%E7%9A%84%E4%BA%8B%E6%83%85)父类的register方法
+
+   ```java
+   public void register(InstanceInfo registrant, int leaseDuration, boolean isReplication) {
+     try {
+       read.lock();
+       Map<String, Lease<InstanceInfo>> gMap = registry.get(registrant.getAppName());
+       REGISTER.increment(isReplication);
+       // 如果是第一次注册，这个map肯定是null
+       // 对Map进行初始化
+       if (gMap == null) {
+         final ConcurrentHashMap<String, Lease<InstanceInfo>> gNewMap = new ConcurrentHashMap<String, Lease<InstanceInfo>>();
+         // 一个服务会有多个实例，所以这样存
+         gMap = registry.putIfAbsent(registrant.getAppName(), gNewMap);
+         if (gMap == null) {
+           gMap = gNewMap;
+         }
+       }
+       // 第一次执行，这里肯定也是null
+       Lease<InstanceInfo> existingLease = gMap.get(registrant.getId());
+       ......省略部分代码
+       // 如果是服务第一次注册，将服务实例信息放到map中
+       Lease<InstanceInfo> lease = new Lease<InstanceInfo>(registrant, leaseDuration);
+       if (existingLease != null) {
+         lease.setServiceUpTimestamp(existingLease.getServiceUpTimestamp());
+       }
+       gMap.put(registrant.getId(), lease);
+         
+   ```
+
+   这里的registry，他的数据结构里面就是保存的服务和实例信息：
+
+   ```json
+   {
+     "APP_A":{
+       "00000":Lease<InstanceInfo>,
+       "00001":Lease<InstanceInfo>,
+       "00002":Lease<InstanceInfo>,
+     },
+     "APP_B":{
+       "10000":Lease<InstanceInfo>,
+    "20001":Lease<InstanceInfo>,
+       "30002":Lease<InstanceInfo>,
+     }
+   }
+   ```
+   
+5. 将服务实例的服务名和实例ID访问一个队列中（recentRegisteredQueue）
+
+6. 再后面也是更新一些状态。
+
+**所以服务注册，最终数据就是服务实例信息放在了一个内存的注册表中：`ConcurrentHashMap<String, Map<String, Lease<InstanceInfo>>>`。**
+
+
+
+注册这里包含了一个读写锁的应用，ReentrantReadWriteLock，在这里注册的时候，上的是读锁，多个服务实例，可以同时注册。灵活运用读写锁，可以控制多线程的并发，有些操作是可以并发执行的，有些操作的互斥的。
+
+
+
+## 画图总结
+
+![image-20200319232127915](/img/spring-cloud/image-20200319232127915.png)

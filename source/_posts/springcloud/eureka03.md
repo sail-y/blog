@@ -1,6 +1,6 @@
 ---
 title: Eureka源码03-服务列表同步分析
-date: 2020-03-22 10:05:39
+date: 2020-03-21 10:05:39
 tags: [spring-cloud,eureka]
 categories: eureka
 
@@ -25,11 +25,11 @@ if (clientConfig.shouldFetchRegistry() && !fetchRegistry(false)) {
 ```java
 // If the delta is disabled or if it is the first time, get all
 // applications
-// 本地的Application缓存
+// 本地的Application缓存，在执行完成后续的全量注册表拉取后，也会将数据缓存到这个地方
 Applications applications = getApplications();
 if 一大堆条件 {
-  // 用jeresy从server端获取全量注册表，然后缓存到本地
   // localRegionApps.set(this.filterAndShuffle(apps));
+  // 用jeresy从server端获取全量注册表，然后缓存到本地（也就是上方的getApplications()）
   getAndStoreFullRegistry();
 } else {
   // 增量

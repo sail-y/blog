@@ -2,7 +2,7 @@
 title: 分析Ribbon源码，Ribbon在底层如何拉取服务列表、进行负载均衡选择并发起Http请求
 date: 2020-03-31 23:05:39
 tags: [spring-cloud,ribnon]
-categories: ribnon
+categories: spring-cloud
 
 ---
 # 负载均衡
@@ -17,7 +17,19 @@ categories: ribnon
 
 # Spring Cloud Ribbon
 
-Spring Cloud Ribbon组件，也是基于Netflix Ribbon做的封装。大体流程如下图所示：
+Spring Cloud Ribbon组件，也是基于Netflix Ribbon做的封装。
+
+Ribbon包含几个核心组件：
+
+* IRule:负载均衡规则组件，轮询，随机，权重等。
+
+* IPing: 用于检测服务是否存活，剔除宕机的服务。
+
+* ServerList: 针对不同的注册中心，有不同的实现类，例如ConsulServerList，NacosServiceList，ZookeeperServerList以及eureka的DomainExtractingServerList。
+* ILoadBalancer:负载均衡器，选择服务用，包含了IRule、IPing和ServerList。
+* LoadBalancerClient: 这是SpringCloud二次封装的一层组件，基于以上组件进行服务列表更新，过滤，选择并发起http调用。
+
+大体流程如下图所示：
 
 ![image-20200331230023575](/img/spring-cloud/image-20200331230023575.png)
 

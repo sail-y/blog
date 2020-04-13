@@ -1,8 +1,8 @@
 ---
 title: Hystrix监控和运维
-tags: [hystrix]
+tags: [spring-cloud,hystrix]
 date: 2018-06-10 18:03:59
-categories: hystrix
+categories: spring-cloud
 ---
 
 此为龙果学院课程学习笔记，记录以后翻看

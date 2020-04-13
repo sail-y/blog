@@ -2,7 +2,7 @@
 title: Eureka源码02-服务注册流程分析
 date: 2020-03-18 20:05:39
 tags: [spring-cloud,eureka]
-categories: eureka
+categories: spring-cloud
 
 ---
 

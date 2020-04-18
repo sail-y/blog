@@ -23,7 +23,6 @@ if (clientConfig.shouldFetchRegistry() && !fetchRegistry(false)) {
 这个fetchRegistry方法，就是抓取注册表的方法。
 
 ```java
-// DiscoveryClient.fetchRegistry()
 // If the delta is disabled or if it is the first time, get all
 // applications
 // 本地的Application缓存，在执行完成后续的全量注册表拉取后，也会将数据缓存到这个地方
@@ -87,7 +86,7 @@ String get(final Key key, boolean useReadOnlyCache) {
 
 ### 主动过期
 
-有新的服务实例发生注册、下线、故障的时候，会刷新readWriteCacheMap。PeerAwareInstanceRegistryImpl的javadoc，说这个类会同步一些状态变化到其他节点，同时我们也看他也维护了注册表信息，并且注册的register方法也是在这里面，我们在register方法里，找到invalidateCache代码
+有新的服务实例发生注册、下线、故障的时候，会刷新readWriteCacheMap。之前在阅读PeerAwareInstanceRegistryImpl的javadoc的时候，说这个类会同步一些状态变化到其他节点，同事我们也看他也维护了注册表信息，并且注册的register方法也是在这里面，我们在register方法里，找到invalidateCache代码
 
 ```java
 // invalidate cache
@@ -130,6 +129,6 @@ readOnlyCacheMap是在初始化的时候，设置了一个定时器，默认每�
 
 ### 亮点
 
-1. 如果要保存增量的最新数据变更，可以基于LinkedQueue将最新变更的数据放入这个queue中，然后用定时任务在队列超过一定时间的数据移除，保持这个队列中就是最近几分钟内变更的增量数据。
+1. 如果要保存增量的最新数据变更，可以基于LinkedQueue将最新变更的数据放入这个queue种，然后用定时任务在队列超过一定时间的数据移除，保持这个队列中就是最近几分钟内变更的增量数据。
 2. 数据同步的hash值对：如果在分布式系统里，在不同的地方进行数据的同步，可以采用hash值的思想，从一个地方计算一个hash值，在另外一个地方也计算一个hash值，保证两个hash值是一样的，这样可以保证数据的准确性。 
 

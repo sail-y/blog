@@ -1,7 +1,7 @@
 ---
-title: Feign源码分析
+title: Feign01-流程大体分析和源码分析入口
 date: 2020-04-12 19:05:39
-tags: [spring-cloud,eureka]
+tags: [spring-cloud,feign]
 categories: spring-cloud
 ---
 
@@ -337,46 +337,3 @@ private void registerFeignClient(BeanDefinitionRegistry registry,
 ### 画图总结流程
 
 ![扫描@FeignClient注解的机制](/img/spring-cloud/扫描@FeignClient注解的机制.jpg)
-
-### 动态代理创建实例
-
-在做完前面的事情以后，FeignClientFactoryBean已经被注册到Spring上下文中，根据Spring的原理，FactoryBean是用于构造复杂对象实例的一种工厂，可定制创建，初始化，刷新，销毁的各个过程。重点需要去看getObject()方法，看对象实例是如何产生的。
-
-```java
-// FeignClientFactoryBean.java
-@Override
-public Object getObject() throws Exception {
-   FeignContext context = applicationContext.getBean(FeignContext.class);
-   Feign.Builder builder = feign(context);
-
-   if (!StringUtils.hasText(this.url)) {
-      String url;
-      if (!this.name.startsWith("http")) {
-         url = "http://" + this.name;
-      }
-      else {
-         url = this.name;
-      }
-      url += cleanPath();
-      return loadBalance(builder, context, new HardCodedTarget<>(this.type,
-            this.name, url));
-   }
-   if (StringUtils.hasText(this.url) && !this.url.startsWith("http")) {
-      this.url = "http://" + this.url;
-   }
-   String url = this.url + cleanPath();
-   Client client = getOptional(context, Client.class);
-   if (client != null) {
-      if (client instanceof LoadBalancerFeignClient) {
-         // not lod balancing because we have a url,
-         // but ribbon is on the classpath, so unwrap
-         client = ((LoadBalancerFeignClient)client).getDelegate();
-      }
-      builder.client(client);
-   }
-   Targeter targeter = get(context, Targeter.class);
-   return targeter.target(this, builder, context, new HardCodedTarget<>(
-         this.type, this.name, url));
-}
-```
-

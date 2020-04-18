@@ -595,7 +595,7 @@ WeightedResponseTimeRule：根据响应时间分配一个weight(权重)，响应
 
 ## 服务宕机后Ribbon多久能感知到
 
-在和eureka结合使用的情况下，因为eureka server是靠心跳来摘除服务实例，那么他是需要duration * 2 =180秒，eureka client 从server同步(recentlyChangedQueue)默认是需要30秒，Ribbon从Eureka Client同步也是30秒，所以最多可能需要240秒，也就是4分钟才能知道一个服务已经宕机了，他是有可能访问到宕机的服务，不过SpringCloud是借用了Hystrix降级和熔断的机制来解决这个问题，一定次数错误后会屏蔽某个实例。
+在和eureka结合使用的情况下，因为eureka server是靠心跳来摘除服务实例，那么他是需要duration * 2 =180秒，eureka client 从server同步(recentlyChangedQueue)默认是需要30秒，Ribbon从Eureka Client同步也是30秒，所以最多可能需要240秒，也就是4分钟才能知道一个服务以及宕机了，他是有可能访问到宕机的服务，不过SpringCloud是借用了Hystrix降级和熔断的机制来解决这个问题，一定次数错误后会屏蔽某个实例。
 
 ![默认的负载均衡算法可能存在的问题](/img/spring-cloud/默认的负载均衡算法可能存在的问题.png)
 

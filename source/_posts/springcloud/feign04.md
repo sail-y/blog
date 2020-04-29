@@ -1,8 +1,9 @@
 ---
 title: Feign04-Feign超时和重试分析
-date: 2020-04-18 13:05:39
+date: 2020-04-18 22:05:39
 tags: [spring-cloud,feign]
 categories: spring-cloud
+typora-root-url: ../../../source
 ---
 
 # Feign超时和重试

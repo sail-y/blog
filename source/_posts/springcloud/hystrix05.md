@@ -447,3 +447,24 @@ public R execute() {
 }
 ```
 
+queue()方法，是用来异步执行的command逻辑的，他会将command扔到线程池里去执行，但是这个方法不会等待线程执行完毕command，他会拿到一个Future对象，通过Future对象去获取command执行完毕的响应结果。
+
+```java
+/*
+ * The Future returned by Observable.toBlocking().toFuture() does not implement the
+ * interruption of the execution thread when the "mayInterrupt" flag of Future.cancel(boolean) is set to true;
+ * thus, to comply with the contract of Future, we must wrap around it.
+ */
+final Future<R> delegate = toObservable().toBlocking().toFuture();
+```
+
+toObservable().toBlocking().toFuture();这行代码已经把command扔到线程池里去执行了，并且拿到了一个Future对象，没有办法在异常情况下终止Future对象对应的线程的执行，所以要对Future做一个包装。
+
+然后接下来就是对delegate做了包装，实现了一下cancel等方法。
+
+f.isDone()，通过future判断对应的那个线程是否完成了command的执行，然后调用f.get()会阻塞住，获取到Thread执行command返回的结果。
+
+那我们就发现，在调用queue()方法后，就会通过线程池去执行command，然后在queue()方法中，会等待线程执行结束，如果线程执行结束了，就会返回future；即使执行失败了，也会根据情况，返回future，要不就是抛异常。
+
+下面，我们接着分析`toObservable().toBlocking().toFuture();`核心逻辑，它实现了Hystrix几乎所有的核心逻辑，包括请求缓存、熔断、队列+线程池、线程异步执行、超时检测、异常处理、异常统计、熔断开关等。
+

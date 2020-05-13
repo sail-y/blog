@@ -1,12 +1,12 @@
 ---
-title: SpringCloud和Hystrix的结合使用
+title: Feign和Hystrix的结合使用
 tags: [spring-cloud,hystrix]
 date: 2020-04-19 18:03:59
 categories: spring-cloud
 typora-root-url: ../../../source
 ---
 
-# SpringCloud Feign和Hystrix结合使用
+# Feign和Hystrix结合使用
 
 在@FeignClient中增加fallback配置，指定降级方法的执行
 
@@ -110,9 +110,33 @@ hystrix.threadpool.default.maxQueueSize 默认－1，不能动态修改
 
 hystrix.threadpool.default.queueSizeRejectionThreshold 可以动态修改，默认是5，先进入请求队列，然后再由线程池执行
 
-### 如何计算线程池？
+### 如何计算线程池数量？
 
-###  
+####  高峰期每秒的请求数量 / 1000毫秒 / TP99请求延时 + buffer空间
+
+比如说处理一个请求，要50ms，那么TP99，也就是99%的请求里处理一个请求耗时最长是50ms。
+
+我们给一点缓冲空间10ms，那就是处理请求接口耗时60ms。
+
+ 所以一秒钟一个线程可以处理：1000 / 60 = 16，一个线程一秒钟可以处理16个请求。
+
+ 假设高峰期，每秒最多1200个请求，一个线程每秒可以处理16个请求，需要多少个线程才能处理每秒1200个请求呢？1200 / 16 = 75，最多需要75个线程，每个线程每秒处理16个请求，75个线程每秒才可以处理1200个请求。
+
+最多需要多少个线程数量，就是这样子算出来
+
+
+
+#### 如果是服务B -> 服务A的话，服务B线程数量怎么设置
+
+服务B调用服务A的线程池需要多少个线程呢？
+
+高峰期，服务B最多要调用服务A每秒钟1200次，服务A处理一个请求是60ms，服务B每次调用服务A的时候，用一个线程发起一次请求，那么这个服务B的这个线程，要60ms才能返回。
+
+服务B而言，一个线程对服务A发起一次请求需要60ms，一个线程每秒钟可以请求服务A达到16次，但是现在服务B每秒钟需要请求服务A达到1200次，那么服务B就需要75个线程，在高峰期并发请求服务A，才可以完成每秒1200次的调用。
+
+服务B，部署多台机器，每台机器调用服务A的线程池有10个线程，比如说搞个10个线程，一共部署10台机器，那么服务B调用服务A的线程数量，一共有100个线程，轻轻松松可以支撑高峰期调用服务A的1200次的场景
+
+每个线程调用服务A一次，耗时60ms，每个线程每秒可以调用服务A一共是16次，100个线程，每秒最多可以调用服务A是1600次，高峰的时候只要支持调用服务A的1200次就可以了，所以这个机器部署就绰绰有余了
 
 ## 执行配置
 
@@ -432,39 +456,6 @@ public HystrixCommand.Setter create(Target<?> target, Method method) {
 4. 如果run方法执行异常，getFallback方法调用之前在FeignClient中定义的降级方法
 5. 检查Feign方法的返回类型，可以拿到Hystrix的相关的返回类型，比如HystrixCommand、Observable、Single、Completable。
 
-## HystrixCommand.execute源码细节
 
-HystrixCommand会将任务丢到异步线程池里去执行，通过Future获取执行完毕的结果。
 
-```java
-// HystrixCommand.java
-public R execute() {
-    try {
-        return queue().get();
-    } catch (Exception e) {
-        throw Exceptions.sneakyThrow(decomposeException(e));
-    }
-}
-```
-
-queue()方法，是用来异步执行的command逻辑的，他会将command扔到线程池里去执行，但是这个方法不会等待线程执行完毕command，他会拿到一个Future对象，通过Future对象去获取command执行完毕的响应结果。
-
-```java
-/*
- * The Future returned by Observable.toBlocking().toFuture() does not implement the
- * interruption of the execution thread when the "mayInterrupt" flag of Future.cancel(boolean) is set to true;
- * thus, to comply with the contract of Future, we must wrap around it.
- */
-final Future<R> delegate = toObservable().toBlocking().toFuture();
-```
-
-toObservable().toBlocking().toFuture();这行代码已经把command扔到线程池里去执行了，并且拿到了一个Future对象，没有办法在异常情况下终止Future对象对应的线程的执行，所以要对Future做一个包装。
-
-然后接下来就是对delegate做了包装，实现了一下cancel等方法。
-
-f.isDone()，通过future判断对应的那个线程是否完成了command的执行，然后调用f.get()会阻塞住，获取到Thread执行command返回的结果。
-
-那我们就发现，在调用queue()方法后，就会通过线程池去执行command，然后在queue()方法中，会等待线程执行结束，如果线程执行结束了，就会返回future；即使执行失败了，也会根据情况，返回future，要不就是抛异常。
-
-下面，我们接着分析`toObservable().toBlocking().toFuture();`核心逻辑，它实现了Hystrix几乎所有的核心逻辑，包括请求缓存、熔断、队列+线程池、线程异步执行、超时检测、异常处理、异常统计、熔断开关等。
-
+到这里已经看到调用了HystrixCommand的execute方法，所以接下来的内容，将会进入到Hystrix的源码中，下一篇文章细说。

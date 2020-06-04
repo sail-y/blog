@@ -304,7 +304,7 @@ public boolean isLeaseExpirationEnabled() {
    }
    ```
 
-   在updateRenewalThreshold任务中，从别的服务同步并合并注册表。然后计算出一个服务实例的数量。如果拉取到的服务实例数量，大于本地的期望的服务实例数量*0.85。**我觉得这里是不是写错了，numberOfRenewsPerMinThreshold本来就是count\*2\*0.85，这里判断再\*0.85？？？**接着再次计算了一下服务实例列表的count，count * 2 * 0.85。这个代码也是骚的很，刚计算了expectedNumberOfRenewsPerMin=count * 2，下面却不用这个变量，又写了一遍。
+   在updateRenewalThreshold任务中，从别的服务同步并合并注册表。然后计算出一个服务实例的数量。如果拉取到的服务实例数量，大于本地的期望的服务实例数量*0.85。**我觉得这里是不是写错了，numberOfRenewsPerMinThreshold本来就是count\*2\*0.85，这里判断再\*0.85？？？**接着再次计算了一下服务实例列表的count，count * 2 * 0.85。这个代码也是骚的很，刚计算了`expectedNumberOfRenewsPerMin=count * 2`，下面却不用这个变量，又写了一遍。
 
    ```java
    synchronized (lock) {

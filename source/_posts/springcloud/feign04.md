@@ -187,3 +187,4 @@ if (maxRetrysNext > 0 && server == null)
     o = o.retry(retryPolicy(maxRetrysNext, false));
 ```
 
+> 上面的逻辑是服务宕机的时候的重试逻辑，在超时的时候重试逻辑却是在RetryableFeignLoadBalancer里

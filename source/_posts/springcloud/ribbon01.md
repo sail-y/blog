@@ -3,7 +3,7 @@ title: 分析Ribbon源码，Ribbon在底层如何拉取服务列表、进行负�
 date: 2020-03-31 23:05:39
 tags: [spring-cloud,ribnon]
 categories: spring-cloud
-
+typora-root-url: ../../../source
 ---
 # 负载均衡
 

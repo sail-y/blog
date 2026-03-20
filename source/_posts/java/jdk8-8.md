@@ -3,6 +3,7 @@ title: JDK8-Collectors工厂类源码探索
 date: 2017-02-26 16:27:03
 tags: [java,jdk8]
 categories: jdk8
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 ### Collectors静态工厂类
@@ -101,3 +102,7 @@ public static <T> Collector<T, ?, Integer> summingInt(ToIntFunction<? super T> m
             a -> a[0], CH_NOID);
 }
 ```
+
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

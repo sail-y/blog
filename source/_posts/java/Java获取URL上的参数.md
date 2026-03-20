@@ -2,6 +2,7 @@ title: Java获取URL上的参数
 date: 2016-07-21 11:18:24
 tags: [Java, Guava]
 categories: Java
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 
@@ -19,3 +20,6 @@ private String getPara(String url, String name) {
 ```
 
 先截取到?后面的字符串，然后再用`Splitter.on("&").withKeyValueSeparator("=").split(params);`就轻松的解决了~
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

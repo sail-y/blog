@@ -3,6 +3,7 @@ title: JDK8-比较器Comparator
 date: 2017-02-26 11:08:13
 tags: [java,jdk8]
 categories: jdk8
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 ### 比较器详解
@@ -44,3 +45,7 @@ public class MyComparatorTest {
 list.sort(Comparator.comparingInt(String::length).thenComparing(String.CASE_INSENSITIVE_ORDER));
 ```
 
+
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

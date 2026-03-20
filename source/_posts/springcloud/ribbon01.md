@@ -3,6 +3,7 @@ title: 分析Ribbon源码，Ribbon在底层如何拉取服务列表、进行负�
 date: 2020-03-31 23:05:39
 tags: [spring-cloud,ribnon]
 categories: spring-cloud
+description: 本文讲解相关技术要点和实践经验。
 typora-root-url: ../../../source
 ---
 # 负载均衡
@@ -604,3 +605,6 @@ WeightedResponseTimeRule：根据响应时间分配一个weight(权重)，响应
 这有篇文章写的比较清晰，说明了SpringCloud在读取Ribbon配置的时候是通过懒加载去读取配置的，也就是第一次发起调用的时候，才会通过NamedContextFactory.createContext去初始化@RibbonClients和@RibbonClient指定的配置。 但是@RibbonClients和@RibbonClient的配置被放入NamedContextFactory的configurations字段中，是在RibbonClientConfigurationRegistrar这个类里，结合源码看看文章，就很清楚了。
 
 https://www.cnblogs.com/trust-freedom/p/11216280.html
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

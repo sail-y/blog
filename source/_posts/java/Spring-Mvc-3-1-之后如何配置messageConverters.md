@@ -2,6 +2,7 @@ title: Spring Mvc 3.1 之后如何配置messageConverters
 date: 2015-03-06 22:15:41
 tags: [spring mvc, messageConverters]
 categories: spring
+description: 本文讲解相关技术要点和实践经验。
 ---
 `<mvc:annotation-driven />` 是一种简写形式，完全可以手动配置替代这种简写形式，简写形式可以让初学都快速应用默认配置方案。`<mvc:annotation-driven />` 会自动注册`DefaultAnnotationHandlerMapping`与`AnnotationMethodHandlerAdapter` 两个bean,是spring MVC为@Controllers分发请求所必须的。
 
@@ -194,3 +195,6 @@ This is the complete list of HttpMessageConverters set up by mvc:annotation-driv
 	</bean>
 </beans>
 ```
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

@@ -3,6 +3,7 @@ title: Feign04-Feign超时和重试分析
 date: 2020-04-18 22:05:39
 tags: [spring-cloud,feign]
 categories: spring-cloud
+description: 本文讲解相关技术要点和实践经验。
 typora-root-url: ../../../source
 ---
 
@@ -188,3 +189,6 @@ if (maxRetrysNext > 0 && server == null)
 ```
 
 > 上面的逻辑是服务宕机的时候的重试逻辑，在超时的时候重试逻辑却是在RetryableFeignLoadBalancer里
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

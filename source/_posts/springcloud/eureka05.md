@@ -3,6 +3,7 @@ title: Eureka源码05-服务集群初始化和同步原理分析
 date: 2020-03-28 11:05:39
 tags: [spring-cloud,eureka]
 categories: spring-cloud
+description: 本文讲解相关技术要点和实践经验。
 
 ---
 # eureka server集群相关源码分析
@@ -136,3 +137,6 @@ switch (action) {
 
 
 ![未命名文件](/img/spring-cloud/未命名文件.jpg)
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

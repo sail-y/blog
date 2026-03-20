@@ -3,6 +3,7 @@ title: HystrixCommand执行源码分析
 tags: [spring-cloud,hystrix]
 date: 2020-05-09 21:03:59
 categories: spring-cloud
+description: 本文讲解相关技术要点和实践经验。
 typora-root-url: ../../../source
 
 ---
@@ -1087,3 +1088,7 @@ if (requestCacheEnabled) {
 }
 ```
 
+
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

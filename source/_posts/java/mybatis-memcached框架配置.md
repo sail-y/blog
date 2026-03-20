@@ -2,6 +2,7 @@ title: mybatis-memcached框架配置
 date: 2015-02-06 23:22:37
 tags: [mybatis,memcached]
 categories: Java
+description: 本文讲解相关技术要点和实践经验。
 ---
 官方放出了mybatis和memcached的整合包，先附上官方文档地址
 http://mybatis.github.io/memcached-cache/
@@ -33,3 +34,6 @@ org.mybatis.caches.memcached.servers=172.29.33.201:11211,localhost:11211
 org.mybatis.caches.memcached.expiration=30 
 org.mybatis.caches.memcached.asyncget=false 
 ```
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

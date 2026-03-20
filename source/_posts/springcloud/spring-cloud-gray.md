@@ -3,6 +3,7 @@ title: Spring Cloud 不停机发布服务(0-downtime Blue/Green deployments)
 date: 2018-04-14 14:06:48
 tags: [spring-cloud,微服务,灰度发布]
 categories: spring boot/cloud
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 
@@ -146,3 +147,7 @@ ribbon:
 
 
 
+
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

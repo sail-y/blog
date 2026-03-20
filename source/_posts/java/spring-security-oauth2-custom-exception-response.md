@@ -3,6 +3,7 @@ title: Spring Cloud Security OAuth2 定制错误消息
 tags: [spring security]
 date: 2019-01-09 20:32:49
 categories: spring
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 # 背景
@@ -247,3 +248,7 @@ public class AuthExceptionEntryPoint implements AuthenticationEntryPoint {
     "msg": "未授权: Token错误"
 }
 ```
+
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

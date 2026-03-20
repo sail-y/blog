@@ -3,6 +3,7 @@ title: JDK8-Stream源码解析
 date: 2017-02-10 12:34:27
 tags: [java,jdk8]
 categories: jdk8
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 ### collect
@@ -95,3 +96,6 @@ CollectorImpl就是Collector的一个实现类，这个构造方法的参数我�
 1. 第一个参数Supplier，就是生成一个容器用来装需要收集的元素，这里是一个ArrayList
 2. 第二个参数是一个BiConsumer，这里叫做累加器，操作内容就是把流里的元素放进容器里
 3. 第三个参数combiner是一个BinaryOperator类型，只有在并发流的时候才会用到，意思就是并发的时候会有多个Supplier各自进行收集，最后combiner会把这些结果集合并在一起。
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

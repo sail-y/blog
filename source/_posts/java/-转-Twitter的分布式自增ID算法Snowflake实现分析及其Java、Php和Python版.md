@@ -2,6 +2,7 @@ title: "[转]Twitter的分布式自增ID算法Snowflake实现分析及其Java、
 date: 2015-04-22 09:47:54
 tags: [分布式自增ID算法]
 categories: Java
+description: 本文讲解相关技术要点和实践经验。
 ---
 转载：http://www.dengchuanhua.com/132.html
 
@@ -335,3 +336,6 @@ $Idwork = new Idwork(2);
 $a= $Idwork->nextId();
 ?>
 ```
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

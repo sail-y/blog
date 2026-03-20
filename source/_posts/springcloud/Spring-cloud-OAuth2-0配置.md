@@ -2,6 +2,7 @@ title: Spring-cloud OAuth2.0配置
 date: 2016-03-31 16:13:49
 tags: [spring-cloud,微服务]
 categories: spring boot/cloud
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 在spring cloud项目环境中配置oauth2.0认证。	
@@ -210,3 +211,7 @@ curl -s clientId:secretId@localhost:10000/oauth/token  \
 访问API的时候在Http Header中带上，Authorization: Bearer$access_token。即可...
 
  
+
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

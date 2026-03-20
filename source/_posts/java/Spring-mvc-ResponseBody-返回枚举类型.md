@@ -2,6 +2,7 @@ title: "Spring mvc @ResponseBody 返回枚举类型"
 date: 2015-01-31 11:36:30
 tags: [fastjson,spring mvc,java]
 categories: spring
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 我们在用`@ResponseBody`返回实体对象可以用`spring mvc`自动帮我们转化成json串  
@@ -82,3 +83,7 @@ public class FastJsonHttpMessageConverter extends AbstractHttpMessageConverter<O
 ```java
 String text = JSONUtil.toJSONString(obj, features);  
 ```
+
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

@@ -3,6 +3,7 @@ title: Spring Cloud微服务-2-SpringBoot起步
 tags: [Spring Cloud, 微服务]
 date: 2019-04-12 14:16:21
 categories: 微服务
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 微服务学习笔记
@@ -482,3 +483,7 @@ Auto-configuration classes are regular Spring Configuration beans. They are loca
 配置扫描@Configuration组件的目录。
 
 
+
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

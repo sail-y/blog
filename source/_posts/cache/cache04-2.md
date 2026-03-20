@@ -120,3 +120,6 @@ bin/kafka-console-producer.sh --broker-list 192.168.2.201:9092,192.168.2.202:909
 bin/kafka-console-consumer.sh --zookeeper 192.168.2.201:2181,192.168.2.202:2181,192.168.2.203:2181 --topic test --from-beginning
 
 ```
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

@@ -3,6 +3,7 @@ title: Spring Cloud Zuul中修改URI
 tags: [zuul]
 date: 2018-12-11 17:14:01
 categories: spring
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 
@@ -124,3 +125,7 @@ public ServiceName2APIFilter serviceName2APIFilter() {
 ```
 
 然后我测试了一下，成功了，需求解决。
+
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

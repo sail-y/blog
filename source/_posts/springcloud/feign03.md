@@ -3,6 +3,7 @@ title: Feign03-Feign请求处理机制分析
 date: 2020-04-18 16:05:39
 tags: [spring-cloud,feign]
 categories: spring-cloud
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 # 接口方法与MethodHandler映射map的生成机制
@@ -391,3 +392,7 @@ Object decode(Response response) throws Throwable {
 
 ![Feign请求处理机制](/img/spring-cloud/Feign请求处理机制-7217603.jpg)
 
+
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

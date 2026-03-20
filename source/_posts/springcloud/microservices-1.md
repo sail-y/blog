@@ -3,6 +3,7 @@ title: Spring Cloud微服务-1-什么是微服务
 tags: [Spring Cloud, 微服务]
 date: 2019-04-10 18:56:58
 categories: 微服务
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 微服务学习笔记
@@ -187,3 +188,6 @@ https://dzone.com/articles/microservices-vs-soa-is-there-any-difference-at-al
 
 
 ![](/img/spring-cloud/sc01-1.jpg)
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

@@ -3,6 +3,7 @@ title: Git-裸库和submodule、substree
 date: 2017-11-21 08:46:13
 tags: [git]
 categories: git
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 
@@ -356,3 +357,6 @@ To github.com:sail-y/git_substree_child.git
 `--squash`会将subtree的所有提交信息合并成parent的一个提交，然后会将这一次合并的提交和parent再次合并，那么就产生了2次合并。`--squash`是为了防止主仓库的提交历史被污染，但是它的使用也有一些问题。
 
 所以在使用`--squash`的时候，我们需要保证要么一直使用，要么一直不使用。
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

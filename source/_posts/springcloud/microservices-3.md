@@ -3,6 +3,7 @@ title: Spring Cloud微服务-3-SpringBoot源码初探
 tags: [Spring Cloud, 微服务]
 date: 2019-10-13 22:50:39
 categories: 微服务
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 
@@ -279,3 +280,7 @@ refreshContext就调用了ApplicationContext的refresh方法，对上下文里�
 
 callRunners触发调用我们自定义的ApplicationRunner和CommandLineRunner，等于是应用启动完成之后的回调。
 
+
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

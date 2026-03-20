@@ -3,6 +3,7 @@ title: Hystrix高级进阶
 date: 2018-04-15 10:33:01
 tags: [spring-cloud,hystrix]
 categories: spring-cloud
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 此为龙果学院课程学习笔记，记录以后翻看

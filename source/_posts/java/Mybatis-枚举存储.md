@@ -2,6 +2,7 @@ title: Mybatis 枚举存储
 date: 2015-12-11 15:10:44
 tags: [mybatis]
 categories: Java
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 ## 枚举
@@ -201,3 +202,6 @@ public class CustomEnumTypeHandler<E extends CommonEnum<E>> extends BaseTypeHand
         <typeHandler handler="xxx.CustomEnumTypeHandler" javaType="com.xxx.user.UserType"/>
 </typeHandlers>
 ```
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

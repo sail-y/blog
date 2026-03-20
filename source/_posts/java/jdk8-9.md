@@ -3,6 +3,7 @@ title: JDK8-Stream流底层原理和实现[转]
 date: 2017-04-08 11:11:34
 tags: [java,jdk8]
 categories: jdk8
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 
@@ -249,3 +250,7 @@ List<String>results =
 本文详细介绍了Stream流水线的组织方式和执行过程，学习本文将有助于理解原理并写出正确的Stream代码，同时打消你对Stream API效率方面的顾虑。如你所见，Stream API实现如此巧妙，即使我们使用外部迭代手动编写等价代码，也未必更加高效。
 
 
+
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

@@ -3,6 +3,7 @@ title: Zuul01-网关介绍和基本使用
 tags: [spring-cloud,zuul]
 date: 2020-05-10 11:23:59
 categories: spring-cloud
+description: 本文讲解相关技术要点和实践经验。
 typora-root-url: ../../../source
 ---
 
@@ -306,3 +307,6 @@ zuul.SendForwardFilter.route.disable=true
 ### error过滤器
 
 在自定义的过滤器有异常可以抛一个ZuulException，然后写一个MyErrorController，继承BasicErrorController，统一处理异常。
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

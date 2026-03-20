@@ -2,6 +2,7 @@ title: spring cloud OAuth2RestTemplate loadBalanced
 date: 2016-04-21 16:52:45
 tags: [spring-cloud,微服务]
 categories: spring boot/cloud
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 
@@ -81,3 +82,7 @@ private OAuth2RestTemplate restTemplate;
 ```
 
 终于可以正常使用了，不知道为什么这个配置并没有在文档中提到，估计以后会补上这个文档的。现在spring cloud的文档有些地方跟最新的代码也表现得不太一致，特别是spring security这一块，做的时候一定要多多注意。
+
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

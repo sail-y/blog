@@ -3,6 +3,7 @@ title: Spring Security配置cors跨域访问
 date: 2016-12-29 13:54:14
 tags: [spring,java]
 categories: spring
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 http://docs.spring.io/spring/docs/current/spring-framework-reference/html/cors.html
@@ -105,3 +106,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 ```
 
 结果当然是成功了，Spring的文档也老是跟不上节奏，还是需要自己多探索和思考。希望能帮到遇到这个问题的朋友们。
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

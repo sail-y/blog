@@ -3,6 +3,7 @@ title: spring-boot-admin
 date: 2017-08-12 14:18:20
 tags: [spring, java]
 categories: spring boot/cloud
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 # Spring Boot Admin
@@ -55,3 +56,7 @@ categories: spring boot/cloud
 ![](/img/login.png)
 ![](/img/page1.png)
 ![](/img/page2.png)
+
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

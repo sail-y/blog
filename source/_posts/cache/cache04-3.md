@@ -218,3 +218,6 @@ storm jar /usr/local/storm-helloworld-1.0-SNAPSHOT.jar com.roncoo.eshop.storm.Wo
 ```bash
 storm kill WorkCountTopology
 ```
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

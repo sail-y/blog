@@ -3,6 +3,7 @@ title: Eureka源码04-服务心跳、下线、故障和服务自我保护机制�
 date: 2020-03-22 18:05:39
 tags: [spring-cloud,eureka]
 categories: spring-cloud
+description: 本文讲解相关技术要点和实践经验。
 
 ---
 
@@ -341,3 +342,6 @@ lastBucket.set(currentBucket.getAndSet(0));
 
 
 ![image-20200329182748663](/img/spring-cloud/image-20200329182748663.png)
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

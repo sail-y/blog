@@ -3,6 +3,7 @@ title: Spring Cloud基于用户和ip的灰度发布方案
 tags: [spring-cloud,微服务,灰度发布]
 date: 2019-02-28 11:32:01
 categories: spring boot/cloud
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 # 基于用户和ip的灰度发布方案
@@ -197,3 +198,6 @@ public class GrayIpDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy 
 nepxion discovery框架的作者是个很用心的作者，我在开发的时候也遇到了一些问题，作者都耐心的和我一起分析，一一帮我解决了，推荐大家去Star，去学习。
 
 https://github.com/Nepxion/Discovery
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

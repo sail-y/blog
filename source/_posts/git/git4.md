@@ -3,6 +3,7 @@ title: Git-远程仓库
 date: 2017-09-29 15:07:22
 tags: [git]
 categories: git
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 ## Git远程仓库
@@ -304,3 +305,7 @@ git可以配置简短的字符串来替代长一些的命令，来方便用户�
 `➜  mygit git:(master) git config --global alias.ui '!gitk'`
 
 
+
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

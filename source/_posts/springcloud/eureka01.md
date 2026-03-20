@@ -4,6 +4,7 @@ title: Eureka源码01-eureka启动流程
 date: 2020-03-15 17:05:39
 tags: [spring-cloud,eureka]
 categories: spring-cloud
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 
@@ -195,3 +196,6 @@ EurekaMonitors.registerAllStats();
 启动流程，到这里就结束了，我们总结一下，源码里用了不少设计模式和优秀的实现机制，例如基于双检锁的单例模式、构建器模式，面向接口的配置读取等，这都是我们值得去学习的。
 
 ![eureka server启动流程图](/img/spring-cloud/eureka server启动流程图.jpg)
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

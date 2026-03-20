@@ -3,6 +3,7 @@ title: SpringCloud Netflix生产实践
 tags: [spring-cloud]
 date: 2020-05-17 20:57:58
 categories: spring-cloud
+description: 本文讲解相关技术要点和实践经验。
 typora-root-url: ../../../source
 
 ---
@@ -263,3 +264,7 @@ Hystrix的超时时间应该大于Ribbon的超时时间，加上Ribbon的重试�
 
 Hystrix的超时时间应该是设置为8秒。
 
+
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

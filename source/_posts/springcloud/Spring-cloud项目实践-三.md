@@ -2,6 +2,7 @@ title: Spring cloud项目实践(三)
 date: 2016-03-22 08:22:18
 tags: [spring-cloud,微服务]
 categories: spring boot/cloud
+description: 本文讲解相关技术要点和实践经验。
 ---
 # 持续集成
 
@@ -246,3 +247,6 @@ encrypt:
 我接下来要继续加入的模块就是使用API网关构建微服务。概念如下
 
 http://www.infoq.com/cn/articles/construct-micro-service-using-api-gateway/
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

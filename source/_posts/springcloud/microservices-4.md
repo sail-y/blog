@@ -3,6 +3,7 @@ title: Spring Cloud微服务-4-SpringBoot日志，JSP，WebSocket等
 tags: [Spring Cloud, 微服务]
 date: 2019-11-23 22:50:39
 categories: 微服务
+description: 本文讲解相关技术要点和实践经验。
 typora-root-url: ../img
 ---
 
@@ -266,3 +267,6 @@ SpringBoot重要组件就介绍到这里，后面的文章会介绍Apache kafka�
 
 
 本文涉及到的源码：https://github.com/sail-y/spring-cloud-lecture/tree/master/spring-lecture
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

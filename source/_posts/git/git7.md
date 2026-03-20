@@ -3,6 +3,7 @@ title: Git-cherry-pick、rebase
 date: 2017-11-30 09:04:20
 tags: [git]
 categories: git
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 ## cherry-pick
@@ -262,3 +263,7 @@ Date:   Tue Dec 5 09:20:26 2017 +0800
 
 
 
+
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

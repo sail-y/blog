@@ -3,6 +3,7 @@ title: JDK8-自定义收集器和注意事项
 date: 2017-02-26 14:10:04
 tags: [java,jdk8]
 categories: jdk8
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 ### 自定义收集器
@@ -402,3 +403,7 @@ finisher invoked
 所以我们可以再总结一下combiner的使用说明，就是在并行流，并且收集器的特性没有CONCURRENT特性的时候，combiner才会被调用。
 
 
+
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

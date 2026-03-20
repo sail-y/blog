@@ -3,6 +3,7 @@ title: 集成JWT到Spring Boot项目
 date: 2016-12-08 14:46:56
 tags: [spring, java]
 categories: spring boot/cloud
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 这篇文章我们来讲一下如何集成JWT到Spring Boot项目中来完成接口的权限验证。
@@ -485,3 +486,6 @@ public class DemoAccessDecisionManager implements AccessDecisionManager {
 
 好了，核心配置就是这些，我把这些代码上传github上，有需要的可以下载下来看看。里面的角色和权限都是虚拟数据，应用还需要自行修改代码。
 https://github.com/sail-y/spring-boot-jwt
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

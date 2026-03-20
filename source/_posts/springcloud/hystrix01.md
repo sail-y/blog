@@ -3,6 +3,7 @@ title: Hystrix介绍和简单使用
 date: 2018-03-11 12:05:39
 tags: [spring-cloud,hystrix]
 categories: spring-cloud
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 此为龙果学院课程学习笔记，记录以后翻看
@@ -362,3 +363,6 @@ HystrixCommandProperties.Setter()
 ```
 
 Hystrix的基本使用已经差不多是这样了，后面再有一篇文章，分析hystrix的流程和原理。
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

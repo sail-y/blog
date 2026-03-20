@@ -3,6 +3,7 @@ title: Feign02-动态代理创建FeignClient的实例
 date: 2020-04-18 13:05:39
 tags: [spring-cloud,feign]
 categories: spring-cloud
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 # 动态代理创建FeignClient的实例
@@ -378,3 +379,7 @@ protected <T> T loadBalance(Feign.Builder builder, FeignContext context,
 ## 画图总结
 
 ![feign动态代理的构造过程](/img/spring-cloud/feign动态代理的构造过程.jpg)
+
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

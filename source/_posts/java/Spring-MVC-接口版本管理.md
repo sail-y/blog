@@ -2,6 +2,7 @@ title: Spring MVC 接口版本管理
 date: 2015-03-31 10:06:12
 tags: [Java, Rest, Spring Mvc]
 categories: spring
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 随着我们的应用后台不断的发版，因为改动导致了数据结构的变化，这个时候就需要对HTTP API进行版本控制了。对原有的客户端进行兼容，搜索一番后找到一个方法。		
@@ -119,3 +120,6 @@ public ApiVersionCondition getMatchingCondition(HttpServletRequest request) {
 </bean>
 ```
 大功告成，目前还没发现其他的问题
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

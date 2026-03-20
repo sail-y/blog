@@ -2,6 +2,7 @@ title: gitlab替换nginx服务
 date: 2015-10-29 16:29:10
 tags: [gitlab]
 categories: centos
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 之前在自己服务器上搭建服务器，这是之前的文章
@@ -15,3 +16,7 @@ categories: centos
 >其次，我替换自己的nginx服务器的时候，nginx官方提供的包并不带gitlab要求的passenger模块，所以不能直接用官方提供的方法。我是用gitlab-ctl reconfigure生成了nginx的配置以后复制到自己的nginx里去的。生成的配置在 /var/opt/gitlab/nginx/conf/gitlab-http.conf
 
 >还是nginx，我的nginx的启动账户不是gitlab的（默认是gitlab-www），所以会出现502错误。日志里内容是访问fastcgi权限不足。所以还要chmod 755 /var/opt/gitlab/gitlab-rails/sockets
+
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

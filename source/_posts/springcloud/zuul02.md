@@ -3,6 +3,7 @@ title: Zuul02-核心流程和源码分析
 tags: [spring-cloud,zuul]
 date: 2020-05-11 22:12:59
 categories: spring-cloud
+description: 本文讲解相关技术要点和实践经验。
 typora-root-url: ../../../source
 ---
 
@@ -635,3 +636,6 @@ public Object run() {
 # 画图总结
 
 ![Zuul源码分析 (/img/spring-cloud/Zuul源码分析 (1).jpg)](/../../../Downloads/Zuul源码分析 (1).jpg)
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

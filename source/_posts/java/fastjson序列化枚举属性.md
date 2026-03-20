@@ -2,6 +2,7 @@ title: fastjson序列化枚举属性
 date: 2015-01-30 23:19:19
 tags: [fastjson,java,枚举]
 categories: Java
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 我的实体类里面有一个属性是枚举类型的，但是我在转换的时候我不希望取它的name，而是它的索引值0,1,2,3,搜索一番后发现这个回答
@@ -122,3 +123,7 @@ public static JSONObject toJSON(Object javaObject) {
 }  
 ```
 这样调用我们的工具类方法转换出来的结果，就是我们想要的数字了。
+
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

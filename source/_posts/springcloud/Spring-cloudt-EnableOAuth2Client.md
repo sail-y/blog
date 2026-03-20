@@ -2,6 +2,7 @@ title: "Spring cloud @EnableOAuth2Client"
 date: 2016-07-15 13:55:11
 tags: [spring-cloud,微服务]
 categories: spring boot/cloud
+description: 本文讲解相关技术要点和实践经验。
 ---
 
 Spring Cloud oauth2 开启客户端功能，并启用LoadBalanced
@@ -71,3 +72,6 @@ public ClientCredentialsResourceDetails xmOauth2RemoteResource() {
     return new ClientCredentialsResourceDetails();
 }
 ```
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

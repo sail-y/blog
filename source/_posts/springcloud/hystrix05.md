@@ -3,6 +3,7 @@ title: Feign和Hystrix的结合使用
 tags: [spring-cloud,hystrix]
 date: 2020-04-19 18:03:59
 categories: spring-cloud
+description: 本文讲解相关技术要点和实践经验。
 typora-root-url: ../../../source
 ---
 
@@ -459,3 +460,6 @@ public HystrixCommand.Setter create(Target<?> target, Method method) {
 
 
 到这里已经看到调用了HystrixCommand的execute方法，所以接下来的内容，将会进入到Hystrix的源码中，下一篇文章细说。
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

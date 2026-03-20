@@ -3,6 +3,7 @@ title: SpringCloud组件的各种MaxTotalConnections详解
 date: 2020-04-29 22:05:39
 tags: [spring-cloud]
 categories: spring-cloud
+description: 本文讲解相关技术要点和实践经验。
 typora-root-url: ../../../source
 ---
 
@@ -357,3 +358,7 @@ public ConnectionPool httpClientConnectionPool(IClientConfig config, OkHttpClien
 
 maxConnections的设置与Tomcat的运行模式有关。如果tomcat使用的是BIO，那么maxConnections的值应该与maxThreads一致；如果tomcat使用的是NIO，maxConnections值应该远大于maxThreads。
 
+
+## 总结
+
+本文系统讲解了技术要点，通过学习掌握核心知识和实践方法。

@@ -1,0 +1,55 @@
+
+=== 文章质量检查报告 ===
+
+❌ Claude_Code_培训教程.md - 总分: 5.7/10
+   问题: 缺少摘要, 缺少总结, 发现1处口语化表述, 标题层级不规范, 缺少SEO描述
+❌ cache01.md - 总分: 4.2/10
+   问题: 缺少摘要, 缺少总结, 发现3处口语化表述, 缺少SEO描述
+❌ cache02.md - 总分: 4.4/10
+   问题: 缺少摘要, 缺少总结, 发现2处口语化表述, 标题层级不规范, 缺少SEO描述
+❌ cache03.md - 总分: 1.6/10
+   问题: 缺少摘要, 缺少总结, 发现1处口语化表述, 标题层级不规范, 缺少SEO描述
+❌ cache04.md - 总分: 0.2/10
+   问题: 缺少摘要, 缺少总结, 发现1处口语化表述, 标题层级不规范, 缺少SEO描述
+❌ cache05.md - 总分: 5.5/10
+   问题: 缺少摘要, 缺少总结, 发现2处口语化表述, 缺少SEO描述
+❌ source/_posts/springcloud/Spring-cloud项目实践.md: Invalid frontmatter
+❌ source/_posts/springcloud/Spring-cloud项目实践-二.md: Invalid frontmatter
+❌ spring-cloud-eureka.md - 总分: 5.7/10
+   问题: 缺少总结, 发现1处口语化表述, 缺少SEO描述
+⚠️ spring-cloud-green-blue.md - 总分: 6.1/10
+   问题: 缺少摘要, 缺少总结, 缺少SEO描述
+⚠️ feign01.md - 总分: 6.6/10
+   问题: 缺少摘要, 缺少总结, 标题层级不规范, 缺少SEO描述
+❌ source/_posts/java/java基础笔记01.md: File not found
+⚠️ jdk8-1.md - 总分: 7.1/10
+⚠️ jdk8-2.md - 总分: 6.6/10
+   问题: 缺少总结, 缺少SEO描述
+⚠️ jdk8-3.md - 总分: 6.6/10
+   问题: 缺少摘要, 缺少总结, 缺少SEO描述
+⚠️ jdk8-4.md - 总分: 6.7/10
+   问题: 缺少摘要, 缺少总结, 发现1处口语化表述, 缺少SEO描述
+⚠️ git1.md - 总分: 7.1/10
+⚠️ git2.md - 总分: 6.9/10
+   问题: 缺少摘要, 缺少总结, 发现1处口语化表述, 缺少SEO描述
+⚠️ git3.md - 总分: 6.9/10
+   问题: 缺少摘要, 缺少总结, 发现1处口语化表述, 缺少SEO描述
+❌ source/_posts/jvm/JVM1.md: Invalid frontmatter
+❌ source/_posts/jdk/jdk1.md: File not found
+❌ source/_posts/jdk/jdk2.md: File not found
+⚠️ netty1.md - 总分: 7.1/10
+⚠️ nio1.md - 总分: 6.5/10
+   问题: 缺少摘要, 缺少总结, 发现1处口语化表述, 缺少SEO描述
+⚠️ mongo1.md - 总分: 7.1/10
+❌ source/_posts/linux/linux1.md: File not found
+❌ source/_posts/linux/linux2.md: File not found
+❌ source/_posts/elasticsearch/elasticsearch1.md: File not found
+❌ source/_posts/concurrency/concurrency01.md: File not found
+❌ source/_posts/ci/jenkins配合docker持续集成.md: Invalid frontmatter
+
+=== 统计 ===
+检查文章数: 30
+平均质量分: 5.7/10
+优秀文章(≥8分): 0
+良好文章(6-7分): 12
+需优化(<6分): 7

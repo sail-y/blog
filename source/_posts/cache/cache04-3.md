@@ -3,6 +3,7 @@ title: Storm介绍和集群部署、WordCount演示
 date: 2018-02-22 13:34:55
 tags: [storm]
 categories: storm
+description: 本文讲解Storm介绍和集群部署、WordCount演示相关技术要点和实践经验，提供系统化的知识总结和应用指导。
 ---
 
 此为龙果学院课程笔记，记录以供以后翻看

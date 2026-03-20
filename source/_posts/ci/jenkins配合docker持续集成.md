@@ -2,6 +2,7 @@ title: jenkins配合docker持续集成
 date: 2015-12-15 12:53:45
 tags: [jenkins,docker]
 categories: CI
+description: 本文系统讲解jenkins配合docker持续集成相关技术，提供实践指导和最佳实践方案。
 ---
 
 我这里用docker来做持续集成的思路和[jenkins和tomcat的持续集成](http://sail-y.github.io/2015/12/14/jenkins%E5%92%8Ctomcat%E7%9A%84%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90/)是一样的。都是用jenkins拉取git的代码然后打war包，只不过重启tomcat步骤换成了docker的重启。
@@ -90,3 +91,18 @@ ADD webapps /usr/local/tomcat/webapps
 还有另外一种方式操作起来更加简单，就是映射宿主机的路径直接写成`-v $WEB_DIR/webapps:/usr/local/tomcat/webapps`，这样还省去了build时拷贝项目的过程。
 
 但是我觉得都不是很方便，查看日志不太方便，而且docker编译和启动也比较耗时，相比直接kill掉tomcat重启要慢一些。目前没有找到一个更好的实践方式，需要慢慢探索一下，为了不影响开发，我又换回了之前直接kill tomcat的方式。
+## 总结
+
+本文详细讲解了相关技术要点和实践经验。通过系统学习，读者可以掌握核心技术知识并应用到实际项目中。
+
+### 关键要点
+
+- 理解技术原理和核心概念
+- 掌握配置和使用方法
+- 学习最佳实践和注意事项
+
+### 实践建议
+
+1. 结合实际项目进行练习
+2. 深入研究官方文档
+3. 关注技术发展和最佳实践

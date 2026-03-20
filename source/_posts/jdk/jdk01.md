@@ -3,6 +3,7 @@ title: JDK集合源码-List
 date: 2020-10-13 14:00:37
 tags: [java,JDK源码]
 categories: JDK源码
+description: 本文讲解JDK集合源码-List技术要点和实践经验。
 ---
 
 # JDK集合源码

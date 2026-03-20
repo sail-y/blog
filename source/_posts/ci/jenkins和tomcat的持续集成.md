@@ -2,6 +2,7 @@ title: jenkins和tomcat的持续集成
 date: 2015-12-14 17:26:16
 tags: [jenkins,tomcat]
 categories: CI
+description: 本文讲解jenkins和tomcat的持续集成技术要点和实践经验。
 ---
 今天来说一下如何用jenkins做持续集成。		
 jenkins我这里就不介绍了，重点介绍一下如何用jenkins对tomcat进行持续集成。
@@ -102,3 +103,18 @@ echo "tomcat is starting,please try to access $PROJECT conslone url"
 
 ## PS
 还有一种方式是通过jenkins的deploy plugin来部署应用，我最早的时候用过一段时间这种方式。不知道是什么原因，部署多次之后会导致内存溢出，每部署一次服务器被占用的内存就多一点。最终导致服务器崩溃，ssh都连接不上去，所以最后换了shell脚本的方案。
+## 总结
+
+本文系统讲解了相关技术要点。通过学习掌握核心概念和实践方法，提升技术能力。
+
+### 关键要点
+
+- 理解核心技术原理
+- 掌握实际应用方法
+- 学习最佳实践和注意事项
+
+### 实践建议
+
+1. 结合实际项目练习
+2. 深入研究官方文档
+3. 持续学习和实践

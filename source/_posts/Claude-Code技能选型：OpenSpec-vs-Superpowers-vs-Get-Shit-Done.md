@@ -1,9 +1,9 @@
 ---
-title: AI 编程时代的规范驱动开发：三大 SDD 技能选型指南
+title: AI 编程时代的规范驱动开发：四大 SDD 技能选型指南
 date: 2026-03-21 21:11:35
 tags: [AI开发工具, Claude Code, Skills, SDD, 规范驱动开发]
 categories: AI工具
-description: 深入解析规范驱动开发（SDD）在 AI 编程时代的重要性，对比 OpenSpec、Superpowers、Get Shit Done 三大 SDD 技能包的特点和适用场景，帮助你根据团队规模和项目需求选择最合适的 SDD 实现方案。
+description: 深入解析规范驱动开发（SDD）在 AI 编程时代的重要性，对比 OpenSpec、Superpowers、Get Shit Done、Spec-Kit 四大 SDD 技能包的特点和适用场景，帮助你根据团队规模和项目需求选择最合适的 SDD 实现方案。
 ---
 
 ## 引言
@@ -12,15 +12,15 @@ description: 深入解析规范驱动开发（SDD）在 AI 编程时代的重要
 
 答案就是 **规范驱动开发（Spec-Driven Development，SDD）**。
 
-目前，社区已经涌现出多款实现 SDD 理念的技能包，其中最热门的三个是：**OpenSpec**、**Superpowers** 和 **Get Shit Done（GSD）**。
+目前，社区已经涌现出多款实现 SDD 理念的技能包，其中最具代表性的四个是：**OpenSpec**、**Superpowers**、**Get Shit Done（GSD）** 和 **Spec-Kit**。
 
-**这三者的共同点**：都提供了规范驱动开发能力，帮助开发者在编码前先明确"要做什么"。
+**这四者的共同点**：都提供了规范驱动开发能力，帮助开发者在编码前先明确"要做什么"。
 
-**不同点**：在实现方式、工具支持、适用场景上各有侧重。
+**不同点**：在设计理念、实现方式、工具支持、适用场景上各有侧重。
 
 本文将：
 1. 深入解析 SDD 的核心理念和价值
-2. 对比三大 SDD 技能包的特点和差异
+2. 对比四大 SDD 技能包的特点和差异
 3. 提供基于团队规模和项目需求的选型建议
 
 <!--more-->
@@ -176,9 +176,9 @@ AI 有上下文限制（如 200K tokens）
 
 ---
 
-## 二、三大 SDD 技能包概览
+## 二、四大 SDD 技能包概览
 
-需要明确：**这三个都是 Skills（技能包），都实现了 SDD 理念**，但在实现方式和侧重点上有所不同。
+需要明确：**这四个都是 Skills（技能包），都实现了 SDD 理念**，但在实现方式和侧重点上有所不同。
 
 ### 2.1 都提供 SDD 能力
 
@@ -190,11 +190,11 @@ AI 有上下文限制（如 200K tokens）
 │  └─ 决策可追溯                              │
 └─────────────────────────────────────────────┘
                     ↓
-      三种不同的实现方式
+      四种不同的实现方式
                     ↓
-┌──────────┬─────────────┬───────────┐
-│OpenSpec  │Superpowers  │GSD        │
-└──────────┴─────────────┴───────────┘
+┌──────────┬─────────────┬───────────┬──────────┐
+│OpenSpec  │Superpowers  │GSD        │Spec-Kit  │
+└──────────┴─────────────┴───────────┴──────────┘
 ```
 
 **共同点**：
@@ -214,13 +214,15 @@ AI 有上下文限制（如 200K tokens）
 | 技能包 | 支持的 AI 工具 | 数量 |
 |--------|----------------|------|
 | **OpenSpec** | Claude Code、Cursor、Windsurf、Gemini CLI、OpenCode、Codex、GitHub Copilot、Cline、Continue、Trae 等 24+ 工具 | 最多 |
-| **Superpowers** | Claude Code、Cursor、Codex、OpenCode、Gemini CLI | 5个 |
+| **Spec-Kit** | Claude Code、Cursor、Windsurf、Gemini CLI、Codex、Copilot、Jules、Junie、Qoder、Kiro 等 24+ 工具 | 最多 |
 | **Get Shit Done** | Claude Code、OpenCode、Gemini CLI、Codex、GitHub Copilot CLI、Cursor CLI、Antigravity | 7个 |
+| **Superpowers** | Claude Code、Cursor、Codex、OpenCode、Gemini CLI | 5个 |
 
 **关键差异**：
 - **OpenSpec**：支持最广泛的工具（24+），适合团队混用不同 AI 工具的场景
+- **Spec-Kit**：GitHub 官方开发，支持最广泛的工具（24+），宪法驱动的企业级方案
 - **Superpowers**：专注主流工具，深度集成，功能最丰富
-- **GSD**：平衡跨工具支持和易用性，支持 7 个主流工具
+- **GSD**：平衡跨工具支持和易用性，独立开发者友好的轻量方案
 
 ### 2.3 核心定位对比
 
@@ -245,14 +247,22 @@ AI 有上下文限制（如 200K tokens）
 │  Get Shit Done                              │
 │  └─ 项目级 SDD 平台                         │
 │     从零到一的完整项目管理                   │
-│     强项：最完整的项目生命周期管理           │
+│     强项：简洁高效，反企业剧场               │
+└─────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────┐
+│  Spec-Kit                                   │
+│  └─ 宪法级 SDD 平台                         │
+│     GitHub 官方，宪法驱动开发                │
+│     强项：企业级，扩展性强                   │
 └─────────────────────────────────────────────┘
 ```
 
 **定位差异**：
 - **OpenSpec**：变更级管理（适合现有项目迭代）
 - **Superpowers**：工作流管理（适合复杂开发流程）
-- **GSD**：项目管理（适合新项目从零开始）
+- **GSD**：项目管理（适合新项目从零开始，个人/小团队）
+- **Spec-Kit**：宪法级管理（适合企业级项目，正式团队流程）
 
 ---
 
@@ -429,7 +439,159 @@ Superpowers 方式：
 
 ---
 
-## 五、Get Shit Done：项目级 SDD 平台
+## 五、Spec-Kit：宪法驱动的 SDD 平台
+
+### 5.1 核心能力
+
+Spec-Kit 是 **GitHub 官方开发**的开源 SDD 工具包，采用"宪法驱动"理念。
+
+**SDD 实现**：
+- 通过 `/speckit.constitution` 创建项目宪法，定义项目原则和开发准则
+- 7 阶段工作流：constitution → specify → clarify → plan → tasks → implement → analyze
+- 规范持久化保存在 `.specify/` 目录
+- 支持 24+ AI 编程工具
+
+**安装方式：**
+```bash
+# 使用 Specify CLI 初始化项目
+uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+specify init my-project --ai claude
+
+# 或在现有项目中初始化
+specify init --here --ai claude
+```
+
+**核心工作流**：
+- `/speckit.constitution` - 创建项目宪法和开发准则
+- `/speckit.specify` - 定义需求（做什么和为什么）
+- `/speckit.clarify` - 澄清不明确区域（可选）
+- `/speckit.plan` - 创建技术实施计划
+- `/speckit.tasks` - 生成可执行任务列表
+- `/speckit.implement` - 执行任务
+- `/speckit.analyze` - 跨制品一致性和覆盖分析（可选）
+
+**宪法驱动理念**：
+```
+第一步：创建宪法（constitution）
+→ 定义项目原则、代码质量标准、测试要求
+→ 所有后续开发都基于这个"宪法"
+
+后续阶段：
+- specify：遵循宪法定义需求
+- plan：基于宪法设计架构
+- tasks：按照宪法分解任务
+- implement：按宪法标准实施
+```
+
+**扩展系统**：
+- **Extensions（扩展）**：添加新能力（如 Jira 集成、代码审查）
+- **Presets（预设）**：自定义现有工作流（如敏捷、瀑布、领域驱动设计）
+- **项目级覆盖**：临时调整单个项目
+
+### 5.2 解决的核心问题
+
+**问题1：项目原则不一致**
+
+```
+场景：团队开发到第 10 个阶段
+
+传统方式：
+"我们之前为什么选择 PostgreSQL？"
+"这个模块为什么用 REST 而不是 GraphQL？"
+→ 决策不一致，架构混乱
+
+Spec-Kit 解决：
+第一步创建宪法：
+- 技术选型原则（PostgreSQL 优先、REST API）
+- 代码质量标准（测试覆盖率 80%+）
+- 性能要求（响应时间 < 200ms）
+
+所有后续决策都基于宪法
+→ 团队有统一的原则指导
+```
+
+**问题2：跨工具团队协作困难**
+
+```
+场景：团队成员使用不同的 AI 工具
+
+传统方式：
+成员A 用 Claude Code
+成员B 用 Cursor
+成员C 用 Windsurf
+→ 工作流不统一，协作困难
+
+Spec-Kit 解决：
+支持 24+ AI 工具，统一的命令体系
+→ 不同工具，相同工作流
+→ 团队协作顺畅
+```
+
+**问题3：缺乏需求澄清机制**
+
+```
+场景：需求描述模糊
+
+传统方式：
+PM：需要一个搜索功能
+AI：直接生成代码
+→ 理解偏差，返工
+
+Spec-Kit 解决：
+/speckit.specify "搜索功能"
+/speckit.clarify（澄清阶段）
+AI：提问确认：
+    - 全文搜索还是精确匹配？
+    - 是否需要分页？
+    - 搜索范围是什么？
+→ 需求明确后再实施
+```
+
+### 5.3 与 GSD 的设计理念差异
+
+**GSD 作者对 Spec-Kit 的批评**：
+
+> "Other spec-driven development tools exist; BMAD, Speckit... But they all seem to make things way more complicated than they need to be (sprint ceremonies, story points, stakeholder syncs, retrospectives, Jira workflows) or lack real big picture understanding of what you're building."
+
+**核心理念对比**：
+
+| 维度 | Spec-Kit | GSD |
+|------|----------|-----|
+| **设计哲学** | 企业级，正式流程 | 简洁高效，反企业剧场 |
+| **目标用户** | 企业团队 | 个人/小团队 |
+| **工作流复杂度** | 7 阶段（完整） | 5 阶段（精简） |
+| **宪法驱动** | ✅ 强制第一步创建宪法 | ❌ 无宪法概念 |
+| **扩展性** | ✅ 扩展 + 预设系统 | ⚠️ 有限 |
+| **澄清机制** | ✅ `/speckit.clarify` | ✅ `/gsd:discuss-phase` |
+| **验证机制** | ✅ `/speckit.analyze` | ✅ `/gsd:verify-work` |
+
+**用户反馈**：
+
+> *"I've done SpecKit, OpenSpec and Taskmaster — this has produced the best results for me."*（用过 SpecKit、OpenSpec、Taskmaster，GSD 效果最好）
+>
+> *"Nothing over-engineered. Literally just gets shit done."*（没有过度工程，真的就是把事情做完）
+
+**选择建议**：
+- **选 Spec-Kit**：企业团队、需要正式流程、需要宪法级一致性
+- **选 GSD**：个人/小团队、追求效率、反感复杂流程
+
+### 5.4 适用场景
+
+✅ **推荐使用：**
+- 企业级项目开发
+- 需要正式流程和文档的团队
+- 混用多种 AI 工具的团队
+- 需要高度定制工作流
+- 需要项目级宪法指导
+
+❌ **不推荐使用：**
+- 个人项目（流程太重）
+- 快速原型验证（流程太正式）
+- 小团队敏捷开发（GSD 更合适）
+
+---
+
+## 六、Get Shit Done：项目级 SDD 平台
 
 ### 5.1 核心能力
 
@@ -555,22 +717,25 @@ GSD 解决：
 
 ---
 
-## 六、对比分析与选型指南
+## 七、对比分析与选型指南
 
-### 6.1 核心维度对比
+### 7.1 核心维度对比
 
-| 维度 | OpenSpec | Superpowers | Get Shit Done |
-|------|----------|-------------|---------------|
-| **SDD 层级** | 变更级 | 工作流级 | 项目级 |
-| **规范持久化** | ✅ 文件系统（`openspec/changes/`） | ✅ 设计文档保存 | ✅ 完整目录结构（`.planning/`） |
-| **学习曲线** | 中等 | 陡峭（14+技能） | 中等（5个核心命令） |
-| **跨工具支持** | ✅ 最强（24+工具） | ⚠️ 中（5个工具） | ✅ 强（7个工具） |
-| **团队协作** | ✅ 强（变更可共享） | ⚠️ 中（需对齐） | ✅ 强（完整项目文档） |
-| **工作流灵活性** | ⚠️ 中（三步流程） | ✅ 强（自由组合） | ⚠️ 中（固定流程） |
-| **验证机制** | ⚠️ 手动验证 | ✅ 两阶段审查 + TDD | ✅ XML 验证标准 |
-| **适合场景** | 现有项目迭代 | 复杂开发流程 | 新项目从零开始 |
+| 维度 | OpenSpec | Superpowers | Get Shit Done | Spec-Kit |
+|------|----------|-------------|---------------|----------|
+| **SDD 层级** | 变更级 | 工作流级 | 项目级 | 宪法级 |
+| **开发方** | 社区 | 社区 | 独立开发者 | GitHub 官方 |
+| **规范持久化** | ✅ 文件系统（`openspec/changes/`） | ✅ 设计文档保存 | ✅ 完整目录结构（`.planning/`） | ✅ 完整目录结构（`.specify/`） |
+| **学习曲线** | 中等 | 陡峭（14+技能） | 中等（5个核心命令） | 中等（7个核心命令） |
+| **跨工具支持** | ✅ 最强（24+工具） | ⚠️ 中（5个工具） | ✅ 强（7个工具） | ✅ 最强（24+工具） |
+| **团队协作** | ✅ 强（变更可共享） | ⚠️ 中（需对齐） | ✅ 强（完整项目文档） | ✅ 强（宪法驱动） |
+| **工作流灵活性** | ⚠️ 中（三步流程） | ✅ 强（自由组合） | ⚠️ 中（固定流程） | ✅ 强（扩展+预设） |
+| **验证机制** | ⚠️ 手动验证 | ✅ 两阶段审查 + TDD | ✅ XML 验证标准 | ✅ 跨制品分析 |
+| **宪法驱动** | ❌ | ❌ | ❌ | ✅ 核心特性 |
+| **扩展性** | ⚠️ 中 | ⚠️ 中 | ⚠️ 低 | ✅ 高（扩展+预设） |
+| **适合场景** | 现有项目迭代 | 复杂开发流程 | 新项目从零开始，个人/小团队 | 企业级项目，正式团队流程 |
 
-### 6.2 根据项目类型选型
+### 7.2 根据项目类型选型
 
 #### 现有项目迭代
 
@@ -594,11 +759,13 @@ GSD 解决：
 
 #### 新项目从零开始
 
-**推荐：Get Shit Done**
+**根据团队规模选择：**
+
+**个人/小团队（1-5人）→ Get Shit Done**
 
 **理由：**
 - 项目级管理，从零到一的全生命周期
-- 完整的需求分析和项目规划
+- 简洁高效，不搞企业剧场
 - STATE.md 记录所有决策，跨会话记忆
 - XML 任务格式，明确的验证标准
 
@@ -611,6 +778,26 @@ GSD 解决：
 → 需求提取 → v1/v2/out-of-scope
 → 创建路线图 → 10 个阶段规划
 → 完整的项目管理文档
+```
+
+**企业团队（5人以上）→ Spec-Kit**
+
+**理由：**
+- 宪法驱动，项目级一致性
+- GitHub 官方支持，成熟稳定
+- 支持 24+ AI 工具，团队可混用
+- 完善的扩展和预设系统
+
+**场景示例：**
+```
+新项目：企业级电商平台
+→ /speckit.constitution 创建宪法（技术选型、质量标准）
+→ /speckit.specify 定义需求
+→ /speckit.clarify 澄清细节
+→ /speckit.plan 制定计划
+→ /speckit.tasks 分解任务
+→ /speckit.implement 实施
+→ /speckit.analyze 分析一致性
 ```
 
 #### 复杂开发流程
@@ -634,48 +821,52 @@ GSD 解决：
 → 两阶段审查确保质量
 ```
 
-### 6.3 根据团队规模选型
+### 7.3 根据团队规模选型
 
 #### 个人开发者
 
 **根据项目类型选择**：
 - 现有项目迭代 → **OpenSpec**（轻量灵活）
-- 新项目从零开始 → **GSD**（完整项目管理）
+- 新项目从零开始 → **GSD**（简洁高效）
 - 复杂功能开发 → **Superpowers**（工作流编排）
 
 #### 小团队（2-5人）
 
-**推荐：Superpowers 或 OpenSpec**
+**根据工作风格选择：**
 
-**Superpowers 适合**：
-- 快速迭代、需要灵活调整
+**追求效率 → GSD**
+- 快速迭代
+- 简洁工作流
+- 反企业剧场
+
+**需要灵活编排 → Superpowers**
 - 复杂开发流程
 - 团队成员使用相同 AI 工具
+- 需要多角度分析
 
-**OpenSpec 适合**：
+**工具混用 → OpenSpec**
 - 团队成员使用不同 AI 工具
 - 需要正式的变更文档
 - 现有项目的增量开发
 
-**GSD 适合**：
-- 新项目从零开始
-- 需要完整项目规划
-
 #### 中大型团队（5人以上）
 
-**推荐：OpenSpec 或 GSD**
+**企业级项目 → Spec-Kit**
+- 需要正式流程和文档
+- 宪法驱动的一致性
+- 支持 24+ AI 工具混用
+- 完善的扩展和预设系统
 
-**OpenSpec 适合**：
+**现有项目迭代 → OpenSpec**
 - 现有大型项目的迭代
 - 团队成员使用不同 AI 工具
 - 需要变更级管理和追溯
 
-**GSD 适合**：
-- 新的大型项目
-- 需要完整的生命周期管理
-- 需要跨会话状态记忆
+**新项目从零开始 → GSD 或 Spec-Kit**
+- GSD：敏捷团队，追求效率
+- Spec-Kit：企业团队，需要正式流程
 
-### 6.4 能否同时使用？
+### 7.4 能否同时使用？
 
 **答案：可以，但需谨慎。**
 
@@ -695,13 +886,14 @@ GSD 解决：
 例如：
 方案1：主用 OpenSpec（正式开发） + 偶尔用 GSD（快速实验）
 方案2：主用 Superpowers（复杂任务） + OpenSpec（需要文档时）
+方案3：主用 Spec-Kit（企业项目） + GSD（个人项目）
 ```
 
 ---
 
-## 七、实际案例对比
+## 八、实际案例对比
 
-### 案例：重构支付模块 - 三种 SDD 实现
+### 案例：重构支付模块 - 四种 SDD 实现
 
 #### OpenSpec 方式：最严格的 SDD 实现
 
@@ -811,11 +1003,88 @@ AI：运行验证标准，确认完成
 - ✅ STATE.md 记录所有决策，跨会话记忆
 - ✅ XML 任务格式，明确的验证标准
 
+#### Spec-Kit 方式：宪法驱动的企业级 SDD
+
+```bash
+# 1. 创建项目宪法
+/speckit.constitution "支付模块重构原则"
+
+# AI 生成宪法文档：
+- .specify/CONSTITUTION.md
+  （技术选型原则：第三方支付解耦、接口抽象）
+  （代码质量标准：测试覆盖率 80%+、接口文档完整）
+  （性能要求：支付响应时间 < 3s，幂等性保证）
+
+# 2. 定义需求
+/speckit.specify "重构支付模块，解耦第三方支付接口"
+
+# AI 生成文档：
+- .specify/features/payment-refactor/SPEC.md
+  （需求描述：解耦支付宝、微信支付）
+  （用户故事：作为商家，我需要支持多种支付方式）
+
+# 3. 澄清细节（可选但推荐）
+/speckit.clarify
+
+# AI 提问：
+  Q: 需要支持哪些支付渠道？
+  Q: 是否需要支付回调机制？
+  Q: 事务一致性要求？
+  Q: 如何处理支付失败重试？
+
+# 4. 制定技术计划
+/speckit.plan "使用策略模式重构"
+
+# AI 生成文档：
+- .specify/features/payment-refactor/PLAN.md
+  （架构设计：策略模式、支付接口抽象）
+  （接口定义：PaymentStrategy、PaymentResult）
+  （风险评估：第三方依赖、事务一致性）
+
+# 5. 分解任务
+/speckit.tasks
+
+# AI 生成文档：
+- .specify/features/payment-refactor/TASKS.md
+  （任务1：创建支付策略接口）
+  （任务2：实现支付宝适配器）
+  （任务3：实现微信支付适配器）
+  （任务4：迁移现有支付代码）
+  （任务5：编写单元测试）
+
+# 6. 实施
+/speckit.implement
+
+# AI 执行：
+按任务逐步实施，每个任务完成后验证
+- 创建 src/payment/PaymentStrategy.ts
+- 实现 src/payment/AlipayAdapter.ts
+- 实现 src/payment/WechatAdapter.ts
+- 更新现有代码使用新接口
+
+# 7. 分析一致性（可选）
+/speckit.analyze
+
+# AI 检查：
+- 实施是否符合宪法原则？✅
+- 测试覆盖率是否达标？✅ 85%
+- 接口文档是否完整？✅
+- 性能是否满足要求？✅ 平均响应时间 1.2s
+```
+
+**特点**：
+- ✅ 宪法级 SDD（项目原则一致性，第一步定义宪法）
+- ✅ GitHub 官方支持，成熟稳定
+- ✅ 7 阶段工作流，最完整（constitution → specify → clarify → plan → tasks → implement → analyze）
+- ✅ 扩展 + 预设系统，高度可定制
+- ✅ 支持 24+ AI 工具，跨工具协作
+- ✅ 可选的澄清和分析阶段，确保质量
+
 ---
 
-## 八、选型决策树
+## 九、选型决策树
 
-基于项目类型的 SDD 工具选择：
+基于项目类型和团队规模的 SDD 工具选择：
 
 ```
 开始选型：你需要什么样的 SDD 实现？
@@ -824,49 +1093,64 @@ AI：运行验证标准，确认完成
  │   ├─ 现有项目迭代 → OpenSpec
  │   │   （变更级管理，轻量灵活）
  │   │
- │   ├─ 新项目从零开始 → GSD
- │   │   （项目级管理，完整生命周期）
+ │   ├─ 新项目从零开始 → 团队规模？
+ │   │   ├─ 个人/小团队（1-5人）→ GSD
+ │   │   │   （项目级管理，简洁高效）
+ │   │   │
+ │   │   └─ 企业团队（5人+）→ Spec-Kit
+ │   │       （宪法级管理，正式流程）
  │   │
  │   └─ 复杂开发流程 → Superpowers
  │       （工作流级管理，技能组合）
  │
  └─ 特殊需求？
-     ├─ 团队使用不同 AI 工具 → OpenSpec
+     ├─ 团队使用不同 AI 工具 → OpenSpec 或 Spec-Kit
      │   （支持 24+ 工具）
      │
      ├─ 需要强测试驱动 → Superpowers
      │   （强制 RED-GREEN-REFACTOR）
      │
-     └─ 需要跨会话状态记忆 → GSD
-         （STATE.md 记录所有决策）
+     ├─ 需要跨会话状态记忆 → GSD
+     │   （STATE.md 记录所有决策）
+     │
+     └─ 需要宪法级一致性 → Spec-Kit
+         （宪法驱动，项目原则统一）
 ```
 
 **关键决策点**：
 1. **项目类型**：现有项目迭代 vs 新项目 vs 复杂流程
-2. **跨工具支持**：团队成员使用的 AI 工具是否一致？
-3. **验证需求**：是否需要强制测试驱动或自动验证？
-4. **状态记忆**：是否需要跨会话保存项目状态？
+2. **团队规模**：个人/小团队 vs 企业团队
+3. **跨工具支持**：团队成员使用的 AI 工具是否一致？
+4. **验证需求**：是否需要强制测试驱动或自动验证？
+5. **一致性要求**：是否需要宪法级项目原则？
 
 ---
 
-## 九、总结
+## 十、总结
 
 ### 核心观点
 
 1. **SDD 是核心，工具是手段**：
    - SDD（规范驱动开发）解决的是 AI 编程时代的根本问题
-   - 三个工具都是 SDD 的不同实现方式
+   - 四个工具都是 SDD 的不同实现方式
    - 选择工具 = 选择 SDD 的实现层级
 
 2. **实现层级的差异**：
    - **OpenSpec**：变更级 SDD，适合现有项目迭代，跨工具支持最广（24+）
    - **Superpowers**：工作流级 SDD，适合复杂开发流程，技能组合最灵活（14+）
-   - **Get Shit Done**：项目级 SDD 平台，适合新项目从零开始，生命周期管理最完整
+   - **Get Shit Done**：项目级 SDD 平台，适合新项目从零开始，个人/小团队首选
+   - **Spec-Kit**：宪法级 SDD 平台，GitHub 官方，企业级项目首选
 
 3. **没有最好的工具，只有最合适的工具**：
    - 现有项目迭代 → OpenSpec（轻量灵活）
-   - 新项目从零开始 → GSD（完整项目管理）
+   - 新项目（个人/小团队）→ GSD（简洁高效）
+   - 新项目（企业团队）→ Spec-Kit（宪法驱动）
    - 复杂开发流程 → Superpowers（工作流编排）
+
+4. **Spec-Kit vs GSD 的理念差异**：
+   - **Spec-Kit**：企业级，正式流程，宪法驱动
+   - **GSD**：简洁高效，反企业剧场，独立开发者友好
+   - 根据团队文化选择合适的工具
 
 ### 推荐方案
 
@@ -874,13 +1158,17 @@ AI：运行验证标准，确认完成
 现有项目迭代 → OpenSpec
   ↓ 变更级管理，不影响现有结构
 
-新项目从零开始 → Get Shit Done
-  ↓ 项目级管理，完整生命周期
+新项目从零开始 → 根据团队规模
+  ├─ 个人/小团队 → Get Shit Done
+  │   ↓ 项目级管理，简洁高效
+  │
+  └─ 企业团队 → Spec-Kit
+      ↓ 宪法级管理，正式流程
 
 复杂开发流程 → Superpowers
   ↓ 工作流级管理，技能灵活组合
 
-跨工具团队 → OpenSpec
+跨工具团队 → OpenSpec 或 Spec-Kit
   ↓ 支持 24+ 工具，最广泛
 ```
 
@@ -903,12 +1191,21 @@ AI：运行验证标准，确认完成
 4. 体验变更级 SDD 流程
 ```
 
-**如果你要启动一个新项目**：
+**如果你要启动一个新项目（个人/小团队）**：
 ```
 1. 安装 GSD：npx gsd-build/get-shit-done
 2. 运行：/gsd:new-project "项目描述"
 3. 完成提问 → 研究 → 需求提取 → 创建路线图
 4. 体验项目级 SDD 平台
+```
+
+**如果你要启动一个企业级项目**：
+```
+1. 安装 Specify CLI：uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+2. 初始化项目：specify init my-project --ai claude
+3. 创建宪法：/speckit.constitution "项目原则"
+4. 运行工作流：/speckit.specify → /speckit.plan → /speckit.tasks → /speckit.implement
+5. 体验宪法级 SDD 平台
 ```
 
 **如果你需要复杂开发流程**：
@@ -919,7 +1216,7 @@ AI：运行验证标准，确认完成
 4. 感受测试驱动开发的强制约束
 ```
 
-**SDD 不只是一个方法论，更是 AI 编程时代的新范式**。根据项目类型选择合适的工具，让你的团队拥抱 SDD，提升开发效率和代码质量。
+**SDD 不只是一个方法论，更是 AI 编程时代的新范式**。根据项目类型和团队规模选择合适的工具，让你的团队拥抱 SDD，提升开发效率和代码质量。
 
 ---
 
@@ -927,6 +1224,7 @@ AI：运行验证标准，确认完成
 
 - [OpenSpec GitHub](https://github.com/fission-ai/openspec) - 支持 24+ AI 工具
 - [Superpowers GitHub](https://github.com/obra/superpowers) - 102k+ stars，支持 5 个主流工具
-- [Get Shit Done GitHub](https://github.com/gsd-build/get-shit-done) - 支持 7 个工具
+- [Get Shit Done GitHub](https://github.com/gsd-build/get-shit-done) - 支持 7 个工具，独立开发者友好
+- [Spec-Kit GitHub](https://github.com/github/spec-kit) - GitHub 官方，支持 24+ 工具，企业级
 - [Claude Code 官方文档](https://docs.anthropic.com/en/docs/claude-code)
 - [AI Agent Skills 生态](https://skills.sh/)

@@ -761,9 +761,14 @@ isso: # <data_isso>
 
 # AddToAny Share. See: https://www.addtoany.com
 addtoany:
-  enable: false
-  # Example: bottons: [facebook, twitter]
+  enable: true
   buttons:
+    - wechat
+    - weibo
+    - qq
+    - qzone
+    - twitter
+    - facebook
 
 
 # ---------------------------------------------------------------

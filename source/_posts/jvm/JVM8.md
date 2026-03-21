@@ -1,4 +1,4 @@
-title: JVM8-类加载机制
+title: "JVM深入理解 08：虚拟机字节码执行引擎"
 date: 2016-11-07 16:30:13
 tags: [java,JVM]
 categories: JVM

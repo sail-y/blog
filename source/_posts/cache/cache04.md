@@ -1,5 +1,5 @@
 ---
-title: 高可用缓存架构实战4-多级缓存架构.高并发读写方案.nginx流量分发方案.ZK分布式锁解决并发冲突方案
+title: "高可用缓存架构实战 04：多级缓存架构设计与实现"
 date: 2018-02-18 19:45:55
 tags: [多级缓存架构]
 categories: 高可用缓存架构实战
@@ -607,7 +607,8 @@ requestPath = "/"..requestPath.."?productId="..productId.."&shopId="..shopId
 https://github.com/sail-y/eshop-inventory
 
 
-
+
+
 ## 总结
 
 本文系统讲解了Redis缓存架构的关键技术要点。通过合理的缓存设计和持久化配置，可以有效提升系统性能和数据安全性。建议根据实际业务场景选择合适的缓存策略，并做好监控和运维工作。

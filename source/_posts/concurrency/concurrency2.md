@@ -1,5 +1,5 @@
 ---
-title: 并发编程2-线程安全性
+title: "并发编程 02：线程安全性"
 date: 2016-12-02 10:19:08
 tags: [java, 并发]
 categories: 并发

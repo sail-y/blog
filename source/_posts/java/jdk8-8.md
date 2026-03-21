@@ -1,5 +1,5 @@
 ---
-title: JDK8-Collectors工厂类源码探索
+title: "JDK8新特性 08：比较器Comparator"
 date: 2017-02-26 16:27:03
 tags: [java,jdk8]
 categories: jdk8

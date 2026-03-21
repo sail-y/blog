@@ -1,5 +1,5 @@
 ---
-title: centos7安装redis4.0.10并进行生产环境部署
+title: Redis安装与配置指南
 tags: [redis]
 date: 2018-07-19 23:24:16
 categories: redis

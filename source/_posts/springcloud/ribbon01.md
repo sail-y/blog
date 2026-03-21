@@ -1,5 +1,5 @@
 ---
-title: 分析Ribbon源码，Ribbon在底层如何拉取服务列表、进行负载均衡选择并发起Http请求
+title: "Ribbon源码解析：负载均衡与请求处理"
 date: 2020-03-31 23:05:39
 tags: [spring-cloud,ribnon]
 categories: spring-cloud

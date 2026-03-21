@@ -1,4 +1,4 @@
-title: mybatis-memcached框架配置
+title: MyBatis Memcached缓存框架配置
 date: 2015-02-06 23:22:37
 tags: [mybatis,memcached]
 categories: Java

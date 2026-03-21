@@ -1,5 +1,5 @@
 ---
-title: ElasticSearch02-快速入门
+title: "ElasticSearch 02：快速入门指南"
 tags: [ElasticSearch]
 date: 2018-06-05 22:34:18
 categories: ElasticSearch
@@ -238,7 +238,8 @@ GET /ecommerce/product/1
   }
 }
 ```	
-	#### 修改商品：替换文档
+	
+#### 修改商品：替换文档
 
 ```json
 PUT /ecommerce/product/1

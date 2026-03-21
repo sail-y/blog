@@ -1,5 +1,5 @@
 ---
-title: Claude Code 完整教程：从入门到精通
+title: "Claude Code 教程：从入门到精通"
 date: 2026-03-20 22:38:00
 tags: [AI, Claude Code, 编程工具]
 categories: AI工具
@@ -22,26 +22,172 @@ Claude Code 本质上是一个运行在终端里的 **AI 编程代理**。你可
 > 一个懂代码的同事坐在你旁边，你说需求，他直接改文件
 
 它能读你的项目代码、执行 shell 命令、操作 Git，甚至帮你做 Code Review。
-
+<!--more-->
 ### 1.2 与 Cursor / Trae 的对比
 
 | 特性 | Cursor | Trae | Claude Code |
 |------|--------|------|-------------|
 | **运行环境** | GUI 编辑器（VS Code 改造） | GUI 编辑器（AI IDE） | 终端 CLI |
-| **工作模式** | Chat + 代码补全 | Chat + 代码补全 + Agent | 纯 Agent（任务驱动） |
-| **上下文理解** | 当前项目 | 当前项目 | 整个项目（200K+ token） |
-| **操作能力** | 改文件、终端命令有限 | 改文件、内置工具链 | 改文件、跑命令、操作 Git、MCP 扩展 |
-| **模型选择** | Claude/GPT 系列 | 豆包/DeepSeek/GPT | Claude 系列 + 多提供商路由 |
-| **扩展性** | 插件系统 | 插件系统 | MCP 协议、Skills、Hooks |
-| **远程开发** | 需 VS Code Remote | 内置支持 | /remote-control 远程操控 |
-| **适合场景** | 偏好 GUI、可视化操作 | 国内用户、中文优化 | 喜欢终端、追求效率、自动化 |
-<!--more-->
+| **最新版本** | Cursor 4.x（2025-2026） | Trae 2026（国内/海外版） | Claude Code 1.x |
+| **工作模式** | Chat + Agent + Plan 模式 | Chat + Agent + 内置工具链 | 纯 Agent（任务驱动） |
+| **上下文理解** | 200K+ token | 200K+ token | 整个项目（200K+ token） |
+| **操作能力** | 改文件、终端命令、Agent 操作 | 改文件、内置工具链、MCP | 改文件、跑命令、操作 Git、MCP 扩展 |
+| **模型选择** | Claude 3.5/3.7 + GPT-4o/o1 | Claude + GPT + 豆包 + DeepSeek | Claude 系列 + 多提供商路由 |
+| **价格** | 免费版 + Pro（$19/月） | 免费版 + Pro | 免费版（需 API Key） |
+| **扩展性** | 插件系统 + Rules | 插件系统 + MCP | MCP 协议、Skills、Hooks |
+| **远程开发** | VS Code Remote | 内置支持 | /remote-control 远程操控 |
+| **适合场景** | 偏好 GUI、可视化操作 | 国内用户、中文优化、全栈开发 | 喜欢终端、追求效率、自动化 |
+
 **选型建议**：
-- **Cursor**：适合习惯 VS Code 工作流、需要可视化界面的开发者
-- **Trae**：适合国内用户、对中文交互有要求的开发者
+- **Cursor**：适合习惯 VS Code 工作流、需要可视化界面、追求成熟生态的开发者
+- **Trae**：适合国内用户、对中文交互有要求、需要免费 AI IDE 的开发者
 - **Claude Code**：适合喜欢终端操作、追求极致效率、需要高度自动化的开发者
 
-### 1.3 核心能力
+### 1.3 Agentic 能力深度对比：Claude Code 的独特优势
+
+Claude Code 与 Cursor、Trae 的核心差异在于其 **Agentic 架构设计**。本节从编程能力的角度深入对比三者。
+
+#### 1.3.1 Tools（工具系统）
+
+| 工具类型 | Claude Code | Cursor | Trae |
+|---------|------------|--------|------|
+| **文件操作** | Read, Write, Edit, Glob（文件搜索）, Grep（内容搜索） | 文件编辑、查看 | 文件编辑、查看 |
+| **命令执行** | Bash（完整 Shell 环境） | 终端集成（有限） | 终端集成（有限） |
+| **Git 操作** | 原生 Git 工具链支持 | 基础 Git 集成 | 基础 Git 集成 |
+| **浏览器自动化** | 通过 MCP 实现（Chrome DevTools） | 无 | 无 |
+| **数据库操作** | 通过 MCP 实现（PostgreSQL 等） | 无原生支持 | 无原生支持 |
+| **网络请求** | WebFetch, WebSearch, fetch MCP | 无原生支持 | 无原生支持 |
+| **代码执行** | NotebookEdit（Jupyter 支持） | 无 | 无 |
+
+**关键差异**：
+- **Claude Code** 拥有完整的编程工具链，可以像真正的工程师一样操作文件系统、执行命令、操作 Git
+- **Cursor/Trae** 主要依赖 GUI 操作，工具链被编辑器环境限制，无法像 Claude Code 那样自由执行系统级命令
+
+#### 1.3.2 Skills（技能系统）
+
+| 特性 | Claude Code | Cursor | Trae |
+|------|------------|--------|------|
+| **技能定义** | `.claude/skills/` 目录，可定义代理行为规则 | ✅ 支持 | ✅ 支持 |
+| **内置 Skills** | code-review, simplify, loop, commit 等 | 内置类似功能 | 内置类似功能 |
+| **权限控制** | 可精细控制每个技能的工具权限 | 支持 | 支持 |
+| **触发机制** | 自动识别 + 斜杠命令调用 | 支持 | 支持 |
+
+**说明**：Skills 是 Anthropic 发明的机制，现已逐步被其他 IDE 采纳支持。
+
+#### 1.3.3 MCP（Model Context Protocol）扩展能力
+
+MCP 是一个开放的协议标准，Claude Code、Cursor、Trae 等现代 AI IDE 都支持。
+
+| MCP 能力 | Claude Code | Cursor | Trae |
+|----------|------------|--------|------|
+| **MCP 支持** | ✅ 完整支持 | ✅ 完整支持 | ✅ 支持 |
+| **文件系统** | ✅ `@anthropic-ai/mcp-server-filesystem` | ✅ 支持 | ✅ 支持 |
+| **数据库** | ✅ PostgreSQL, MySQL, SQLite | ✅ 通过 MCP 支持 | ✅ 通过 MCP 支持 |
+| **浏览器控制** | ✅ Chrome DevTools Protocol | ✅ 通过 MCP 支持 | ✅ 通过 MCP 支持 |
+| **GitHub/GitLab** | ✅ GitHub MCP Server | ✅ 支持 | ✅ 支持 |
+| **自定义 MCP** | ✅ 可开发自己的 MCP Server | ✅ 支持 | ✅ 支持 |
+
+**注意**：MCP 是开放协议，所有支持 MCP 的 IDE 都能使用这些扩展能力。
+
+#### 1.3.4 Agent & Subagent（代理与子代理）
+
+这是 Claude Code 与其他工具最本质的架构差异。
+
+**Claude Code 的多级代理架构**：
+
+```
+Main Agent (主代理)
+    ├── Explore Agent (代码探索)
+    ├── Plan Agent (规划设计)
+    ├── Executor Agent (任务执行)
+    ├── Debugger Agent (调试分析)
+    ├── Quality Reviewer (质量审查)
+    └── ... (可扩展更多子代理)
+```
+
+| 代理能力 | Claude Code | Cursor | Trae |
+|---------|------------|--------|------|
+| **子代理类型** | 10+ 种专用代理（Explore, Plan, Executor, Debugger, Architect 等） | 无子代理概念 | 无子代理概念 |
+| **并行执行** | ✅ 多个 Agent 并行工作（如 `/simplify` 启动 3 个并行审查） | ❌ 单线程 | ❌ 单线程 |
+| **模型选择** | 每个子代理可独立选择模型（Sonnet/Opus/Haiku） | 固定模型 | 固定模型 |
+| **上下文隔离** | ✅ 子代理独立上下文，不污染主对话 | ❌ | ❌ |
+| **任务委托** | ✅ 主代理可将复杂任务委托给专用子代理 | ❌ | ❌ |
+
+**实际案例**：
+- `/simplify` 命令启动 3 个并行 Agent 分别审查代码复用、质量、效率
+- 复杂 Bug 可委托 Debugger Agent 分析，不影响主对话上下文
+- 大型重构先让 Plan Agent 规划，再让 Executor Agent 执行
+
+**Cursor 的 Agent 模式**：
+- Cursor 的 "Agent" 本质是**自动化执行器**，而非真正的多代理系统
+- Cursor Cloud Agents 可以在云端并行运行任务，但缺乏 Claude Code 那样的专用子代理分工
+- 无法像 Claude Code 那样精细控制每个 Agent 的模型、权限、工具集
+
+#### 1.3.5 Teams（团队协作）
+
+Claude Code 独有的多代理协作系统，让多个 AI Agent 像团队一样协同工作。
+
+| Teams 能力 | Claude Code | Cursor | Trae |
+|-----------|------------|--------|------|
+| **团队创建** | ✅ TeamCreate 创建多代理团队 | ❌ | ❌ |
+| **任务分配** | ✅ 通过 TaskUpdate 分配任务给不同 Agent | ❌ | ❌ |
+| **消息传递** | ✅ SendMessage 实现代理间通信 | ❌ | ❌ |
+| **工作协调** | ✅ 共享任务列表、依赖管理 | ❌ | ❌ |
+| **团队解散** | ✅ TeamDelete 清理团队资源 | ❌ | ❌ |
+
+**使用场景**：
+- **全栈开发**：一个 Agent 负责前端，另一个负责后端，第三个负责测试
+- **代码审查**：一个 Agent 写代码，另一个 Agent 做安全审查，第三个做性能优化
+- **研究项目**：一个 Agent 搜索资料，另一个整理文档，第三个生成代码
+
+**这是 Claude Code 独有的能力，Cursor 和 Trae 完全没有类似的多代理协作机制。**
+
+#### 1.3.6 其他 Agentic 能力对比
+
+| 能力 | Claude Code | Cursor | Trae |
+|------|------------|--------|------|
+| **Plan 模式** | ✅ 深度规划模式，支持复杂任务分解、EnterPlanMode 工具 | ⚠️ Chat 模式可询问，但无专用 Plan 模式 | ⚠️ 类似 Cursor |
+| **Hooks 钩子** | ✅ 在工具调用前后插入自定义脚本 | ❌ | ❌ |
+| **Commands 自定义命令** | ✅ `.claude/commands/` 封装工作流 | ⚠️ 有 Snippets，但非命令级 | ⚠️ 类似 |
+| **Auto Memory** | ✅ 自动记忆项目约定、用户偏好 | ⚠️ 上下文记忆，但无持久化文件 | ⚠️ 类似 |
+| **Worktrees 并行工作** | ✅ Git Worktrees 支持多会话并行 | ❌ | ❌ |
+| **Remote Control** | ✅ `/remote-control` 手机远程操控 | ⚠️ 有移动端 App，但功能有限 | ❌ |
+| **Cron 定时任务** | ✅ `/loop` 和 CronCreate 定时执行 | ❌ | ❌ |
+| **对话分叉** | ✅ `/branch` 创建平行对话分支 | ❌ | ❌ |
+| **时光回溯** | ✅ `/rewind` 回退代码或对话 | ⚠️ Git 回退 | ⚠️ Git 回退 |
+| **并行提问** | ✅ `/btw` 不打断主任务的旁注提问 | ❌ | ❌ |
+
+#### 1.3.7 架构对比总结
+
+**Claude Code 的独有优势**：
+1. **Teams 多代理协作**：TeamCreate/TaskUpdate/SendMessage，让多个 Agent 像团队一样协同工作（Cursor/Trae 无此功能）
+2. **Subagent 架构**：专用的 Explore/Plan/Executor/Debugger 等子代理，每个可独立配置模型和权限
+3. **终端 CLI 环境**：完整的 Bash Shell 能力，不受 GUI 环境限制（Cursor/Trae 是 GUI 应用）
+4. **Hooks 钩子机制**：PreToolUse/PostToolUse 等事件钩子，实现自动化工作流
+5. **高级对话管理**：`/branch` 对话分叉、`/btw` 并行提问、`/rewind` 时光回溯等独特命令
+
+**三方都支持的能力**：
+- ✅ MCP（Model Context Protocol）扩展
+- ✅ Skills 技能系统
+- ✅ 文件操作、Git 集成、代码补全等基础功能
+
+**Cursor 的优势**：
+- **GUI 编辑器**：VS Code 基础上的可视化操作体验
+- **Cloud Agents**：云端并行执行任务
+- **成熟生态**：插件系统、团队协作功能完善
+- **Tab 模型**：高速精准的代码补全
+
+**Trae 的优势**：
+- **国内用户友好**：中文优化、免费 AI IDE
+- **多模型支持**：Claude + GPT + 豆包 + DeepSeek
+- **成本优势**：适合对成本敏感的开发者
+
+**选择建议**：
+- 如果你需要 **多代理协作（Teams）** 或 **终端 CLI 工作流**，选择 **Claude Code**
+- 如果你更习惯 **GUI 操作** 或需要 **成熟的团队协作功能**，选择 **Cursor**
+- 如果你是 **国内开发者**，对 **中文交互和成本敏感**，选择 **Trae**
+
+### 1.4 核心能力
 
 - **项目级全局视野**：一次性"阅读"项目中成百上千个文件
 - **自然语言交互**：用中文/英文描述需求即可

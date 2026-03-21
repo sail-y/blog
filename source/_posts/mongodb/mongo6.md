@@ -1,5 +1,5 @@
 ---
-title: MongoDB6-分片
+title: "MongoDB 06：分片集群"
 date: 2018-01-17 19:52:53
 tags: [Mongo]
 categories: Mongo

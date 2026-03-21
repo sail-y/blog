@@ -1,4 +1,4 @@
-title: JVM10-运行期优化
+title: "JVM深入理解 10：早期编译优化"
 date: 2016-11-17 17:01:49
 tags: [JVM,java]
 categories: JVM

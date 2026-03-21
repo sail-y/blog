@@ -1,5 +1,5 @@
 ---
-title: Feign和Hystrix的结合使用
+title: "Hystrix实战 05：Feign集成"
 tags: [spring-cloud,hystrix]
 date: 2020-04-19 18:03:59
 categories: spring-cloud

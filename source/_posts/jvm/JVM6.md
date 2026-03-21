@@ -1,4 +1,4 @@
-title: JVM6-虚拟机性能监控与故障处理工具
+title: "JVM深入理解 06：类文件结构"
 date: 2016-11-02 15:24:35
 tags: [java,JVM]
 categories: JVM

@@ -1,0 +1,29 @@
+{% extends '_layout.njk' %}
+{% import '_macro/post-collapse.njk' as post_template with context %}
+{% import '_macro/sidebar.njk' as sidebar_template with context %}
+
+{% block title %}{{ title }}{% if theme.index_with_subtitle and subtitle %} - {{ subtitle }}{% endif %}{% endblock %}
+
+{% block class %}index posts-collapse{% endblock %}
+
+{% block content %}
+
+  {#####################}
+  {### INDEX BLOCK ###}
+  {#####################}
+  <div class="post-block">
+    <div class="post-content">
+      {{ post_template.render(page.posts) }}
+    </div>
+  </div>
+  {#########################}
+  {### END INDEX BLOCK ###}
+  {#########################}
+
+  {%- include '_partials/pagination.njk' -%}
+
+{% endblock %}
+
+{% block sidebar %}
+  {{ sidebar_template.render(false) }}
+{% endblock %}

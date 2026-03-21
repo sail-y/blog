@@ -1,5 +1,5 @@
 ---
-title: 并发编程6-任务执行
+title: "并发编程 06：任务执行"
 date: 2016-12-13 09:13:36
 tags: [java, 并发]
 categories: 并发

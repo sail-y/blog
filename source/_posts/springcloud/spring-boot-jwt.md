@@ -1,5 +1,5 @@
 ---
-title: 集成JWT到Spring Boot项目
+title: Spring Boot集成JWT认证
 date: 2016-12-08 14:46:56
 tags: [spring, java]
 categories: spring boot/cloud

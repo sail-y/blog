@@ -1,4 +1,4 @@
-title: "Spring mvc @ResponseBody 返回枚举类型"
+title: Spring MVC @ResponseBody返回枚举类型
 date: 2015-01-31 11:36:30
 tags: [fastjson,spring mvc,java]
 categories: spring

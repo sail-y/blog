@@ -1,5 +1,5 @@
 ---
-title: Git-远程仓库2
+title: "Git教程 05：远程仓库进阶"
 date: 2017-11-12 20:15:46
 tags: [git]
 categories: git

@@ -1,5 +1,5 @@
 ---
-title: MongoDB1-安装和增删改查
+title: "MongoDB 01：快速入门指南"
 date: 2017-12-08 14:37:05
 tags: [Mongo]
 categories: Mongo

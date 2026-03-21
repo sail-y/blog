@@ -1,4 +1,4 @@
-title: Spring MVC 接口版本管理
+title: Spring MVC接口版本管理实践
 date: 2015-03-31 10:06:12
 tags: [Java, Rest, Spring Mvc]
 categories: spring

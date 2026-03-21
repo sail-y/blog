@@ -1,5 +1,5 @@
 ---
-title: 并发编程4-对象的组合
+title: "并发编程 04：对象的组合"
 date: 2016-12-06 09:45:58
 tags: [java, 并发]
 categories: 并发

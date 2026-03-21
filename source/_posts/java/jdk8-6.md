@@ -1,5 +1,5 @@
 ---
-title: JDK8-比较器Comparator
+title: "JDK8新特性 06：Stream详解"
 date: 2017-02-26 11:08:13
 tags: [java,jdk8]
 categories: jdk8

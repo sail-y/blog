@@ -1,5 +1,5 @@
 ---
-title: Git-checkout、stash等命令
+title: "Git教程 03：Checkout、Stash等命令"
 date: 2017-09-28 16:40:00
 tags: [git]
 categories: git

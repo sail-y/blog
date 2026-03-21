@@ -1,4 +1,4 @@
-title: JVM5-内存分配与回收策略
+title: "JVM深入理解 05：调优案例分析"
 date: 2016-11-01 13:51:44
 tags: [java,JVM]
 categories: JVM

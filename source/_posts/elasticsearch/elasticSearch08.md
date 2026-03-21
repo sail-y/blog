@@ -1,5 +1,5 @@
 ---
-title: ElasticSearch08-内核原理
+title: "ElasticSearch 08：内核原理"
 tags: [ElasticSearch]
 date: 2018-09-28 15:12:35
 categories: ElasticSearch

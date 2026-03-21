@@ -1,5 +1,5 @@
 ---
-title: Git-裸库和submodule、substree
+title: "Git教程 06：裸库与Submodule"
 date: 2017-11-21 08:46:13
 tags: [git]
 categories: git

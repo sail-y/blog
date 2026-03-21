@@ -1,4 +1,4 @@
-title: centos6.5使用yum安装mysql
+title: CentOS 6.5 MySQL YUM安装方法
 date: 2015-01-31 17:41:07
 tags: [mysql,centos]
 categories: centos

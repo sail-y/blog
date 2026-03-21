@@ -1,5 +1,5 @@
 ---
-title: ElasticSearch05-搜索详解
+title: "ElasticSearch 05：搜索功能详解"
 tags: [ElasticSearch]
 date: 2018-09-19 11:36:54
 categories: ElasticSearch

@@ -1,5 +1,5 @@
 ---
-title: Git-分支
+title: "Git教程 02：分支管理"
 date: 2017-09-21 21:35:29
 tags: [git]
 categories: git

@@ -1,5 +1,5 @@
 ---
-title: Spring Cloud Security OAuth2 定制错误消息
+title: Spring Security OAuth2自定义异常响应
 tags: [spring security]
 date: 2019-01-09 20:32:49
 categories: spring

@@ -1,5 +1,5 @@
 ---
-title: ElasticSearch03-集群和架构讲解
+title: "ElasticSearch 03：集群架构详解"
 tags: [ElasticSearch]
 date: 2018-06-20 08:57:00
 categories: ElasticSearch

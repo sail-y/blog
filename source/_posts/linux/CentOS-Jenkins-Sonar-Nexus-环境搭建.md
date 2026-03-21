@@ -1,4 +1,4 @@
-title: CentOS Jenkins + Sonar + Nexus 环境搭建
+title: "CentOS环境搭建：Jenkins+Sonar+Nexus持续集成平台"
 date: 2015-03-06 21:43:05
 tags: [centos]
 categories: CI

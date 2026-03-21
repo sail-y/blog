@@ -1,5 +1,5 @@
 ---
-title: Git-cherry-pick、rebase
+title: "Git教程 07：Cherry-pick与Rebase"
 date: 2017-11-30 09:04:20
 tags: [git]
 categories: git

@@ -1,5 +1,5 @@
 ---
-title: Spring Cloud微服务-5-SpringBoot整合Spring MVC
+title: "Spring Cloud微服务 05：Spring MVC整合"
 tags: [Spring Cloud, 微服务]
 date: 2020-01-30 21:50:39
 categories: 微服务

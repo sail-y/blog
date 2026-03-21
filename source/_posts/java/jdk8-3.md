@@ -1,5 +1,5 @@
 ---
-title: JDK8-方法引用
+title: "JDK8新特性 03：Fork/Join与CompletableFuture"
 date: 2017-02-05 19:00:56
 tags: [java,jdk8]
 categories: jdk8

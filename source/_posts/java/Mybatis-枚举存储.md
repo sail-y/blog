@@ -1,4 +1,4 @@
-title: Mybatis 枚举存储
+title: MyBatis枚举类型存储方案
 date: 2015-12-11 15:10:44
 tags: [mybatis]
 categories: Java

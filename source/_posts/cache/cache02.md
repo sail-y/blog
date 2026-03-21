@@ -1,5 +1,5 @@
 ---
-title: 高可用缓存架构实战2-Redis企业级应用实战
+title: "高可用缓存架构实战 02：Redis企业级应用实战"
 date: 2018-02-12 17:27:23
 tags: [redis]
 categories: 高可用缓存架构实战

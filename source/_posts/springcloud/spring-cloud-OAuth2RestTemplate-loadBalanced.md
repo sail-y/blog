@@ -1,4 +1,4 @@
-title: spring cloud OAuth2RestTemplate loadBalanced
+title: Spring Cloud OAuth2RestTemplate负载均衡配置
 date: 2016-04-21 16:52:45
 tags: [spring-cloud,微服务]
 categories: spring boot/cloud

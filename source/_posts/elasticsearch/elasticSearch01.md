@@ -1,5 +1,5 @@
 ---
-title: ElasticSearch01-介绍
+title: "ElasticSearch 01：核心概念介绍"
 tags: [ElasticSearch]
 date: 2018-06-03 11:46:54
 categories: ElasticSearch

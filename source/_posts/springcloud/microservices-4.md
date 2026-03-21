@@ -1,5 +1,5 @@
 ---
-title: Spring Cloud微服务-4-SpringBoot日志，JSP，WebSocket等
+title: "Spring Cloud微服务 04：日志与WebSocket集成"
 tags: [Spring Cloud, 微服务]
 date: 2019-11-23 22:50:39
 categories: 微服务

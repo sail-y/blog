@@ -1,5 +1,5 @@
 ---
-title: Storm介绍和集群部署、WordCount演示
+title: Storm介绍与集群部署实战
 date: 2018-02-22 13:34:55
 tags: [storm]
 categories: storm
@@ -47,7 +47,8 @@ Nimbus，Supervisor，ZooKeeper，Worker，Executor，Task
 
 
 ![storm集群架构](/img/cache/storm集群架构.png)
-Topology，Spout，Bolt，Tuple，Stream
+
+Topology，Spout，Bolt，Tuple，Stream
 
 ![storm核心概念](/img/cache/storm核心概念.png)
 

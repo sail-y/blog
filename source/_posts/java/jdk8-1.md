@@ -1,5 +1,5 @@
 ---
-title: JDK8-Lambda表达式初步与函数式接口
+title: "JDK8新特性 01：Lambda表达式与函数式接口"
 date: 2016-12-19 14:00:37
 tags: [java,jdk8]
 categories: jdk8

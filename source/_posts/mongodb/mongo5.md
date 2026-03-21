@@ -1,5 +1,5 @@
 ---
-title: MongoDB5-副本集
+title: "MongoDB 05：副本集架构"
 date: 2018-01-07 18:47:46
 tags: [Mongo]
 categories: Mongo

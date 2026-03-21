@@ -1,5 +1,5 @@
 ---
-title: Netty-源码分析(一)
+title: "Netty实战 06：源码分析（一）"
 date: 2017-09-13 09:55:11
 tags: [Netty,java]
 categories: Netty
@@ -210,7 +210,8 @@ future.addListener(new  ChannelFutureListener() {
 
 反应器模式，Netty整体架构是Reactor模式的完整体现。提到Reactor模式，就不得不拿出大神Doug Lea(Java并发包的作者)的文档：[《Scalable IO in Java》](http://gee.cs.oswego.edu/dl/cpjslides/nio.pdf)，内容不多，里面涉及到传统IO的写法，NIO的设计思想。这个文档非常重要，一定要熟读。
 
-![](/img/netty/netty6-1.png)
+
+![](/img/netty/netty6-1.png)
 
 大多数的网络服务都是下面的流程：
 

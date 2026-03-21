@@ -1,5 +1,5 @@
 ---
-title: 高可用缓存架构实战3-Redis高可用集群实战
+title: "高可用缓存架构实战 03：Redis高可用集群实战"
 date: 2018-02-15 17:27:23
 tags: [redis]
 categories: 高可用缓存架构实战

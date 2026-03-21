@@ -1,5 +1,5 @@
 ---
-title: (转)eureka缓存细节以及生产环境的最佳配置
+title: "[转载] Eureka缓存细节与生产环境最佳配置"
 date: 2018-04-14 13:29:08
 tags: [spring-cloud,微服务]
 categories: spring boot/cloud

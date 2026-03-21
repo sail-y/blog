@@ -1,4 +1,4 @@
-title: JVM9-虚拟机字节码执行引擎
+title: "JVM深入理解 09：类加载及执行子系统的案例与实战"
 date: 2016-11-15 16:53:50
 tags: [JVM,java]
 categories: JVM

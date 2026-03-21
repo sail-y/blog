@@ -1,4 +1,4 @@
-title: jenkins和tomcat的持续集成
+title: Jenkins与Tomcat持续集成实践
 date: 2015-12-14 17:26:16
 tags: [jenkins,tomcat]
 categories: CI

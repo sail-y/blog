@@ -1,4 +1,4 @@
-title: centos 6.5 安装gitlab安装需注意的问题
+title: CentOS 6.5 GitLab安装注意事项
 date: 2015-02-06 23:30:50
 tags: [centos,gitlab]
 categories: centos

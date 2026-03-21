@@ -1,5 +1,5 @@
 ---
-title: ElasticSearch07-索引管理
+title: "ElasticSearch 07：索引管理"
 tags: [ElasticSearch]
 date: 2018-09-27 11:48:13
 categories: ElasticSearch

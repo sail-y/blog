@@ -1,4 +1,4 @@
-title: gitlab替换nginx服务
+title: "GitLab性能优化：Nginx服务替换方案"
 date: 2015-10-29 16:29:10
 tags: [gitlab]
 categories: centos

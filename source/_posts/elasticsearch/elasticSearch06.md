@@ -1,5 +1,5 @@
 ---
-title: ElasticSearch06-_Search API
+title: "ElasticSearch 06：Search API深入"
 tags: [ElasticSearch]
 date: 2018-09-21 10:15:48
 categories: ElasticSearch

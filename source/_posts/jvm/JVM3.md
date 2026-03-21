@@ -1,4 +1,4 @@
-title: JVM3-内存溢出异常实战
+title: "JVM深入理解 03：垃圾收集器与内存分配"
 date: 2016-10-31 12:25:33
 tags: [JVM,java]
 categories: JVM

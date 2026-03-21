@@ -1,5 +1,5 @@
 ---
-title: JDK8-Stream源码解析
+title: "JDK8新特性 05：方法引用"
 date: 2017-02-10 12:34:27
 tags: [java,jdk8]
 categories: jdk8

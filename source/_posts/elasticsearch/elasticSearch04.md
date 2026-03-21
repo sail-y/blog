@@ -1,5 +1,5 @@
 ---
-title: ElasticSearch04-Document、Index详解和操作以及并发问题
+title: "ElasticSearch 04：Document与Index详解"
 tags: [ElasticSearch]
 date: 2018-08-19 17:40:30
 categories: ElasticSearch

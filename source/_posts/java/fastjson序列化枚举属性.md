@@ -1,4 +1,4 @@
-title: fastjson序列化枚举属性
+title: Fastjson枚举属性序列化配置
 date: 2015-01-30 23:19:19
 tags: [fastjson,java,枚举]
 categories: Java

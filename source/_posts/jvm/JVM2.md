@@ -1,4 +1,4 @@
-title: JVM2-Java内存区域
+title: "JVM深入理解 02：内存区域与溢出异常"
 date: 2016-10-28 17:29:15
 tags: [java,JVM]
 categories: JVM

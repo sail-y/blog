@@ -1,4 +1,4 @@
-title: Spring-cloud OAuth2.0配置
+title: Spring Cloud OAuth2.0配置指南
 date: 2016-03-31 16:13:49
 tags: [spring-cloud,微服务]
 categories: spring boot/cloud

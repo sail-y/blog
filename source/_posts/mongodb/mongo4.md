@@ -1,5 +1,5 @@
 ---
-title: MongoDB4-GridFS、Capped Collections、索引与查询计划
+title: "MongoDB 04：GridFS与索引优化"
 date: 2018-01-07 10:13:24
 tags: [Mongo]
 categories: Mongo

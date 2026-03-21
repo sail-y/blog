@@ -1,4 +1,4 @@
-title: centos 6.5 安装docker
+title: CentOS 6.5 Docker安装指南
 date: 2015-12-08 12:33:43
 tags: [centos,docker]
 categories: centos

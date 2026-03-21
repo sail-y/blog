@@ -1,5 +1,5 @@
 ---
-title: 高可用缓存架构实战1-Redis配置和持久化
+title: "高可用缓存架构实战 01：Redis配置和持久化"
 date: 2018-02-12 10:02:35
 tags: [redis]
 categories: 高可用缓存架构实战

@@ -1,4 +1,4 @@
-title: JVM12-线程安全与锁优化
+title: "JVM深入理解 12：Java内存模型与线程"
 date: 2016-11-25 15:12:24
 tags: [JVM,java]
 categories: JVM

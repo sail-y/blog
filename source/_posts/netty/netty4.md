@@ -1,5 +1,5 @@
 ---
-title: Netty-Apache Thrift介绍和使用
+title: "Netty实战 04：Apache Thrift集成"
 date: 2017-07-09 10:58:58
 tags: [Netty,java]
 categories: Netty

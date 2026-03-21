@@ -1,5 +1,5 @@
 ---
-title: Spring Security配置cors跨域访问
+title: Spring Security跨域资源共享配置
 date: 2016-12-29 13:54:14
 tags: [spring,java]
 categories: spring

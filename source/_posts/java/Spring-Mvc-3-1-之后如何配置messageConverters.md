@@ -1,4 +1,4 @@
-title: Spring Mvc 3.1 之后如何配置messageConverters
+title: Spring MVC 3.1+ MessageConverters配置指南
 date: 2015-03-06 22:15:41
 tags: [spring mvc, messageConverters]
 categories: spring

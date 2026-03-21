@@ -1,5 +1,5 @@
 ---
-title: SpringCloud组件的各种MaxTotalConnections详解
+title: Spring Cloud组件MaxTotalConnections配置详解
 date: 2020-04-29 22:05:39
 tags: [spring-cloud]
 categories: spring-cloud

@@ -1,4 +1,4 @@
-title: "Spring cloud @EnableOAuth2Client"
+title: Spring Cloud @EnableOAuth2Client注解详解
 date: 2016-07-15 13:55:11
 tags: [spring-cloud,微服务]
 categories: spring boot/cloud

@@ -1,5 +1,5 @@
 ---
-title: Sleuth在异步线程中丢失traceId的解决方案
+title: Sleuth异步线程TraceId丢失解决方案
 tags: [spring, sleuth]
 date: 2018-12-29 09:55:21
 categories: spring

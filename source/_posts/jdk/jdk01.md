@@ -1,5 +1,5 @@
 ---
-title: JDK集合源码-List
+title: "JDK核心知识 01：基础概念"
 date: 2020-10-13 14:00:37
 tags: [java,JDK源码]
 categories: JDK源码

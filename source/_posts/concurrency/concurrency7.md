@@ -1,5 +1,5 @@
 ---
-title: 并发编程7-取消与关闭
+title: "并发编程 07：取消与关闭"
 date: 2016-12-14 10:51:20
 tags: [java, 并发]
 categories: 并发

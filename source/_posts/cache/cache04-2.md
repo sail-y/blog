@@ -1,5 +1,5 @@
 ---
-title: zookeeper+kafka集群的安装部署
+title: Zookeeper与Kafka集群安装部署指南
 date: 2018-02-20 15:09:58
 tags: [zookeeper, kafka]
 categories: kafka

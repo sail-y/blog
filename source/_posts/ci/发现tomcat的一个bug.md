@@ -1,4 +1,4 @@
-title: 发现tomcat的一个bug
+title: Tomcat配置Bug分析与解决方案
 date: 2015-03-10 14:01:15
 tags: [tomcat]
 categories: Java

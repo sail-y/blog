@@ -1,5 +1,5 @@
 ---
-title: spring-boot-admin
+title: "Spring Boot Admin：微服务监控利器"
 date: 2017-08-12 14:18:20
 tags: [spring, java]
 categories: spring boot/cloud

@@ -1,4 +1,4 @@
-title: JVM1-Java介绍
+title: "JVM深入理解 01：Java技术体系"
 date: 2016-10-28 13:30:50
 tags: [java,JVM]
 categories: JVM

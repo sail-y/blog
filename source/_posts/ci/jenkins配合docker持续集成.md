@@ -1,4 +1,4 @@
-title: jenkins配合docker持续集成
+title: Jenkins与Docker持续集成实践
 date: 2015-12-15 12:53:45
 tags: [jenkins,docker]
 categories: CI

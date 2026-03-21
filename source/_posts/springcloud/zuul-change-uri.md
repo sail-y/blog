@@ -1,5 +1,5 @@
 ---
-title: Spring Cloud Zuul中修改URI
+title: Spring Cloud Zuul URI修改方案
 tags: [zuul]
 date: 2018-12-11 17:14:01
 categories: spring

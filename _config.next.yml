@@ -83,6 +83,7 @@ creative_commons:
 # See: https://hexo.io/docs/helpers#open-graph
 open_graph:
   enable: true
+  image: /images/avatar.gif
   options:
     #twitter_card: <twitter:card>
     #twitter_id: <twitter:creator>

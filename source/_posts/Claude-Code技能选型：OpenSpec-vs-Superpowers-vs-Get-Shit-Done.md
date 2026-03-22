@@ -78,13 +78,13 @@ sequenceDiagram
     participant U as 用户
     participant AI as AI
 
-    U->>AI: /opsx:propose "添加用户认证功能"
+    U->>AI: 提出添加用户认证功能
     AI->>U: 生成规范文档
-    Note over AI: ✓ proposal.md<br/>✓ design.md<br/>✓ tasks.md
-    U->>AI: 审核规范，发现不符合要求的地方
+    Note over AI: proposal.md<br/>design.md<br/>tasks.md
+    U->>AI: 审核规范
     AI->>AI: 修改规范
     AI->>U: 确认后实施
-    Note over U,AI: ✅ 按规范执行，减少理解偏差
+    Note over U,AI: ✅ 按规范执行
 {% endmermaid %}
 
 #### 问题2：团队协作中的"需求理解不一致"
@@ -92,11 +92,11 @@ sequenceDiagram
 **现象：**
 {% mermaid %}
 graph LR
-    PM[PM: 需要一个搜索功能] --> DA[开发A: 做了全文搜索]
-    PM --> DB[开发B: 做了模糊匹配]
-    PM --> Test[测试: 做了精确匹配测试]
+    PM["PM需要搜索功能"] --> DA["开发A做全文搜索"]
+    PM --> DB["开发B做模糊匹配"]
+    PM --> Test["测试做精确匹配"]
 
-    DA --> Error[❌ 三方理解不同<br/>集成时出问题]
+    DA --> Error["❌ 三方理解不同"]
     DB --> Error
     Test --> Error
 {% endmermaid %}
@@ -104,13 +104,13 @@ graph LR
 **SDD 解决：**
 {% mermaid %}
 graph TD
-    PM[PM: /opsx:propose "搜索功能"] --> AI[AI: 生成规范文档]
-    AI --> Team[团队: 所有人审核同一份规范]
-    Team --> DA[开发A: 基于规范工作]
-    Team --> DB[开发B: 基于规范工作]
-    Team --> Test[测试: 基于规范工作]
+    PM["PM 提出搜索功能"] --> AI["AI 生成规范文档"]
+    AI --> Team["团队审核规范"]
+    Team --> DA["开发A 实施"]
+    Team --> DB["开发B 实施"]
+    Team --> Test["测试验证"]
 
-    DA --> Success[✅ 理解一致，协作顺畅]
+    DA --> Success["✅ 理解一致"]
     DB --> Success
     Test --> Success
 {% endmermaid %}

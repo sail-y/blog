@@ -3,7 +3,7 @@ title: "Claude Code 教程：从入门到精通"
 date: 2026-03-20 22:38:00
 tags: [AI, Claude Code, 编程工具]
 categories: AI工具
-description: 本文讲解相关技术要点和实践经验。
+description: Claude Code 功能、隐藏技巧、终端美化以及项目实战经验。
 ---
 
 # Claude Code 完整教程：从入门到精通
@@ -95,14 +95,14 @@ MCP 是一个开放的协议标准，Claude Code、Cursor、Trae 等现代 AI ID
 
 **Claude Code 的多级代理架构**：
 
-```
-Main Agent (主代理)
-    ├── Explore Agent (代码探索)
-    ├── Plan Agent (规划设计)
-    ├── Executor Agent (任务执行)
-    ├── Debugger Agent (调试分析)
-    ├── Quality Reviewer (质量审查)
-    └── ... (可扩展更多子代理)
+```mermaid
+graph TD
+    Main[Main Agent<br/>主代理] --> E[Explore Agent<br/>代码探索]
+    Main --> P[Plan Agent<br/>规划设计]
+    Main --> Ex[Executor Agent<br/>任务执行]
+    Main --> D[Debugger Agent<br/>调试分析]
+    Main --> Q[Quality Reviewer<br/>质量审查]
+    Main --> More[... 可扩展更多子代理]
 ```
 
 | 代理能力 | Claude Code | Cursor | Trae |

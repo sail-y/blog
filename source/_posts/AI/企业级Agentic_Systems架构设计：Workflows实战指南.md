@@ -3,31 +3,31 @@ title: "企业级 Agentic Systems 架构设计：Workflows 实战指南"
 date: 2026-03-21 14:00:00
 tags: [Agentic AI, LangGraph, Workflows, LLM Application]
 categories: AI架构设计
-description: 深入探讨企业级 Agentic Systems 架构设计，重点讲解 Workflows 模式（Prompt Chaining、Routing、Parallelization、Orchestrator-Workers）的生产实践。基于 LangGraph 提供完整的状态持久化、人工介入、流式输出等生产级特性实现方案。
+description: 探讨企业级 Agentic Systems 架构设计，重点讲解 Workflows 模式（Prompt Chaining、Routing、Parallelization、Orchestrator-Workers）的生产实践。基于 LangGraph 提供完整的状态持久化、人工介入、流式输出等生产级特性实现方案。
 ---
 
 ## 一、Agentic Systems 架构概览
 
-### 1.1 核心概念：Workflows 主导企业应用
+### 1.1 Workflows 主导企业应用
 
-根据 Anthropic 官方研究，**Agentic Systems** 分为两大类：
+根据 Anthropic 官方研究，Agentic Systems 分为两大类：
 
+```mermaid
+graph TD
+    A[Agentic Systems<br/>智能体系统] --> B[Workflows<br/>工作流 - 企业主流 80-90%场景]
+    A --> C[Agents<br/>智能体 - 动态自主 10-20%场景]
+
+    B --> B1[Prompt Chaining<br/>链式处理]
+    B --> B2[Routing<br/>路由分类]
+    B --> B3[Parallelization<br/>并行执行]
+    B --> B4[Orchestrator-Workers<br/>编排-工作者模式]
+    B --> B5[Evaluator-Optimizer<br/>评估-优化循环]
+
+    C --> C1[Feedback Loop Agents<br/>基于环境反馈的循环智能体]
 ```
-Agentic Systems（智能体系统）
-│
-├── Workflows（工作流 - 企业主流，80-90% 场景）
-│   ├── Prompt Chaining：链式处理
-│   ├── Routing：路由分类
-│   ├── Parallelization：并行执行
-│   ├── Orchestrator-Workers：编排-工作者模式
-│   └── Evaluator-Optimizer：评估-优化循环
-│
-└── Agents（智能体 - 动态自主，10-20% 场景）
-    └── Feedback Loop Agents：基于环境反馈的循环智能体
-```
 
-**关键洞察**：
-> **"Success isn't about making the most sophisticated system. It's about building the right system for your needs."**
+**Anthropic 的观点**：
+> "Success isn't about making the most sophisticated system. It's about building the right system for your needs."
 > —— Anthropic, Building Effective Agents
 
 **企业应用现状**：
@@ -38,11 +38,11 @@ Agentic Systems（智能体系统）
 
 | 维度 | Workflows | Agents | 企业选择 |
 |------|-----------|--------|---------|
-| **可控性** | ✅ 100% 可预测执行路径 | ⚠️ 动态决策，不可预测 | **Workflows** |
-| **成本控制** | ✅ 固定步骤，成本可计算 | ❌ 循环次数不确定 | **Workflows** |
-| **调试难度** | ✅ 线性追踪，容易定位 | ❌ 非线性，难以重现 | **Workflows** |
-| **合规审计** | ✅ 容易记录和审计 | ⚠️ 决策路径复杂 | **Workflows** |
-| **适用场景** | 固定流程、高频任务 | 开放式、探索性 | 取决于业务 |
+| 可控性 | ✅ 100% 可预测执行路径 | ⚠️ 动态决策，不可预测 | **Workflows** |
+| 成本控制 | ✅ 固定步骤，成本可计算 | ❌ 循环次数不确定 | **Workflows** |
+| 调试难度 | ✅ 线性追踪，容易定位 | ❌ 非线性，难以重现 | **Workflows** |
+| 合规审计 | ✅ 容易记录和审计 | ⚠️ 决策路径复杂 | **Workflows** |
+| 适用场景 | 固定流程、高频任务 | 开放式、探索性 | 取决于业务 |
 
 **成本对比**（以客服系统为例）：
 
@@ -66,28 +66,30 @@ Autonomous Agent：
 
 **决策树**：
 
-```
-开始：你的任务是什么？
-│
-├─ 是否有明确的处理步骤？
-│  ├─ 是 → 使用 Workflow ✅
-│  └─ 否 → 继续判断
-│
-├─ 是否需要根据输入动态调整策略？
-│  ├─ 是，但有限几种情况 → Routing Workflow ✅
-│  └─ 是，无限可能 → 考虑 Agent ⚠️
-│
-├─ 任务是否有明确的结束条件？
-│  ├─ 是 → Workflow ✅
-│  └─ 否 → 考虑 Agent ⚠️
-│
-├─ 是否需要探索未知解决方案？
-│  ├─ 否 → Workflow ✅
-│  └─ 是（如研究、创意）→ Agent ✅
-│
-└─ 成本是否敏感？
-   ├─ 是 → Workflow ✅
-   └─ 否 → 可考虑 Agent
+```mermaid
+graph TD
+    Start[开始：你的任务是什么？] --> Q1{是否有明确的<br/>处理步骤？}
+    Q1 -->|是| A1[使用 Workflow ✅]
+    Q1 -->|否| Q2{是否需要根据输入<br/>动态调整策略？}
+
+    Q2 -->|是，但有限几种情况| A2[Routing Workflow ✅]
+    Q2 -->|是，无限可能| A3[考虑 Agent ⚠️]
+    Q2 -->|否| Q3{任务是否有明确的<br/>结束条件？}
+
+    Q3 -->|是| A4[Workflow ✅]
+    Q3 -->|否| A5[考虑 Agent ⚠️]
+
+    A1 --> Q4{是否需要探索<br/>未知解决方案？}
+    A2 --> Q4
+    A3 --> Q4
+    A4 --> Q4
+    A5 --> Q4
+
+    Q4 -->|否| Q5{成本是否敏感？}
+    Q4 -->|是 如研究、创意| A6[Agent ✅]
+
+    Q5 -->|是| A7[Workflow ✅]
+    Q5 -->|否| A8[可考虑 Agent]
 ```
 
 **典型场景映射**：
@@ -106,53 +108,48 @@ Autonomous Agent：
 
 ### 1.4 生产级架构全景图
 
-```
-┌─────────────────────────────────────────────────────────┐
-│  应用层 (Client Applications)                            │
-│  • Web UI / CLI / API Integration                       │
-└─────────────────────────────────────────────────────────┘
-                          ↓
-┌─────────────────────────────────────────────────────────┐
-│  API 网关层 (FastAPI)                                    │
-│  • 认证授权 / Rate Limiting / 路由分发                   │
-│  • 流式响应 (SSE/WebSocket)                              │
-└─────────────────────────────────────────────────────────┘
-                          ↓
-┌─────────────────────────────────────────────────────────┐
-│  Agentic Runtime 层 (LangGraph)                         │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │  Workflows（核心）                                 │  │
-│  │  ├── Prompt Chaining（链式）                      │  │
-│  │  ├── Routing（路由）                              │  │
-│  │  ├── Parallelization（并行）                      │  │
-│  │  ├── Orchestrator-Workers（编排）                 │  │
-│  │  └── Evaluator-Optimizer（评估优化）              │  │
-│  │                                                    │  │
-│  │  Agents（进阶）                                    │  │
-│  │  └── Feedback Loop Agents                         │  │
-│  └──────────────────────────────────────────────────┘  │
-│  • StateGraph (状态图)                                  │
-│  • Checkpointer (状态持久化)                            │
-│  • Human-in-the-loop                                    │
-│  • Streaming (实时流式输出)                              │
-└─────────────────────────────────────────────────────────┘
-                          ↓
-┌─────────────────────────────────────────────────────────┐
-│  增强能力层 (Augmented Capabilities)                     │
-│  ├── Retrieval (RAG)                                    │
-│  │   ├── Vector Store (pgvector)                       │
-│  │   └── Hybrid Search (Vector + FTS)                  │
-│  ├── Tools (工具调用)                                    │
-│  └── Memory (记忆系统)                                   │
-└─────────────────────────────────────────────────────────┘
-                          ↓
-┌─────────────────────────────────────────────────────────┐
-│  基础设施层 (Infrastructure)                             │
-│  ├── Database: PostgreSQL + pgvector                   │
-│  ├── LLM: OpenAI API Compatible                        │
-│  ├── Cache: Redis                                      │
-│  └── Observability: OpenTelemetry + Prometheus        │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+    subgraph Layer1[应用层 Client Applications]
+        A1[Web UI / CLI / API Integration]
+    end
+
+    subgraph Layer2[API 网关层 FastAPI]
+        B1[认证授权 / Rate Limiting / 路由分发]
+        B2[流式响应 SSE/WebSocket]
+    end
+
+    subgraph Layer3[Agentic Runtime 层 LangGraph]
+        C1[Workflows 核心]
+        C1_1[Prompt Chaining 链式]
+        C1_2[Routing 路由]
+        C1_3[Parallelization 并行]
+        C1_4[Orchestrator-Workers 编排]
+        C1_5[Evaluator-Optimizer 评估优化]
+        C2[Agents 进阶]
+        C2_1[Feedback Loop Agents]
+        C3[StateGraph 状态图]
+        C4[Checkpointer 状态持久化]
+        C5[Human-in-the-loop]
+        C6[Streaming 实时流式输出]
+    end
+
+    subgraph Layer4[增强能力层 Augmented Capabilities]
+        D1[Retrieval RAG]
+        D1_1[Vector Store pgvector]
+        D1_2[Hybrid Search Vector + FTS]
+        D2[Tools 工具调用]
+        D3[Memory 记忆系统]
+    end
+
+    subgraph Layer5[基础设施层 Infrastructure]
+        E1[Database: PostgreSQL + pgvector]
+        E2[LLM: OpenAI API Compatible]
+        E3[Cache: Redis]
+        E4[Observability: OpenTelemetry + Prometheus]
+    end
+
+    Layer1 --> Layer2 --> Layer3 --> Layer4 --> Layer5
 ```
 
 ---

@@ -12,7 +12,7 @@ description: 探讨企业级 Agentic Systems 架构设计，重点讲解 Workflo
 
 根据 Anthropic 官方研究，Agentic Systems 分为两大类：
 
-```mermaid
+{% mermaid %}
 graph TD
     A[Agentic Systems<br/>智能体系统] --> B[Workflows<br/>工作流 - 企业主流 80-90%场景]
     A --> C[Agents<br/>智能体 - 动态自主 10-20%场景]
@@ -24,7 +24,7 @@ graph TD
     B --> B5[Evaluator-Optimizer<br/>评估-优化循环]
 
     C --> C1[Feedback Loop Agents<br/>基于环境反馈的循环智能体]
-```
+{% endmermaid %}
 
 **Anthropic 的观点**：
 > "Success isn't about making the most sophisticated system. It's about building the right system for your needs."
@@ -66,7 +66,7 @@ Autonomous Agent：
 
 **决策树**：
 
-```mermaid
+{% mermaid %}
 graph TD
     Start[开始：你的任务是什么？] --> Q1{是否有明确的<br/>处理步骤？}
     Q1 -->|是| A1[使用 Workflow ✅]
@@ -90,7 +90,7 @@ graph TD
 
     Q5 -->|是| A7[Workflow ✅]
     Q5 -->|否| A8[可考虑 Agent]
-```
+{% endmermaid %}
 
 **典型场景映射**：
 
@@ -108,7 +108,7 @@ graph TD
 
 ### 1.4 生产级架构全景图
 
-```mermaid
+{% mermaid %}
 graph TB
     subgraph Layer1[应用层 Client Applications]
         A1[Web UI / CLI / API Integration]
@@ -150,7 +150,7 @@ graph TB
     end
 
     Layer1 --> Layer2 --> Layer3 --> Layer4 --> Layer5
-```
+{% endmermaid %}
 
 ---
 

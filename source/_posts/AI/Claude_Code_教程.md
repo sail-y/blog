@@ -95,7 +95,7 @@ MCP 是一个开放的协议标准，Claude Code、Cursor、Trae 等现代 AI ID
 
 **Claude Code 的多级代理架构**：
 
-```mermaid
+{% mermaid %}
 graph TD
     Main[Main Agent<br/>主代理] --> E[Explore Agent<br/>代码探索]
     Main --> P[Plan Agent<br/>规划设计]
@@ -103,7 +103,7 @@ graph TD
     Main --> D[Debugger Agent<br/>调试分析]
     Main --> Q[Quality Reviewer<br/>质量审查]
     Main --> More[... 可扩展更多子代理]
-```
+{% endmermaid %}
 
 | 代理能力 | Claude Code | Cursor | Trae |
 |---------|------------|--------|------|

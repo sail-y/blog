@@ -29,7 +29,7 @@ AI 编程工具普及，Claude Code、Cursor、Windsurf 等已成为开发者的
 
 规范驱动开发（Spec-Driven Development，SDD）是一种软件开发方法论：在编写代码之前，先编写规范（Spec），让所有人对"要做什么"达成一致。
 
-```mermaid
+{% mermaid %}
 graph LR
     subgraph 传统开发流程
         T1[需求] --> T2[直接编码]
@@ -51,14 +51,14 @@ graph LR
     end
 
     S2 -.->|提前对齐，减少返工| Success1[✅]
-```
+{% endmermaid %}
 
 ### 1.2 为什么推崇 SDD？
 
 #### 问题1：AI 编程工具的"幻觉"
 
 **现象：**
-```mermaid
+{% mermaid %}
 sequenceDiagram
     participant U as 用户
     participant AI as AI
@@ -70,10 +70,10 @@ sequenceDiagram
     Note over AI: 用了 SHA256，你要求 bcrypt
     Note over AI: 生成了前端，你是后端 API
     AI-->>U: ❌ 多处理解偏差
-```
+{% endmermaid %}
 
 **SDD 解决：**
-```mermaid
+{% mermaid %}
 sequenceDiagram
     participant U as 用户
     participant AI as AI
@@ -85,12 +85,12 @@ sequenceDiagram
     AI->>AI: 修改规范
     AI->>U: 确认后实施
     Note over U,AI: ✅ 按规范执行，减少理解偏差
-```
+{% endmermaid %}
 
 #### 问题2：团队协作中的"需求理解不一致"
 
 **现象：**
-```mermaid
+{% mermaid %}
 graph LR
     PM[PM: 需要一个搜索功能] --> DA[开发A: 做了全文搜索]
     PM --> DB[开发B: 做了模糊匹配]
@@ -99,10 +99,10 @@ graph LR
     DA --> Error[❌ 三方理解不同<br/>集成时出问题]
     DB --> Error
     Test --> Error
-```
+{% endmermaid %}
 
 **SDD 解决：**
-```mermaid
+{% mermaid %}
 graph TD
     PM[PM: /opsx:propose "搜索功能"] --> AI[AI: 生成规范文档]
     AI --> Team[团队: 所有人审核同一份规范]
@@ -113,7 +113,7 @@ graph TD
     DA --> Success[✅ 理解一致，协作顺畅]
     DB --> Success
     Test --> Success
-```
+{% endmermaid %}
 
 #### 问题3：大型项目的"上下文衰减"
 

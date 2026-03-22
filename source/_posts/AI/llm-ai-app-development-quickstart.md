@@ -35,13 +35,13 @@ LLM应用: 提示词 + 上下文 → 概率性推理
 
 LLM应用通常分为四层：
 
-```mermaid
+{% mermaid %}
 graph TB
     Input[用户输入] --> Pre[预处理层<br/>提示词构建]
     Pre --> |系统提示词<br/>用户消息<br/>上下文注入| LLM[LLM推理<br/>模型决策]
     LLM --> |理解意图<br/>工具调用决策<br/>生成响应| Post[后处理层<br/>结果验证 & 执行]
     Post --> |结构化输出验证<br/>工具执行<br/>多轮迭代| Output[返回结果]
-```
+{% endmermaid %}
 
 **预处理层**：将用户输入转换为模型可理解的提示词，包括系统提示词、用户消息、上下文注入。
 
@@ -55,7 +55,7 @@ graph TB
 
 LLM的知识是静态的，无法访问私有数据或最新信息。RAG通过在推理时注入相关文档解决这个限制。
 
-```mermaid
+{% mermaid %}
 graph LR
     A[知识库] --> B[切片]
     B --> C[向量化]
@@ -66,7 +66,7 @@ graph LR
     D --> G
     G --> H[注入提示词]
     H --> I[LLM生成答案]
-```
+{% endmermaid %}
 
 生产级RAG需要考虑：
 - 切片策略：如何分割文档
@@ -78,7 +78,7 @@ graph LR
 
 Function Calling让LLM调用外部工具。模型不直接执行函数，而是返回调用指令，应用层执行。
 
-```mermaid
+{% mermaid %}
 sequenceDiagram
     participant U as 用户
     participant L as LLM
@@ -98,7 +98,7 @@ sequenceDiagram
     T-->>A: 返回 {"temp": 25, "condition": "晴"}
     A-->>L: 返回结果
     L-->>U: "根据查询结果，北京今天晴天，气温25°C"
-```
+{% endmermaid %}
 
 要点：
 - 可靠性：GPT-4/Claude达95%+，开源模型60-75%
@@ -174,7 +174,7 @@ Agent动态决定检索策略：
 
 LLM应用需要管理对话历史和中间状态：
 
-```mermaid
+{% mermaid %}
 sequenceDiagram
     participant U as 用户
     participant A as Agent
@@ -191,7 +191,7 @@ sequenceDiagram
     Note over A: 需要记住之前的财报
     A->>A: 检索阿里财报
     A-->>U: 对比分析
-```
+{% endmermaid %}
 
 需要：
 - 会话管理：关联对话历史
@@ -311,7 +311,7 @@ Memory是LLM应用的需求，两个框架支持程度差异显著。
 
 LangGraph提供三层Memory：
 
-```mermaid
+{% mermaid %}
 graph TB
     subgraph M1[1. 短期记忆 Checkpointer]
         A1[线程内对话历史]
@@ -329,7 +329,7 @@ graph TB
         C1[自动压缩历史对话]
         C2[控制token使用]
     end
-```
+{% endmermaid %}
 
 效果：
 ```
@@ -575,7 +575,7 @@ LangGraph在企业级场景优势明显，但Pydantic AI在以下场景更合适
 
 选择Agent框架时，问自己这些问题：
 
-```mermaid
+{% mermaid %}
 graph TD
     Start[开始选择] --> Q1{应用复杂度？}
     Q1 -->|单Agent，简单流程| A1[Pydantic AI]
@@ -604,7 +604,7 @@ graph TD
 
     Q5 -->|快速原型，容忍故障| A9[Pydantic AI]
     Q5 -->|企业级，高可靠性| A10[LangGraph]
-```
+{% endmermaid %}
 
 ## 5.2 学习路径
 
